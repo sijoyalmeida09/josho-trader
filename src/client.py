@@ -34,25 +34,55 @@ class GrowwClient:
 
         log.info("Authenticating with Groww API...")
 
+        # Try TOTP flow first (the JWT token contains role=auth-totp)
         try:
-            # Method 1: API Key + Secret (approval-based)
-            timestamp = str(int(time.time()))
-            checksum = hashlib.sha256(
-                f"{self.api_key}{timestamp}{self.secret}".encode()
-            ).hexdigest()
+            import pyotp
+            totp_gen = pyotp.TOTP(self.secret)
+            totp_code = totp_gen.now()
+            log.info(f"Using TOTP auth (code: {totp_code})")
 
+            self._token = GrowwAPI.get_access_token(
+                api_key=self.api_key,
+                totp=totp_code,
+            )
+            self._api = GrowwAPI(self._token)
+            self._token_expiry = time.time() + 3600 * 8
+            log.info("Connected to Groww API via TOTP")
+            return self._api
+        except Exception as e1:
+            log.warning(f"TOTP auth failed: {e1}")
+
+        # Fallback: API Key + Secret (approval-based)
+        try:
             self._token = GrowwAPI.get_access_token(
                 api_key=self.api_key,
                 secret=self.secret,
             )
             self._api = GrowwAPI(self._token)
-            self._token_expiry = time.time() + 3600 * 8  # 8 hour session
-            log.info("Connected to Groww API")
+            self._token_expiry = time.time() + 3600 * 8
+            log.info("Connected to Groww API via API Key+Secret")
             return self._api
+        except Exception as e2:
+            log.error(f"API Key+Secret auth also failed: {e2}")
 
-        except Exception as e:
-            log.error(f"Groww auth failed: {e}")
-            raise
+        # Last resort: use the API key directly as access token
+        # (if it's already a valid JWT session token)
+        try:
+            log.info("Attempting direct token usage...")
+            self._api = GrowwAPI(self.api_key)
+            self._token = self.api_key
+            self._token_expiry = time.time() + 3600 * 8
+            # Test with a simple call
+            self._api.get_positions_for_user()
+            log.info("Connected to Groww API via direct token")
+            return self._api
+        except Exception as e3:
+            log.error(f"Direct token also failed: {e3}")
+            raise RuntimeError(
+                "All auth methods failed. "
+                "Go to groww.in/trade-api/api-keys and approve today's session, "
+                "or regenerate your API key."
+            )
 
     @property
     def api(self) -> GrowwAPI:
@@ -64,7 +94,7 @@ class GrowwClient:
     def get_positions(self) -> dict:
         """Get all open positions."""
         try:
-            return self.api.get_positions()
+            return self.api.get_positions_for_user()
         except Exception as e:
             log.error(f"Failed to get positions: {e}")
             return {}
@@ -72,9 +102,47 @@ class GrowwClient:
     def get_holdings(self) -> dict:
         """Get holdings."""
         try:
-            return self.api.get_holdings()
+            return self.api.get_holdings_for_user()
         except Exception as e:
             log.error(f"Failed to get holdings: {e}")
+            return {}
+
+    def get_profile(self) -> dict:
+        """Get user profile."""
+        try:
+            return self.api.get_user_profile()
+        except Exception as e:
+            log.error(f"Failed to get profile: {e}")
+            return {}
+
+    def get_option_chain(self, symbol: str, expiry: str) -> dict:
+        """Get option chain from Groww API."""
+        try:
+            return self.api.get_option_chain(
+                trading_symbol=symbol,
+                expiry_date=expiry,
+            )
+        except Exception as e:
+            log.error(f"Option chain failed for {symbol}: {e}")
+            return {}
+
+    def get_expiries(self, symbol: str) -> dict:
+        """Get available expiry dates."""
+        try:
+            return self.api.get_expiries(trading_symbol=symbol)
+        except Exception as e:
+            log.error(f"Expiries failed for {symbol}: {e}")
+            return {}
+
+    def get_greeks(self, symbol: str, exchange: str = "NSE") -> dict:
+        """Get option greeks."""
+        try:
+            return self.api.get_greeks(
+                trading_symbol=symbol,
+                exchange=exchange,
+            )
+        except Exception as e:
+            log.error(f"Greeks failed for {symbol}: {e}")
             return {}
 
     def get_ltp(self, symbol: str, exchange: str = "NSE", segment: str = "FNO") -> Optional[float]:

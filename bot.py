@@ -118,11 +118,11 @@ def main():
     args = parser.parse_args()
 
     print("""
-     ╔═══════════════════════════════════════╗
-     ║   JOSHO TRADER — F&O Trading Bot      ║
-     ║   Groww API | Paper + Live modes       ║
-     ║   Risk-managed | Telegram alerts       ║
-     ╚═══════════════════════════════════════╝
+    ==========================================
+     JOSHO TRADER -- F&O Trading Bot
+     Groww API | Paper + Live modes
+     Risk-managed | Telegram alerts
+    ==========================================
     """)
 
     # Create logs dir
