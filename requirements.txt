@@ -6,3 +6,4 @@ pandas>=2.0.0
 numpy>=1.24.0
 ta>=0.11.0
 websockets>=12.0
+pytrends>=4.9.0
