@@ -1,0 +1,1682 @@
+{
+  "icicibank": {
+    "3d/0.3%": {
+      "xgboost_v2": {
+        "accuracy": 0.6047,
+        "precision": 0.5702,
+        "recall": 0.6436,
+        "f1": 0.6047,
+        "auc": 0.612,
+        "train_time": 0.79
+      },
+      "lightgbm": {
+        "accuracy": 0.5953,
+        "precision": 0.5648,
+        "recall": 0.604,
+        "f1": 0.5837,
+        "auc": 0.6153,
+        "train_time": 3.31
+      },
+      "random_forest": {
+        "accuracy": 0.5767,
+        "precision": 0.5472,
+        "recall": 0.5743,
+        "f1": 0.5604,
+        "auc": 0.5914,
+        "train_time": 1.39
+      },
+      "extra_trees": {
+        "accuracy": 0.5302,
+        "precision": 0.5,
+        "recall": 0.5842,
+        "f1": 0.5388,
+        "auc": 0.5872,
+        "train_time": 0.88
+      },
+      "gradient_boosting": {
+        "accuracy": 0.586,
+        "precision": 0.5769,
+        "recall": 0.4455,
+        "f1": 0.5028,
+        "auc": 0.6005,
+        "train_time": 0.53
+      },
+      "adaboost": {
+        "accuracy": 0.4698,
+        "precision": 0.4698,
+        "recall": 1.0,
+        "f1": 0.6392,
+        "auc": 0.5589,
+        "train_time": 0.92
+      },
+      "lgb_xgb_blend": {
+        "accuracy": 0.6186,
+        "precision": 0.5856,
+        "recall": 0.6436,
+        "f1": 0.6132,
+        "auc": 0.6198,
+        "train_time": 0.0
+      },
+      "top3_stack": {
+        "accuracy": 0.4698,
+        "precision": 0.4698,
+        "recall": 1.0,
+        "f1": 0.6392,
+        "auc": 0.6153,
+        "train_time": 47.09
+      },
+      "weighted_ensemble": {
+        "accuracy": 0.6186,
+        "precision": 0.5856,
+        "recall": 0.6436,
+        "f1": 0.6132,
+        "auc": 0.6223,
+        "train_time": 0.0
+      },
+      "cascading_rf_lgb": {
+        "accuracy": 0.5953,
+        "precision": 0.5648,
+        "recall": 0.604,
+        "f1": 0.5837,
+        "auc": 0.6177,
+        "train_time": 0.0
+      }
+    },
+    "5d/0.3%": {
+      "xgboost_v2": {
+        "accuracy": 0.6222,
+        "precision": 0.5652,
+        "recall": 0.65,
+        "f1": 0.6047,
+        "auc": 0.6645,
+        "train_time": 1.9
+      },
+      "lightgbm": {
+        "accuracy": 0.5822,
+        "precision": 0.5227,
+        "recall": 0.69,
+        "f1": 0.5948,
+        "auc": 0.6138,
+        "train_time": 2.54
+      },
+      "random_forest": {
+        "accuracy": 0.6178,
+        "precision": 0.5761,
+        "recall": 0.53,
+        "f1": 0.5521,
+        "auc": 0.6367,
+        "train_time": 2.46
+      },
+      "extra_trees": {
+        "accuracy": 0.5556,
+        "precision": 0.5,
+        "recall": 0.45,
+        "f1": 0.4737,
+        "auc": 0.5837,
+        "train_time": 1.65
+      },
+      "gradient_boosting": {
+        "accuracy": 0.6311,
+        "precision": 0.6049,
+        "recall": 0.49,
+        "f1": 0.5414,
+        "auc": 0.619,
+        "train_time": 0.92
+      },
+      "adaboost": {
+        "accuracy": 0.4578,
+        "precision": 0.4439,
+        "recall": 0.87,
+        "f1": 0.5878,
+        "auc": 0.5585,
+        "train_time": 1.31
+      },
+      "lgb_xgb_blend": {
+        "accuracy": 0.6089,
+        "precision": 0.5484,
+        "recall": 0.68,
+        "f1": 0.6071,
+        "auc": 0.6485,
+        "train_time": 0.0
+      },
+      "top3_stack": {
+        "accuracy": 0.4889,
+        "precision": 0.4615,
+        "recall": 0.9,
+        "f1": 0.6102,
+        "auc": 0.6317,
+        "train_time": 36.88
+      },
+      "weighted_ensemble": {
+        "accuracy": 0.6578,
+        "precision": 0.6095,
+        "recall": 0.64,
+        "f1": 0.6244,
+        "auc": 0.6489,
+        "train_time": 0.0
+      },
+      "cascading_rf_lgb": {
+        "accuracy": 0.5822,
+        "precision": 0.5231,
+        "recall": 0.68,
+        "f1": 0.5913,
+        "auc": 0.6112,
+        "train_time": 0.0
+      }
+    },
+    "5d/0.5%": {
+      "xgboost_v2": {
+        "accuracy": 0.6202,
+        "precision": 0.5806,
+        "recall": 0.5745,
+        "f1": 0.5775,
+        "auc": 0.6524,
+        "train_time": 1.21
+      },
+      "lightgbm": {
+        "accuracy": 0.625,
+        "precision": 0.5656,
+        "recall": 0.734,
+        "f1": 0.6389,
+        "auc": 0.6192,
+        "train_time": 1.04
+      },
+      "random_forest": {
+        "accuracy": 0.6058,
+        "precision": 0.5625,
+        "recall": 0.5745,
+        "f1": 0.5684,
+        "auc": 0.6132,
+        "train_time": 1.92
+      },
+      "extra_trees": {
+        "accuracy": 0.5625,
+        "precision": 0.5238,
+        "recall": 0.3511,
+        "f1": 0.4204,
+        "auc": 0.5804,
+        "train_time": 1.16
+      },
+      "gradient_boosting": {
+        "accuracy": 0.6058,
+        "precision": 0.5968,
+        "recall": 0.3936,
+        "f1": 0.4744,
+        "auc": 0.5802,
+        "train_time": 0.63
+      },
+      "adaboost": {
+        "accuracy": 0.4663,
+        "precision": 0.453,
+        "recall": 0.8723,
+        "f1": 0.5964,
+        "auc": 0.5598,
+        "train_time": 1.27
+      },
+      "lgb_xgb_blend": {
+        "accuracy": 0.649,
+        "precision": 0.5929,
+        "recall": 0.7128,
+        "f1": 0.6473,
+        "auc": 0.6428,
+        "train_time": 0.0
+      },
+      "top3_stack": {
+        "accuracy": 0.4615,
+        "precision": 0.4545,
+        "recall": 0.9574,
+        "f1": 0.6164,
+        "auc": 0.6471,
+        "train_time": 18.42
+      },
+      "weighted_ensemble": {
+        "accuracy": 0.6442,
+        "precision": 0.6087,
+        "recall": 0.5957,
+        "f1": 0.6022,
+        "auc": 0.6294,
+        "train_time": 0.0
+      },
+      "cascading_rf_lgb": {
+        "accuracy": 0.625,
+        "precision": 0.5656,
+        "recall": 0.734,
+        "f1": 0.6389,
+        "auc": 0.6136,
+        "train_time": 0.0
+      }
+    },
+    "10d/0.5%": {
+      "xgboost_v2": {
+        "accuracy": 0.6167,
+        "precision": 0.5854,
+        "recall": 0.6667,
+        "f1": 0.6234,
+        "auc": 0.6139,
+        "train_time": 0.24
+      },
+      "lightgbm": {
+        "accuracy": 0.5683,
+        "precision": 0.5403,
+        "recall": 0.6204,
+        "f1": 0.5776,
+        "auc": 0.5891,
+        "train_time": 1.18
+      },
+      "random_forest": {
+        "accuracy": 0.5991,
+        "precision": 0.5752,
+        "recall": 0.6019,
+        "f1": 0.5882,
+        "auc": 0.6215,
+        "train_time": 2.27
+      },
+      "extra_trees": {
+        "accuracy": 0.5947,
+        "precision": 0.593,
+        "recall": 0.4722,
+        "f1": 0.5258,
+        "auc": 0.5972,
+        "train_time": 1.37
+      },
+      "gradient_boosting": {
+        "accuracy": 0.5639,
+        "precision": 0.5542,
+        "recall": 0.4259,
+        "f1": 0.4817,
+        "auc": 0.5775,
+        "train_time": 0.71
+      },
+      "adaboost": {
+        "accuracy": 0.4846,
+        "precision": 0.48,
+        "recall": 1.0,
+        "f1": 0.6486,
+        "auc": 0.565,
+        "train_time": 1.52
+      },
+      "lgb_xgb_blend": {
+        "accuracy": 0.6035,
+        "precision": 0.5703,
+        "recall": 0.6759,
+        "f1": 0.6186,
+        "auc": 0.6041,
+        "train_time": 0.0
+      },
+      "top3_stack": {
+        "accuracy": 0.489,
+        "precision": 0.4815,
+        "recall": 0.963,
+        "f1": 0.642,
+        "auc": 0.5463,
+        "train_time": 16.7
+      },
+      "weighted_ensemble": {
+        "accuracy": 0.6211,
+        "precision": 0.6019,
+        "recall": 0.6019,
+        "f1": 0.6019,
+        "auc": 0.6111,
+        "train_time": 0.0
+      },
+      "cascading_rf_lgb": {
+        "accuracy": 0.5815,
+        "precision": 0.5537,
+        "recall": 0.6204,
+        "f1": 0.5852,
+        "auc": 0.5903,
+        "train_time": 0.0
+      }
+    },
+    "3d/0.2%": {
+      "xgboost_v2": {
+        "accuracy": 0.5284,
+        "precision": 0.5111,
+        "recall": 0.6216,
+        "f1": 0.561,
+        "auc": 0.5551,
+        "train_time": 0.8
+      },
+      "lightgbm": {
+        "accuracy": 0.5153,
+        "precision": 0.5,
+        "recall": 0.6486,
+        "f1": 0.5647,
+        "auc": 0.5676,
+        "train_time": 0.82
+      },
+      "random_forest": {
+        "accuracy": 0.5197,
+        "precision": 0.5036,
+        "recall": 0.6306,
+        "f1": 0.56,
+        "auc": 0.5446,
+        "train_time": 1.46
+      },
+      "extra_trees": {
+        "accuracy": 0.5415,
+        "precision": 0.5211,
+        "recall": 0.6667,
+        "f1": 0.585,
+        "auc": 0.5596,
+        "train_time": 0.91
+      },
+      "gradient_boosting": {
+        "accuracy": 0.5459,
+        "precision": 0.528,
+        "recall": 0.5946,
+        "f1": 0.5593,
+        "auc": 0.5627,
+        "train_time": 0.53
+      },
+      "adaboost": {
+        "accuracy": 0.4891,
+        "precision": 0.485,
+        "recall": 0.8739,
+        "f1": 0.6238,
+        "auc": 0.5423,
+        "train_time": 0.96
+      },
+      "lgb_xgb_blend": {
+        "accuracy": 0.5371,
+        "precision": 0.5185,
+        "recall": 0.6306,
+        "f1": 0.5691,
+        "auc": 0.5625,
+        "train_time": 0.0
+      },
+      "top3_stack": {
+        "accuracy": 0.4847,
+        "precision": 0.4847,
+        "recall": 1.0,
+        "f1": 0.6529,
+        "auc": 0.5158,
+        "train_time": 13.16
+      },
+      "weighted_ensemble": {
+        "accuracy": 0.5459,
+        "precision": 0.5255,
+        "recall": 0.6486,
+        "f1": 0.5806,
+        "auc": 0.5673,
+        "train_time": 0.0
+      },
+      "cascading_rf_lgb": {
+        "accuracy": 0.5153,
+        "precision": 0.5,
+        "recall": 0.6486,
+        "f1": 0.5647,
+        "auc": 0.5633,
+        "train_time": 0.0
+      }
+    },
+    "5d/0.2%": {
+      "xgboost_v2": {
+        "accuracy": 0.6309,
+        "precision": 0.5943,
+        "recall": 0.5943,
+        "f1": 0.5943,
+        "auc": 0.6345,
+        "train_time": 0.89
+      },
+      "lightgbm": {
+        "accuracy": 0.6137,
+        "precision": 0.5606,
+        "recall": 0.6981,
+        "f1": 0.6218,
+        "auc": 0.618,
+        "train_time": 0.93
+      },
+      "random_forest": {
+        "accuracy": 0.618,
+        "precision": 0.5842,
+        "recall": 0.5566,
+        "f1": 0.57,
+        "auc": 0.6156,
+        "train_time": 1.49
+      },
+      "extra_trees": {
+        "accuracy": 0.5536,
+        "precision": 0.5078,
+        "recall": 0.6132,
+        "f1": 0.5556,
+        "auc": 0.567,
+        "train_time": 1.09
+      },
+      "gradient_boosting": {
+        "accuracy": 0.618,
+        "precision": 0.5794,
+        "recall": 0.5849,
+        "f1": 0.5822,
+        "auc": 0.6137,
+        "train_time": 0.75
+      },
+      "adaboost": {
+        "accuracy": 0.4721,
+        "precision": 0.4577,
+        "recall": 0.8679,
+        "f1": 0.5993,
+        "auc": 0.5302,
+        "train_time": 1.3
+      },
+      "lgb_xgb_blend": {
+        "accuracy": 0.6266,
+        "precision": 0.5772,
+        "recall": 0.6698,
+        "f1": 0.6201,
+        "auc": 0.631,
+        "train_time": 0.0
+      },
+      "top3_stack": {
+        "accuracy": 0.4635,
+        "precision": 0.455,
+        "recall": 0.9057,
+        "f1": 0.6057,
+        "auc": 0.6238,
+        "train_time": 14.62
+      },
+      "weighted_ensemble": {
+        "accuracy": 0.6309,
+        "precision": 0.5877,
+        "recall": 0.6321,
+        "f1": 0.6091,
+        "auc": 0.6319,
+        "train_time": 0.0
+      },
+      "cascading_rf_lgb": {
+        "accuracy": 0.618,
+        "precision": 0.5649,
+        "recall": 0.6981,
+        "f1": 0.6245,
+        "auc": 0.6284,
+        "train_time": 0.0
+      }
+    },
+    "10d/1.0%": {
+      "xgboost_v2": {
+        "accuracy": 0.6337,
+        "precision": 0.6311,
+        "recall": 0.6436,
+        "f1": 0.6373,
+        "auc": 0.6468,
+        "train_time": 0.87
+      },
+      "lightgbm": {
+        "accuracy": 0.599,
+        "precision": 0.5806,
+        "recall": 0.7129,
+        "f1": 0.64,
+        "auc": 0.6141,
+        "train_time": 0.81
+      },
+      "random_forest": {
+        "accuracy": 0.6238,
+        "precision": 0.6087,
+        "recall": 0.6931,
+        "f1": 0.6481,
+        "auc": 0.6418,
+        "train_time": 1.37
+      },
+      "extra_trees": {
+        "accuracy": 0.6139,
+        "precision": 0.6117,
+        "recall": 0.6238,
+        "f1": 0.6176,
+        "auc": 0.6087,
+        "train_time": 0.98
+      },
+      "gradient_boosting": {
+        "accuracy": 0.6535,
+        "precision": 0.6782,
+        "recall": 0.5842,
+        "f1": 0.6277,
+        "auc": 0.625,
+        "train_time": 0.66
+      },
+      "adaboost": {
+        "accuracy": 0.4703,
+        "precision": 0.4837,
+        "recall": 0.8812,
+        "f1": 0.6246,
+        "auc": 0.5852,
+        "train_time": 1.07
+      },
+      "lgb_xgb_blend": {
+        "accuracy": 0.6287,
+        "precision": 0.6161,
+        "recall": 0.6832,
+        "f1": 0.6479,
+        "auc": 0.636,
+        "train_time": 0.0
+      },
+      "top3_stack": {
+        "accuracy": 0.5,
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6667,
+        "auc": 0.641,
+        "train_time": 10.27
+      },
+      "weighted_ensemble": {
+        "accuracy": 0.6386,
+        "precision": 0.6321,
+        "recall": 0.6634,
+        "f1": 0.6473,
+        "auc": 0.6391,
+        "train_time": 0.0
+      },
+      "cascading_rf_lgb": {
+        "accuracy": 0.5941,
+        "precision": 0.5772,
+        "recall": 0.703,
+        "f1": 0.6339,
+        "auc": 0.6049,
+        "train_time": 0.0
+      }
+    }
+  },
+  "reliance": {
+    "3d/0.3%": {
+      "xgboost_v2": {
+        "accuracy": 0.4709,
+        "precision": 0.473,
+        "recall": 0.6364,
+        "f1": 0.5426,
+        "auc": 0.4709,
+        "train_time": 0.75
+      },
+      "lightgbm": {
+        "accuracy": 0.4664,
+        "precision": 0.4602,
+        "recall": 0.4727,
+        "f1": 0.4664,
+        "auc": 0.4684,
+        "train_time": 0.68
+      },
+      "random_forest": {
+        "accuracy": 0.4709,
+        "precision": 0.4718,
+        "recall": 0.6091,
+        "f1": 0.5317,
+        "auc": 0.5058,
+        "train_time": 1.38
+      },
+      "extra_trees": {
+        "accuracy": 0.5112,
+        "precision": 0.5038,
+        "recall": 0.6,
+        "f1": 0.5477,
+        "auc": 0.4973,
+        "train_time": 0.91
+      },
+      "gradient_boosting": {
+        "accuracy": 0.5067,
+        "precision": 0.5,
+        "recall": 0.6364,
+        "f1": 0.56,
+        "auc": 0.5124,
+        "train_time": 0.54
+      },
+      "adaboost": {
+        "accuracy": 0.5022,
+        "precision": 0.4977,
+        "recall": 1.0,
+        "f1": 0.6647,
+        "auc": 0.5101,
+        "train_time": 0.93
+      },
+      "lgb_xgb_blend": {
+        "accuracy": 0.4305,
+        "precision": 0.4388,
+        "recall": 0.5545,
+        "f1": 0.49,
+        "auc": 0.4713,
+        "train_time": 0.0
+      },
+      "top3_stack": {
+        "accuracy": 0.5067,
+        "precision": 0.5,
+        "recall": 0.5091,
+        "f1": 0.5045,
+        "auc": 0.4895,
+        "train_time": 10.67
+      },
+      "weighted_ensemble": {
+        "accuracy": 0.4933,
+        "precision": 0.4928,
+        "recall": 0.9364,
+        "f1": 0.6458,
+        "auc": 0.5105,
+        "train_time": 0.0
+      },
+      "cascading_rf_lgb": {
+        "accuracy": 0.4664,
+        "precision": 0.4602,
+        "recall": 0.4727,
+        "f1": 0.4664,
+        "auc": 0.4684,
+        "train_time": 0.0
+      }
+    },
+    "5d/0.3%": {
+      "xgboost_v2": {
+        "accuracy": 0.4914,
+        "precision": 0.5328,
+        "recall": 0.5748,
+        "f1": 0.553,
+        "auc": 0.4712,
+        "train_time": 1.0
+      },
+      "lightgbm": {
+        "accuracy": 0.5172,
+        "precision": 0.5455,
+        "recall": 0.7087,
+        "f1": 0.6164,
+        "auc": 0.4445,
+        "train_time": 0.81
+      },
+      "random_forest": {
+        "accuracy": 0.4741,
+        "precision": 0.5146,
+        "recall": 0.6929,
+        "f1": 0.5906,
+        "auc": 0.4818,
+        "train_time": 1.75
+      },
+      "extra_trees": {
+        "accuracy": 0.444,
+        "precision": 0.4878,
+        "recall": 0.315,
+        "f1": 0.3828,
+        "auc": 0.4805,
+        "train_time": 1.03
+      },
+      "gradient_boosting": {
+        "accuracy": 0.4871,
+        "precision": 0.5247,
+        "recall": 0.6693,
+        "f1": 0.5882,
+        "auc": 0.459,
+        "train_time": 0.7
+      },
+      "adaboost": {
+        "accuracy": 0.5474,
+        "precision": 0.5474,
+        "recall": 1.0,
+        "f1": 0.7075,
+        "auc": 0.4098,
+        "train_time": 1.08
+      },
+      "lgb_xgb_blend": {
+        "accuracy": 0.4914,
+        "precision": 0.5298,
+        "recall": 0.6299,
+        "f1": 0.5755,
+        "auc": 0.4552,
+        "train_time": 0.0
+      },
+      "top3_stack": {
+        "accuracy": 0.5388,
+        "precision": 0.5463,
+        "recall": 0.9291,
+        "f1": 0.688,
+        "auc": 0.5022,
+        "train_time": 12.75
+      },
+      "cascading_rf_lgb": {
+        "accuracy": 0.5172,
+        "precision": 0.5455,
+        "recall": 0.7087,
+        "f1": 0.6164,
+        "auc": 0.4446,
+        "train_time": 0.0
+      }
+    },
+    "5d/0.5%": {
+      "xgboost_v2": {
+        "accuracy": 0.455,
+        "precision": 0.4901,
+        "recall": 0.6271,
+        "f1": 0.5502,
+        "auc": 0.4445,
+        "train_time": 1.24
+      },
+      "lightgbm": {
+        "accuracy": 0.482,
+        "precision": 0.5085,
+        "recall": 0.7627,
+        "f1": 0.6102,
+        "auc": 0.443,
+        "train_time": 1.06
+      },
+      "random_forest": {
+        "accuracy": 0.455,
+        "precision": 0.4915,
+        "recall": 0.7373,
+        "f1": 0.5898,
+        "auc": 0.4804,
+        "train_time": 2.43
+      },
+      "extra_trees": {
+        "accuracy": 0.5135,
+        "precision": 0.5417,
+        "recall": 0.5508,
+        "f1": 0.5462,
+        "auc": 0.489,
+        "train_time": 1.49
+      },
+      "gradient_boosting": {
+        "accuracy": 0.5,
+        "precision": 0.521,
+        "recall": 0.7373,
+        "f1": 0.6105,
+        "auc": 0.45,
+        "train_time": 1.02
+      },
+      "adaboost": {
+        "accuracy": 0.5315,
+        "precision": 0.5315,
+        "recall": 1.0,
+        "f1": 0.6941,
+        "auc": 0.404,
+        "train_time": 1.38
+      },
+      "lgb_xgb_blend": {
+        "accuracy": 0.5,
+        "precision": 0.521,
+        "recall": 0.7373,
+        "f1": 0.6105,
+        "auc": 0.4379,
+        "train_time": 0.0
+      },
+      "top3_stack": {
+        "accuracy": 0.5045,
+        "precision": 0.5202,
+        "recall": 0.8729,
+        "f1": 0.6519,
+        "auc": 0.5179,
+        "train_time": 16.97
+      },
+      "cascading_rf_lgb": {
+        "accuracy": 0.482,
+        "precision": 0.5085,
+        "recall": 0.7627,
+        "f1": 0.6102,
+        "auc": 0.443,
+        "train_time": 0.0
+      }
+    },
+    "10d/0.5%": {
+      "xgboost_v2": {
+        "accuracy": 0.4286,
+        "precision": 0.4444,
+        "recall": 0.2927,
+        "f1": 0.3529,
+        "auc": 0.4504,
+        "train_time": 1.53
+      },
+      "lightgbm": {
+        "accuracy": 0.5411,
+        "precision": 0.7073,
+        "recall": 0.2358,
+        "f1": 0.3537,
+        "auc": 0.4891,
+        "train_time": 1.64
+      },
+      "random_forest": {
+        "accuracy": 0.4892,
+        "precision": 0.5161,
+        "recall": 0.6504,
+        "f1": 0.5755,
+        "auc": 0.4311,
+        "train_time": 2.76
+      },
+      "extra_trees": {
+        "accuracy": 0.4113,
+        "precision": 0.4356,
+        "recall": 0.3577,
+        "f1": 0.3929,
+        "auc": 0.4,
+        "train_time": 2.02
+      },
+      "gradient_boosting": {
+        "accuracy": 0.5281,
+        "precision": 0.5376,
+        "recall": 0.813,
+        "f1": 0.6472,
+        "auc": 0.4956,
+        "train_time": 1.66
+      },
+      "adaboost": {
+        "accuracy": 0.5325,
+        "precision": 0.5325,
+        "recall": 1.0,
+        "f1": 0.6949,
+        "auc": 0.4925,
+        "train_time": 2.35
+      },
+      "lgb_xgb_blend": {
+        "accuracy": 0.4762,
+        "precision": 0.5161,
+        "recall": 0.2602,
+        "f1": 0.3459,
+        "auc": 0.4677,
+        "train_time": 0.0
+      },
+      "top3_stack": {
+        "accuracy": 0.4675,
+        "precision": 0.5,
+        "recall": 0.6829,
+        "f1": 0.5773,
+        "auc": 0.5259,
+        "train_time": 27.21
+      },
+      "cascading_rf_lgb": {
+        "accuracy": 0.5411,
+        "precision": 0.7073,
+        "recall": 0.2358,
+        "f1": 0.3537,
+        "auc": 0.4989,
+        "train_time": 0.0
+      }
+    },
+    "3d/0.2%": {
+      "xgboost_v2": {
+        "accuracy": 0.4678,
+        "precision": 0.4679,
+        "recall": 0.6404,
+        "f1": 0.5407,
+        "auc": 0.4903,
+        "train_time": 1.07
+      },
+      "lightgbm": {
+        "accuracy": 0.4506,
+        "precision": 0.4485,
+        "recall": 0.5351,
+        "f1": 0.488,
+        "auc": 0.5114,
+        "train_time": 2.0
+      },
+      "random_forest": {
+        "accuracy": 0.5193,
+        "precision": 0.5054,
+        "recall": 0.8158,
+        "f1": 0.6242,
+        "auc": 0.517,
+        "train_time": 2.59
+      },
+      "extra_trees": {
+        "accuracy": 0.4893,
+        "precision": 0.4812,
+        "recall": 0.5614,
+        "f1": 0.5182,
+        "auc": 0.5305,
+        "train_time": 1.68
+      },
+      "gradient_boosting": {
+        "accuracy": 0.4764,
+        "precision": 0.4753,
+        "recall": 0.6754,
+        "f1": 0.558,
+        "auc": 0.5015,
+        "train_time": 0.93
+      },
+      "adaboost": {
+        "accuracy": 0.4893,
+        "precision": 0.4884,
+        "recall": 0.9211,
+        "f1": 0.6383,
+        "auc": 0.581,
+        "train_time": 1.37
+      },
+      "lgb_xgb_blend": {
+        "accuracy": 0.4807,
+        "precision": 0.4768,
+        "recall": 0.6316,
+        "f1": 0.5434,
+        "auc": 0.4954,
+        "train_time": 0.0
+      },
+      "top3_stack": {
+        "accuracy": 0.5193,
+        "precision": 0.5072,
+        "recall": 0.614,
+        "f1": 0.5556,
+        "auc": 0.4687,
+        "train_time": 16.9
+      },
+      "weighted_ensemble": {
+        "accuracy": 0.5021,
+        "precision": 0.4951,
+        "recall": 0.8947,
+        "f1": 0.6375,
+        "auc": 0.5264,
+        "train_time": 0.0
+      },
+      "cascading_rf_lgb": {
+        "accuracy": 0.4506,
+        "precision": 0.4485,
+        "recall": 0.5351,
+        "f1": 0.488,
+        "auc": 0.5114,
+        "train_time": 0.0
+      }
+    },
+    "5d/0.2%": {
+      "xgboost_v2": {
+        "accuracy": 0.5146,
+        "precision": 0.5625,
+        "recall": 0.5455,
+        "f1": 0.5538,
+        "auc": 0.5236,
+        "train_time": 1.72
+      },
+      "lightgbm": {
+        "accuracy": 0.5188,
+        "precision": 0.5509,
+        "recall": 0.697,
+        "f1": 0.6154,
+        "auc": 0.4414,
+        "train_time": 3.17
+      },
+      "random_forest": {
+        "accuracy": 0.4895,
+        "precision": 0.5298,
+        "recall": 0.6742,
+        "f1": 0.5933,
+        "auc": 0.4884,
+        "train_time": 2.53
+      },
+      "extra_trees": {
+        "accuracy": 0.5063,
+        "precision": 0.5614,
+        "recall": 0.4848,
+        "f1": 0.5203,
+        "auc": 0.507,
+        "train_time": 1.96
+      },
+      "gradient_boosting": {
+        "accuracy": 0.4812,
+        "precision": 0.5253,
+        "recall": 0.6288,
+        "f1": 0.5724,
+        "auc": 0.4804,
+        "train_time": 1.56
+      },
+      "adaboost": {
+        "accuracy": 0.5523,
+        "precision": 0.5523,
+        "recall": 1.0,
+        "f1": 0.7116,
+        "auc": 0.45,
+        "train_time": 3.19
+      },
+      "lgb_xgb_blend": {
+        "accuracy": 0.5272,
+        "precision": 0.5646,
+        "recall": 0.6288,
+        "f1": 0.595,
+        "auc": 0.4845,
+        "train_time": 0.0
+      },
+      "top3_stack": {
+        "accuracy": 0.5481,
+        "precision": 0.5541,
+        "recall": 0.9318,
+        "f1": 0.6949,
+        "auc": 0.4982,
+        "train_time": 16.7
+      },
+      "weighted_ensemble": {
+        "accuracy": 0.5397,
+        "precision": 0.5873,
+        "recall": 0.5606,
+        "f1": 0.5736,
+        "auc": 0.5229,
+        "train_time": 0.0
+      },
+      "cascading_rf_lgb": {
+        "accuracy": 0.5188,
+        "precision": 0.5509,
+        "recall": 0.697,
+        "f1": 0.6154,
+        "auc": 0.4414,
+        "train_time": 0.0
+      }
+    },
+    "10d/1.0%": {
+      "xgboost_v2": {
+        "accuracy": 0.4115,
+        "precision": 0.3714,
+        "recall": 0.114,
+        "f1": 0.1745,
+        "auc": 0.4189,
+        "train_time": 2.59
+      },
+      "lightgbm": {
+        "accuracy": 0.4928,
+        "precision": 0.7,
+        "recall": 0.1228,
+        "f1": 0.209,
+        "auc": 0.5164,
+        "train_time": 1.93
+      },
+      "random_forest": {
+        "accuracy": 0.5024,
+        "precision": 0.5391,
+        "recall": 0.6053,
+        "f1": 0.5702,
+        "auc": 0.4635,
+        "train_time": 2.53
+      },
+      "extra_trees": {
+        "accuracy": 0.4019,
+        "precision": 0.3878,
+        "recall": 0.1667,
+        "f1": 0.2331,
+        "auc": 0.3902,
+        "train_time": 2.13
+      },
+      "gradient_boosting": {
+        "accuracy": 0.4928,
+        "precision": 0.5323,
+        "recall": 0.5789,
+        "f1": 0.5546,
+        "auc": 0.4974,
+        "train_time": 1.91
+      },
+      "adaboost": {
+        "accuracy": 0.5455,
+        "precision": 0.5455,
+        "recall": 1.0,
+        "f1": 0.7059,
+        "auc": 0.4893,
+        "train_time": 2.09
+      },
+      "lgb_xgb_blend": {
+        "accuracy": 0.4593,
+        "precision": 0.5238,
+        "recall": 0.0965,
+        "f1": 0.163,
+        "auc": 0.4544,
+        "train_time": 0.0
+      },
+      "top3_stack": {
+        "accuracy": 0.4928,
+        "precision": 0.5247,
+        "recall": 0.7456,
+        "f1": 0.6159,
+        "auc": 0.5223,
+        "train_time": 37.75
+      },
+      "cascading_rf_lgb": {
+        "accuracy": 0.4928,
+        "precision": 0.7,
+        "recall": 0.1228,
+        "f1": 0.209,
+        "auc": 0.5247,
+        "train_time": 0.0
+      }
+    }
+  },
+  "sbin": {
+    "3d/0.3%": {
+      "xgboost_v2": {
+        "accuracy": 0.444,
+        "precision": 0.6,
+        "recall": 0.169,
+        "f1": 0.2637,
+        "auc": 0.5031,
+        "train_time": 4.99
+      },
+      "lightgbm": {
+        "accuracy": 0.4315,
+        "precision": 0.5676,
+        "recall": 0.1479,
+        "f1": 0.2346,
+        "auc": 0.4772,
+        "train_time": 2.72
+      },
+      "random_forest": {
+        "accuracy": 0.4108,
+        "precision": 0.5,
+        "recall": 0.1408,
+        "f1": 0.2198,
+        "auc": 0.4888,
+        "train_time": 2.81
+      },
+      "extra_trees": {
+        "accuracy": 0.4398,
+        "precision": 0.6061,
+        "recall": 0.1408,
+        "f1": 0.2286,
+        "auc": 0.5211,
+        "train_time": 1.95
+      },
+      "gradient_boosting": {
+        "accuracy": 0.4232,
+        "precision": 0.5349,
+        "recall": 0.162,
+        "f1": 0.2486,
+        "auc": 0.4967,
+        "train_time": 1.69
+      },
+      "adaboost": {
+        "accuracy": 0.5519,
+        "precision": 0.6133,
+        "recall": 0.6479,
+        "f1": 0.6301,
+        "auc": 0.5179,
+        "train_time": 2.43
+      },
+      "lgb_xgb_blend": {
+        "accuracy": 0.444,
+        "precision": 0.6111,
+        "recall": 0.1549,
+        "f1": 0.2472,
+        "auc": 0.4853,
+        "train_time": 0.0
+      },
+      "top3_stack": {
+        "accuracy": 0.5892,
+        "precision": 0.5892,
+        "recall": 1.0,
+        "f1": 0.7415,
+        "auc": 0.4778,
+        "train_time": 13.8
+      },
+      "weighted_ensemble": {
+        "accuracy": 0.5145,
+        "precision": 0.6033,
+        "recall": 0.5141,
+        "f1": 0.5551,
+        "auc": 0.5184,
+        "train_time": 0.0
+      },
+      "cascading_rf_lgb": {
+        "accuracy": 0.4315,
+        "precision": 0.5676,
+        "recall": 0.1479,
+        "f1": 0.2346,
+        "auc": 0.5114,
+        "train_time": 0.0
+      }
+    },
+    "5d/0.3%": {
+      "xgboost_v2": {
+        "accuracy": 0.378,
+        "precision": 0.5455,
+        "recall": 0.1529,
+        "f1": 0.2388,
+        "auc": 0.4854,
+        "train_time": 1.91
+      },
+      "lightgbm": {
+        "accuracy": 0.435,
+        "precision": 0.68,
+        "recall": 0.2166,
+        "f1": 0.3285,
+        "auc": 0.4902,
+        "train_time": 3.47
+      },
+      "random_forest": {
+        "accuracy": 0.3902,
+        "precision": 0.6061,
+        "recall": 0.1274,
+        "f1": 0.2105,
+        "auc": 0.4933,
+        "train_time": 2.95
+      },
+      "extra_trees": {
+        "accuracy": 0.4431,
+        "precision": 0.6429,
+        "recall": 0.2866,
+        "f1": 0.3965,
+        "auc": 0.497,
+        "train_time": 2.25
+      },
+      "gradient_boosting": {
+        "accuracy": 0.4431,
+        "precision": 0.6667,
+        "recall": 0.2548,
+        "f1": 0.3687,
+        "auc": 0.4724,
+        "train_time": 1.81
+      },
+      "adaboost": {
+        "accuracy": 0.6341,
+        "precision": 0.6367,
+        "recall": 0.9936,
+        "f1": 0.7761,
+        "auc": 0.4867,
+        "train_time": 3.22
+      },
+      "lgb_xgb_blend": {
+        "accuracy": 0.3984,
+        "precision": 0.6154,
+        "recall": 0.1529,
+        "f1": 0.2449,
+        "auc": 0.4882,
+        "train_time": 0.0
+      },
+      "top3_stack": {
+        "accuracy": 0.6382,
+        "precision": 0.6382,
+        "recall": 1.0,
+        "f1": 0.7792,
+        "auc": 0.4877,
+        "train_time": 52.45
+      },
+      "cascading_rf_lgb": {
+        "accuracy": 0.4309,
+        "precision": 0.6889,
+        "recall": 0.1975,
+        "f1": 0.3069,
+        "auc": 0.4932,
+        "train_time": 0.0
+      }
+    },
+    "5d/0.5%": {
+      "xgboost_v2": {
+        "accuracy": 0.3922,
+        "precision": 0.5946,
+        "recall": 0.1486,
+        "f1": 0.2378,
+        "auc": 0.4693,
+        "train_time": 1.13
+      },
+      "lightgbm": {
+        "accuracy": 0.4569,
+        "precision": 0.75,
+        "recall": 0.223,
+        "f1": 0.3438,
+        "auc": 0.5232,
+        "train_time": 1.37
+      },
+      "random_forest": {
+        "accuracy": 0.4009,
+        "precision": 0.6552,
+        "recall": 0.1284,
+        "f1": 0.2147,
+        "auc": 0.4932,
+        "train_time": 2.57
+      },
+      "extra_trees": {
+        "accuracy": 0.4009,
+        "precision": 0.6,
+        "recall": 0.1824,
+        "f1": 0.2798,
+        "auc": 0.4853,
+        "train_time": 2.18
+      },
+      "gradient_boosting": {
+        "accuracy": 0.4353,
+        "precision": 0.6667,
+        "recall": 0.2297,
+        "f1": 0.3417,
+        "auc": 0.5028,
+        "train_time": 1.48
+      },
+      "adaboost": {
+        "accuracy": 0.6336,
+        "precision": 0.6364,
+        "recall": 0.9932,
+        "f1": 0.7757,
+        "auc": 0.4814,
+        "train_time": 2.53
+      },
+      "lgb_xgb_blend": {
+        "accuracy": 0.431,
+        "precision": 0.7857,
+        "recall": 0.1486,
+        "f1": 0.25,
+        "auc": 0.5043,
+        "train_time": 0.0
+      },
+      "top3_stack": {
+        "accuracy": 0.6379,
+        "precision": 0.6379,
+        "recall": 1.0,
+        "f1": 0.7789,
+        "auc": 0.5006,
+        "train_time": 176.55
+      },
+      "weighted_ensemble": {
+        "accuracy": 0.4483,
+        "precision": 0.7381,
+        "recall": 0.2095,
+        "f1": 0.3263,
+        "auc": 0.5035,
+        "train_time": 0.0
+      },
+      "cascading_rf_lgb": {
+        "accuracy": 0.4569,
+        "precision": 0.75,
+        "recall": 0.223,
+        "f1": 0.3438,
+        "auc": 0.5251,
+        "train_time": 0.0
+      }
+    },
+    "10d/0.5%": {
+      "xgboost_v2": {
+        "accuracy": 0.3936,
+        "precision": 0.6364,
+        "recall": 0.2108,
+        "f1": 0.3167,
+        "auc": 0.5325,
+        "train_time": 3.35
+      },
+      "lightgbm": {
+        "accuracy": 0.4177,
+        "precision": 0.6667,
+        "recall": 0.253,
+        "f1": 0.3668,
+        "auc": 0.5505,
+        "train_time": 2.62
+      },
+      "random_forest": {
+        "accuracy": 0.5382,
+        "precision": 0.7525,
+        "recall": 0.4578,
+        "f1": 0.5693,
+        "auc": 0.5578,
+        "train_time": 2.68
+      },
+      "extra_trees": {
+        "accuracy": 0.5382,
+        "precision": 0.7429,
+        "recall": 0.4699,
+        "f1": 0.5756,
+        "auc": 0.5147,
+        "train_time": 2.38
+      },
+      "gradient_boosting": {
+        "accuracy": 0.5823,
+        "precision": 0.7279,
+        "recall": 0.5964,
+        "f1": 0.6556,
+        "auc": 0.5774,
+        "train_time": 2.68
+      },
+      "adaboost": {
+        "accuracy": 0.6185,
+        "precision": 0.6715,
+        "recall": 0.8373,
+        "f1": 0.7453,
+        "auc": 0.5879,
+        "train_time": 3.44
+      },
+      "lgb_xgb_blend": {
+        "accuracy": 0.3976,
+        "precision": 0.6379,
+        "recall": 0.2229,
+        "f1": 0.3304,
+        "auc": 0.5474,
+        "train_time": 0.0
+      },
+      "top3_stack": {
+        "accuracy": 0.6586,
+        "precision": 0.664,
+        "recall": 0.988,
+        "f1": 0.7942,
+        "auc": 0.5956,
+        "train_time": 19.59
+      },
+      "weighted_ensemble": {
+        "accuracy": 0.5622,
+        "precision": 0.7478,
+        "recall": 0.5181,
+        "f1": 0.6121,
+        "auc": 0.5703,
+        "train_time": 0.0
+      },
+      "cascading_rf_lgb": {
+        "accuracy": 0.4137,
+        "precision": 0.6613,
+        "recall": 0.247,
+        "f1": 0.3596,
+        "auc": 0.5532,
+        "train_time": 0.0
+      }
+    },
+    "3d/0.2%": {
+      "xgboost_v2": {
+        "accuracy": 0.4223,
+        "precision": 0.5641,
+        "recall": 0.1467,
+        "f1": 0.2328,
+        "auc": 0.4587,
+        "train_time": 3.62
+      },
+      "lightgbm": {
+        "accuracy": 0.3984,
+        "precision": 0.4839,
+        "recall": 0.1,
+        "f1": 0.1657,
+        "auc": 0.4599,
+        "train_time": 13.8
+      },
+      "random_forest": {
+        "accuracy": 0.3984,
+        "precision": 0.4894,
+        "recall": 0.1533,
+        "f1": 0.2335,
+        "auc": 0.4674,
+        "train_time": 2.65
+      },
+      "extra_trees": {
+        "accuracy": 0.4263,
+        "precision": 0.5682,
+        "recall": 0.1667,
+        "f1": 0.2577,
+        "auc": 0.4988,
+        "train_time": 2.18
+      },
+      "gradient_boosting": {
+        "accuracy": 0.4143,
+        "precision": 0.5319,
+        "recall": 0.1667,
+        "f1": 0.2538,
+        "auc": 0.4797,
+        "train_time": 2.0
+      },
+      "adaboost": {
+        "accuracy": 0.5259,
+        "precision": 0.6054,
+        "recall": 0.5933,
+        "f1": 0.5993,
+        "auc": 0.507,
+        "train_time": 3.36
+      },
+      "lgb_xgb_blend": {
+        "accuracy": 0.3984,
+        "precision": 0.4857,
+        "recall": 0.1133,
+        "f1": 0.1838,
+        "auc": 0.4597,
+        "train_time": 0.0
+      },
+      "top3_stack": {
+        "accuracy": 0.5976,
+        "precision": 0.5976,
+        "recall": 1.0,
+        "f1": 0.7481,
+        "auc": 0.5075,
+        "train_time": 16.8
+      },
+      "cascading_rf_lgb": {
+        "accuracy": 0.3984,
+        "precision": 0.4839,
+        "recall": 0.1,
+        "f1": 0.1657,
+        "auc": 0.4693,
+        "train_time": 0.0
+      }
+    },
+    "5d/0.2%": {
+      "xgboost_v2": {
+        "accuracy": 0.4016,
+        "precision": 0.5714,
+        "recall": 0.2,
+        "f1": 0.2963,
+        "auc": 0.4469,
+        "train_time": 13.14
+      },
+      "lightgbm": {
+        "accuracy": 0.5079,
+        "precision": 0.7465,
+        "recall": 0.3312,
+        "f1": 0.4589,
+        "auc": 0.5315,
+        "train_time": 6.88
+      },
+      "random_forest": {
+        "accuracy": 0.4016,
+        "precision": 0.5909,
+        "recall": 0.1625,
+        "f1": 0.2549,
+        "auc": 0.4557,
+        "train_time": 3.21
+      },
+      "extra_trees": {
+        "accuracy": 0.4488,
+        "precision": 0.6471,
+        "recall": 0.275,
+        "f1": 0.386,
+        "auc": 0.4828,
+        "train_time": 2.53
+      },
+      "gradient_boosting": {
+        "accuracy": 0.4724,
+        "precision": 0.697,
+        "recall": 0.2875,
+        "f1": 0.4071,
+        "auc": 0.5319,
+        "train_time": 2.24
+      },
+      "adaboost": {
+        "accuracy": 0.6181,
+        "precision": 0.6307,
+        "recall": 0.95,
+        "f1": 0.7581,
+        "auc": 0.4922,
+        "train_time": 2.65
+      },
+      "lgb_xgb_blend": {
+        "accuracy": 0.4567,
+        "precision": 0.6897,
+        "recall": 0.25,
+        "f1": 0.367,
+        "auc": 0.4917,
+        "train_time": 0.0
+      },
+      "top3_stack": {
+        "accuracy": 0.6299,
+        "precision": 0.6299,
+        "recall": 1.0,
+        "f1": 0.7729,
+        "auc": 0.4801,
+        "train_time": 83.3
+      },
+      "weighted_ensemble": {
+        "accuracy": 0.4921,
+        "precision": 0.746,
+        "recall": 0.2938,
+        "f1": 0.4215,
+        "auc": 0.534,
+        "train_time": 0.0
+      },
+      "cascading_rf_lgb": {
+        "accuracy": 0.4961,
+        "precision": 0.7581,
+        "recall": 0.2938,
+        "f1": 0.4234,
+        "auc": 0.5311,
+        "train_time": 0.0
+      }
+    },
+    "10d/1.0%": {
+      "xgboost_v2": {
+        "accuracy": 0.3789,
+        "precision": 0.619,
+        "recall": 0.25,
+        "f1": 0.3562,
+        "auc": 0.5206,
+        "train_time": 1.53
+      },
+      "lightgbm": {
+        "accuracy": 0.4009,
+        "precision": 0.6562,
+        "recall": 0.2692,
+        "f1": 0.3818,
+        "auc": 0.4991,
+        "train_time": 2.07
+      },
+      "random_forest": {
+        "accuracy": 0.467,
+        "precision": 0.7108,
+        "recall": 0.3782,
+        "f1": 0.4937,
+        "auc": 0.5026,
+        "train_time": 1.94
+      },
+      "extra_trees": {
+        "accuracy": 0.4449,
+        "precision": 0.7273,
+        "recall": 0.3077,
+        "f1": 0.4324,
+        "auc": 0.5029,
+        "train_time": 1.57
+      },
+      "gradient_boosting": {
+        "accuracy": 0.5639,
+        "precision": 0.728,
+        "recall": 0.5833,
+        "f1": 0.6477,
+        "auc": 0.5469,
+        "train_time": 1.95
+      },
+      "adaboost": {
+        "accuracy": 0.6211,
+        "precision": 0.6842,
+        "recall": 0.8333,
+        "f1": 0.7514,
+        "auc": 0.5714,
+        "train_time": 2.66
+      },
+      "lgb_xgb_blend": {
+        "accuracy": 0.3789,
+        "precision": 0.623,
+        "recall": 0.2436,
+        "f1": 0.3502,
+        "auc": 0.503,
+        "train_time": 0.0
+      },
+      "top3_stack": {
+        "accuracy": 0.6211,
+        "precision": 0.7134,
+        "recall": 0.75,
+        "f1": 0.7312,
+        "auc": 0.5304,
+        "train_time": 9.06
+      },
+      "weighted_ensemble": {
+        "accuracy": 0.5507,
+        "precision": 0.7411,
+        "recall": 0.5321,
+        "f1": 0.6194,
+        "auc": 0.5436,
+        "train_time": 0.0
+      },
+      "cascading_rf_lgb": {
+        "accuracy": 0.4009,
+        "precision": 0.6562,
+        "recall": 0.2692,
+        "f1": 0.3818,
+        "auc": 0.4892,
+        "train_time": 0.0
+      }
+    }
+  }
+}

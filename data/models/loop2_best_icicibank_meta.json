@@ -1,0 +1,26 @@
+{
+  "symbol": "ICICIBANK",
+  "algorithm": "xgboost_v2",
+  "target": "5d/0.3%",
+  "accuracy": 0.6222,
+  "auc": 0.6645,
+  "precision": 0.5652,
+  "recall": 0.65,
+  "f1": 0.6047,
+  "saved_at": "2026-04-13T22:29:47.785551",
+  "loop": "LOOP-2",
+  "data": "5yr daily + macro",
+  "info": {
+    "total_rows": 1323,
+    "valid_samples": 1121,
+    "train_size": 886,
+    "test_size": 225,
+    "up_count": 600,
+    "down_count": 521,
+    "balance_ratio": 0.553,
+    "n_features_base": 52,
+    "n_features_macro": 18,
+    "n_features_total": 70,
+    "scale_pos_weight": 0.8082
+  }
+}
