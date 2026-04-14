@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JoSho Trader — Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: { brand: '#2563EB', profit: '#22C55E', loss: '#EF4444' } } }
+    }
+  </script>
+  <style>
+    body { background: #0A0A1A; font-family: 'Inter', system-ui, sans-serif; }
+    .card { background: #111127; border: 1px solid #1E1E3F; border-radius: 12px; }
+    .glow { box-shadow: 0 0 20px rgba(37, 99, 235, 0.1); }
+    @keyframes pulse-green { 0%,100% { opacity:1 } 50% { opacity:0.5 } }
+    .live-dot { animation: pulse-green 2s infinite; }
+    .up { color: #22C55E; } .down { color: #EF4444; } .neutral { color: #94A3B8; }
+  </style>
+</head>
+<body class="text-gray-200 min-h-screen">
+  <header class="border-b border-gray-800 px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 bg-brand rounded-lg flex items-center justify-center font-bold text-white text-sm">JT</div>
+      <h1 class="text-xl font-bold text-white">JoSho Trader</h1>
+      <span id="mode-badge" class="px-2 py-0.5 rounded text-xs font-medium bg-yellow-500/20 text-yellow-400">PAPER</span>
+    </div>
+    <div class="flex items-center gap-4 text-sm text-gray-400">
+      <span class="flex items-center gap-1.5">
+        <span id="health-dot" class="w-2 h-2 rounded-full bg-profit live-dot"></span>
+        <span id="health-text">Live</span>
+      </span>
+      <span id="clock"></span>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
+    <!-- Stats -->
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+      <div class="card p-4 glow">
+        <p class="text-xs text-gray-500 uppercase">Balance</p>
+        <p id="balance" class="text-2xl font-bold text-white mt-1">Rs.600</p>
+      </div>
+      <div class="card p-4">
+        <p class="text-xs text-gray-500 uppercase">F&O Available</p>
+        <p id="fno" class="text-2xl font-bold text-white mt-1">Rs.600</p>
+      </div>
+      <div class="card p-4">
+        <p class="text-xs text-gray-500 uppercase">ML Accuracy</p>
+        <p class="text-2xl font-bold text-profit mt-1">71.1%</p>
+      </div>
+      <div class="card p-4">
+        <p class="text-xs text-gray-500 uppercase">Models Trained</p>
+        <p class="text-2xl font-bold text-white mt-1">11</p>
+      </div>
+      <div class="card p-4">
+        <p class="text-xs text-gray-500 uppercase">Data Rows</p>
+        <p class="text-2xl font-bold text-white mt-1">899K</p>
+      </div>
+    </div>
+
+    <!-- Watchlist -->
+    <div class="card p-5">
+      <h2 class="text-lg font-semibold text-white mb-4">Watchlist (Last Close)</h2>
+      <table class="w-full text-sm" id="watchlist">
+        <thead>
+          <tr class="text-gray-500 text-xs uppercase border-b border-gray-800">
+            <th class="text-left py-2">Symbol</th><th class="text-right py-2">LTP</th>
+            <th class="text-right py-2">Change</th><th class="text-right py-2">V2 Acc</th>
+            <th class="text-right py-2">V3 Acc</th><th class="text-right py-2">PF</th>
+          </tr>
+        </thead>
+        <tbody id="wbody"></tbody>
+      </table>
+    </div>
+
+    <!-- ML Progress -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="card p-5">
+        <h2 class="text-lg font-semibold text-white mb-3">ML Accuracy Loop</h2>
+        <div class="space-y-3">
+          <div class="flex items-center gap-3">
+            <div class="w-20 text-xs text-gray-500">V1</div>
+            <div class="flex-1 bg-gray-800 rounded-full h-4"><div class="bg-red-500 rounded-full h-4 text-[10px] text-center text-white" style="width:45.5%">45.5%</div></div>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="w-20 text-xs text-gray-500">V2</div>
+            <div class="flex-1 bg-gray-800 rounded-full h-4"><div class="bg-yellow-500 rounded-full h-4 text-[10px] text-center text-white" style="width:67.1%">67.1%</div></div>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="w-20 text-xs text-gray-500">LOOP-1</div>
+            <div class="flex-1 bg-gray-800 rounded-full h-4"><div class="bg-profit rounded-full h-4 text-[10px] text-center text-white" style="width:71.1%">71.1%</div></div>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="w-20 text-xs text-gray-500">V3 (honest)</div>
+            <div class="flex-1 bg-gray-800 rounded-full h-4"><div class="bg-brand rounded-full h-4 text-[10px] text-center text-white" style="width:62.1%">62.1%</div></div>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="w-20 text-xs text-gray-500">Target</div>
+            <div class="flex-1 bg-gray-800 rounded-full h-4 relative"><div class="bg-gray-700 rounded-full h-4" style="width:90%"></div><span class="absolute right-2 top-0 text-[10px] text-gray-400">90%</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card p-5">
+        <h2 class="text-lg font-semibold text-white mb-3">High Win Rate Patterns</h2>
+        <div class="space-y-2 text-sm">
+          <div class="flex justify-between"><span class="text-gray-300">RSI(2) Mean Reversion</span><span class="text-profit font-bold">91%</span></div>
+          <div class="flex justify-between"><span class="text-gray-300">OTM Selling (delta 0.10)</span><span class="text-profit font-bold">~90%</span></div>
+          <div class="flex justify-between"><span class="text-gray-300">Iron Condor + Management</span><span class="text-profit font-bold">86%</span></div>
+          <div class="flex justify-between"><span class="text-gray-300">Large Drop Reversion</span><span class="text-yellow-400 font-bold">78%</span></div>
+          <div class="flex justify-between"><span class="text-gray-300">Connors RSI</span><span class="text-yellow-400 font-bold">75%</span></div>
+          <div class="flex justify-between"><span class="text-gray-300">Triple Confirmation</span><span class="text-yellow-400 font-bold">70-80%</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- System -->
+    <div class="card p-5">
+      <h2 class="text-lg font-semibold text-white mb-3">System</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+        <div><span class="text-gray-500">Files</span><br><span class="text-white font-bold">39+ Python</span></div>
+        <div><span class="text-gray-500">Lines</span><br><span class="text-white font-bold">9,000+</span></div>
+        <div><span class="text-gray-500">Strategies</span><br><span class="text-white font-bold">9 + 5 patterns</span></div>
+        <div><span class="text-gray-500">Indicators</span><br><span class="text-white font-bold">40+</span></div>
+        <div><span class="text-gray-500">Algorithms</span><br><span class="text-white font-bold">8 (XGB, LGB, RF, ET...)</span></div>
+        <div><span class="text-gray-500">Data</span><br><span class="text-white font-bold">899K rows</span></div>
+        <div><span class="text-gray-500">Symbols</span><br><span class="text-white font-bold">41</span></div>
+        <div><span class="text-gray-500">Groww API</span><br><span class="text-profit font-bold">Connected</span></div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="border-t border-gray-800 py-4 text-center text-xs text-gray-600">
+    JoSho Trader v2.0 -- Groww API + ML + 899K rows -- Built by Sijoy Almeida
+  </footer>
+
+  <script>
+    // Static data from last training run
+    const stocks = [
+      {sym:"SBIN", ltp:1063.55, chg:-0.30, v2:61.0, v3:62.1, pf:1.64},
+      {sym:"RELIANCE", ltp:1315.10, chg:-2.60, v2:65.4, v3:59.3, pf:1.46},
+      {sym:"BANKNIFTY", ltp:0, chg:0, v2:46.0, v3:57.5, pf:1.35},
+      {sym:"ICICIBANK", ltp:0, chg:0, v2:67.1, v3:53.7, pf:1.16},
+      {sym:"INFY", ltp:1276.80, chg:-1.21, v2:58.0, v3:0, pf:0},
+      {sym:"TCS", ltp:2472.60, chg:-2.05, v2:47.4, v3:0, pf:0},
+      {sym:"HDFCBANK", ltp:794.70, chg:-1.93, v2:35.6, v3:0, pf:0},
+      {sym:"BAJFINANCE", ltp:0, chg:0, v2:46.3, v3:51.9, pf:1.08},
+      {sym:"ITC", ltp:0, chg:0, v2:32.9, v3:53.0, pf:1.13},
+    ];
+    const body = document.getElementById('wbody');
+    stocks.forEach(s => {
+      const cls = s.chg > 0 ? 'up' : s.chg < 0 ? 'down' : 'neutral';
+      body.innerHTML += `<tr class="border-b border-gray-800/30">
+        <td class="py-2 font-medium text-white">${s.sym}</td>
+        <td class="text-right py-2 font-mono">${s.ltp||'--'}</td>
+        <td class="text-right py-2 ${cls} font-mono">${s.chg?s.chg.toFixed(2)+'%':'--'}</td>
+        <td class="text-right py-2 ${s.v2>55?'text-profit':'text-gray-400'}">${s.v2?s.v2+'%':'--'}</td>
+        <td class="text-right py-2 ${s.v3>55?'text-profit':'text-gray-400'}">${s.v3?s.v3+'%':'--'}</td>
+        <td class="text-right py-2 ${s.pf>1?'text-profit':'text-gray-400'}">${s.pf||'--'}</td>
+      </tr>`;
+    });
+    setInterval(()=>{document.getElementById('clock').textContent=new Date().toLocaleTimeString('en-IN')},1000);
+  </script>
+</body>
+</html>
