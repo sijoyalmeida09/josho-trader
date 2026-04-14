@@ -64,7 +64,7 @@ def cached(key: str, fn, ttl: int = CACHE_SECONDS):
 @app.get("/", response_class=HTMLResponse)
 async def dashboard(request: Request):
     """Main dashboard page."""
-    return templates.TemplateResponse("dashboard.html", {"request": request})
+    return templates.TemplateResponse(request=request, name="dashboard.html")
 
 
 # ── API Endpoints (consumed by frontend JS) ───────────────────────
