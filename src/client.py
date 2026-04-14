@@ -22,29 +22,55 @@ class GrowwClient:
     def __init__(self):
         self.api_key: str = os.environ["GROWW_API_KEY"]
         self.secret: str = os.environ["GROWW_SECRET_KEY"]
+        self.totp_secret: str = os.environ.get("GROWW_TOTP_SECRET", "")
+        self.totp_token: str = os.environ.get("GROWW_TOTP_TOKEN", "")
         self._api: Optional[GrowwAPI] = None
         self._token: Optional[str] = None
         self._token_expiry: float = 0
 
     def connect(self) -> GrowwAPI:
-        """Authenticate and return a live GrowwAPI instance."""
+        """Authenticate and return a live GrowwAPI instance.
+
+        Auth priority:
+        1. TOTP (auto-daily, no manual approval) — uses TOTP token + generated OTP
+        2. API Key + Secret (needs daily approval on dashboard)
+        """
         if self._api and time.time() < self._token_expiry:
             return self._api
 
         log.info("Authenticating with Groww API...")
 
-        # Get access token using API Key + Secret
+        # Method 1: TOTP (fully automated, no daily approval needed)
+        if self.totp_secret and self.totp_token:
+            try:
+                import pyotp
+                totp_gen = pyotp.TOTP(self.totp_secret)
+                totp_code = totp_gen.now()
+                log.info(f"TOTP auth (code: {totp_code})")
+
+                self._token = GrowwAPI.get_access_token(
+                    api_key=self.totp_token,
+                    totp=totp_code,
+                )
+                self._api = GrowwAPI(self._token)
+                self._token_expiry = time.time() + 3600 * 8
+                log.info("Connected via TOTP (auto-daily)")
+                return self._api
+            except Exception as e:
+                log.warning(f"TOTP auth failed: {e}")
+
+        # Method 2: API Key + Secret (needs manual daily approval)
         try:
             self._token = GrowwAPI.get_access_token(
                 api_key=self.api_key,
                 secret=self.secret,
             )
             self._api = GrowwAPI(self._token)
-            self._token_expiry = time.time() + 3600 * 8  # 8 hour session
-            log.info("Connected to Groww API")
+            self._token_expiry = time.time() + 3600 * 8
+            log.info("Connected via API Key + Secret")
             return self._api
         except Exception as e:
-            log.error(f"Groww auth failed: {e}")
+            log.error(f"All auth methods failed: {e}")
             raise
 
     @property
