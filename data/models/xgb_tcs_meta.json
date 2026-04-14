@@ -1,0 +1,26 @@
+{
+  "model_name": "tcs",
+  "trained_at": "2026-04-13T21:46:42.185101",
+  "samples": 436,
+  "features": 65,
+  "train_accuracy": 1.0,
+  "test_accuracy": 0.4205,
+  "forward_periods": 5,
+  "top_features": {
+    "ema_9_21_cross": 0.0319,
+    "volatility_5d": 0.0255,
+    "days_to_month_end": 0.0247,
+    "sma_200_dist": 0.0245,
+    "macd_signal": 0.023,
+    "price_vs_vwap": 0.0228,
+    "adx_trend": 0.0228,
+    "mfi_14": 0.0215,
+    "rsi_divergence": 0.0215,
+    "bb_width": 0.0213,
+    "cci_20": 0.0212,
+    "month": 0.02,
+    "rsi_14": 0.0199,
+    "macd_line": 0.0198,
+    "atr_14": 0.0197
+  }
+}

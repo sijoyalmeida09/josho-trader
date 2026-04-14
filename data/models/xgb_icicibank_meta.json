@@ -1,0 +1,26 @@
+{
+  "model_name": "icicibank",
+  "trained_at": "2026-04-13T21:46:53.049507",
+  "samples": 436,
+  "features": 65,
+  "train_accuracy": 1.0,
+  "test_accuracy": 0.3977,
+  "forward_periods": 5,
+  "top_features": {
+    "ema_9_21_cross": 0.043,
+    "volume_price_confirm": 0.0273,
+    "month": 0.0254,
+    "adx_14": 0.0247,
+    "cci_20": 0.0241,
+    "macd_line": 0.0241,
+    "sma_200_dist": 0.023,
+    "volatility_20d": 0.0219,
+    "sma_slope_20": 0.0215,
+    "obv_slope": 0.0214,
+    "roc_12": 0.0205,
+    "bb_width": 0.0203,
+    "ema_21_dist": 0.0202,
+    "rsi_14": 0.0196,
+    "sma_9_dist": 0.0196
+  }
+}

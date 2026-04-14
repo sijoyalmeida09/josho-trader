@@ -239,10 +239,10 @@ class XGBoostSignalModel:
             "trained_at": datetime.now().isoformat(),
             "samples": len(X),
             "features": len(self.feature_names),
-            "train_accuracy": round(train_acc, 4),
-            "test_accuracy": round(test_acc, 4),
+            "train_accuracy": round(float(train_acc), 4),
+            "test_accuracy": round(float(test_acc), 4),
             "forward_periods": forward_periods,
-            "top_features": {k: round(v, 4) for k, v in top_features},
+            "top_features": {k: round(float(v), 4) for k, v in top_features},
         }
 
         self._save()

@@ -1,0 +1,26 @@
+{
+  "model_name": "reliance",
+  "trained_at": "2026-04-13T21:46:38.249314",
+  "samples": 436,
+  "features": 65,
+  "train_accuracy": 1.0,
+  "test_accuracy": 0.4318,
+  "forward_periods": 5,
+  "top_features": {
+    "ema_9_21_cross": 0.0448,
+    "bb_squeeze": 0.0317,
+    "bb_width": 0.0277,
+    "atr_14": 0.0274,
+    "roc_12": 0.0267,
+    "stoch_k": 0.0251,
+    "sma_50_dist": 0.0244,
+    "price_vs_vwap": 0.0225,
+    "bb_pct": 0.022,
+    "mfi_14": 0.0216,
+    "month": 0.0208,
+    "is_friday": 0.0202,
+    "ema_50_dist": 0.0202,
+    "cci_20": 0.0201,
+    "sma_200_dist": 0.0198
+  }
+}

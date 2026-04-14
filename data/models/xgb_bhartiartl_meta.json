@@ -1,0 +1,26 @@
+{
+  "model_name": "bhartiartl",
+  "trained_at": "2026-04-13T21:47:00.581623",
+  "samples": 436,
+  "features": 65,
+  "train_accuracy": 1.0,
+  "test_accuracy": 0.3068,
+  "forward_periods": 5,
+  "top_features": {
+    "cci_20": 0.0298,
+    "sma_20_dist": 0.0292,
+    "sma_20_50_cross": 0.026,
+    "sma_slope_20": 0.0246,
+    "price_vs_vwap": 0.0242,
+    "macd_histogram": 0.0239,
+    "sma_50_dist": 0.0226,
+    "roc_12": 0.0223,
+    "bb_pct": 0.022,
+    "obv_slope": 0.0218,
+    "adx_14": 0.0213,
+    "bb_width": 0.0208,
+    "vol_ratio": 0.0208,
+    "returns_10d": 0.0207,
+    "rsi_7": 0.0205
+  }
+}

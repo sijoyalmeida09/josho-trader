@@ -1,0 +1,26 @@
+{
+  "model_name": "itc",
+  "trained_at": "2026-04-13T21:47:04.250896",
+  "samples": 437,
+  "features": 65,
+  "train_accuracy": 1.0,
+  "test_accuracy": 0.3409,
+  "forward_periods": 5,
+  "top_features": {
+    "bb_squeeze": 0.0309,
+    "macd_signal": 0.0256,
+    "volatility_5d": 0.0253,
+    "sma_200_dist": 0.0252,
+    "adx_14": 0.0237,
+    "roc_12": 0.0236,
+    "obv_slope": 0.0228,
+    "ema_9_21_cross": 0.0228,
+    "ema_21_dist": 0.0224,
+    "rsi_14": 0.0223,
+    "cci_20": 0.0217,
+    "price_vs_vwap": 0.0213,
+    "sma_9_dist": 0.0208,
+    "sma_50_dist": 0.0203,
+    "stoch_k": 0.0203
+  }
+}

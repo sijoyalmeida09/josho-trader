@@ -1,0 +1,26 @@
+{
+  "model_name": "bajfinance",
+  "trained_at": "2026-04-13T21:47:08.005438",
+  "samples": 436,
+  "features": 65,
+  "train_accuracy": 1.0,
+  "test_accuracy": 0.4545,
+  "forward_periods": 5,
+  "top_features": {
+    "sma_200_dist": 0.0337,
+    "rsi_14": 0.03,
+    "supertrend_dir": 0.0279,
+    "bb_squeeze": 0.0268,
+    "sma_50_dist": 0.0251,
+    "ema_50_dist": 0.0224,
+    "macd_histogram": 0.0223,
+    "sma_slope_20": 0.0219,
+    "returns_20d": 0.0218,
+    "ema_21_dist": 0.0216,
+    "mfi_14": 0.0214,
+    "price_vs_vwap": 0.0204,
+    "sma_9_dist": 0.0204,
+    "days_to_month_end": 0.0195,
+    "bb_pct": 0.0195
+  }
+}

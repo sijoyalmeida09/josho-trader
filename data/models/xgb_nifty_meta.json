@@ -1,0 +1,26 @@
+{
+  "model_name": "nifty",
+  "trained_at": "2026-04-13T21:46:31.109299",
+  "samples": 434,
+  "features": 65,
+  "train_accuracy": 1.0,
+  "test_accuracy": 0.3218,
+  "forward_periods": 5,
+  "top_features": {
+    "ema_21_dist": 0.0348,
+    "higher_low": 0.0282,
+    "month": 0.0277,
+    "ema_9_21_cross": 0.0274,
+    "sma_20_dist": 0.026,
+    "volatility_20d": 0.0243,
+    "cci_20": 0.0234,
+    "bb_pct": 0.0231,
+    "sma_200_dist": 0.0228,
+    "stoch_d": 0.0226,
+    "rsi_14": 0.0224,
+    "adx_trend": 0.0223,
+    "roc_12": 0.022,
+    "obv_slope": 0.0213,
+    "adx_14": 0.0206
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "model_name": "infy",
+  "trained_at": "2026-04-13T21:46:45.837482",
+  "samples": 436,
+  "features": 65,
+  "train_accuracy": 1.0,
+  "test_accuracy": 0.3409,
+  "forward_periods": 5,
+  "top_features": {
+    "macd_signal": 0.0329,
+    "price_vs_vwap": 0.0301,
+    "cci_20": 0.0278,
+    "macd_line": 0.0254,
+    "month": 0.0252,
+    "stoch_d": 0.0252,
+    "sma_5_dist": 0.0243,
+    "sma_200_dist": 0.0241,
+    "stoch_k": 0.0238,
+    "bb_pct": 0.0214,
+    "sma_50_dist": 0.0213,
+    "rsi_7": 0.0211,
+    "days_to_month_end": 0.0208,
+    "adx_14": 0.0204,
+    "ema_21_dist": 0.0203
+  }
+}

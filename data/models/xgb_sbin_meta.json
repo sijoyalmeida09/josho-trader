@@ -1,0 +1,26 @@
+{
+  "model_name": "sbin",
+  "trained_at": "2026-04-13T21:46:57.103554",
+  "samples": 436,
+  "features": 65,
+  "train_accuracy": 1.0,
+  "test_accuracy": 0.4432,
+  "forward_periods": 5,
+  "top_features": {
+    "supertrend_dir": 0.0475,
+    "month": 0.0331,
+    "ema_50_dist": 0.0313,
+    "higher_high": 0.0292,
+    "sma_200_dist": 0.0271,
+    "macd_histogram": 0.0264,
+    "sma_50_dist": 0.025,
+    "rsi_14": 0.0241,
+    "adx_14": 0.0241,
+    "macd_line": 0.0213,
+    "stoch_k": 0.0213,
+    "returns_10d": 0.0211,
+    "ema_21_dist": 0.0209,
+    "sma_20_dist": 0.0205,
+    "mfi_14": 0.0203
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "model_name": "banknifty",
+  "trained_at": "2026-04-13T21:46:34.573083",
+  "samples": 433,
+  "features": 65,
+  "train_accuracy": 1.0,
+  "test_accuracy": 0.2529,
+  "forward_periods": 5,
+  "top_features": {
+    "volume_price_confirm": 0.0294,
+    "macd_line": 0.0261,
+    "sma_200_dist": 0.0235,
+    "inside_bar": 0.0232,
+    "ema_9_21_cross": 0.0227,
+    "atr_14": 0.0226,
+    "volatility_20d": 0.0225,
+    "bb_squeeze": 0.0222,
+    "ema_21_dist": 0.0219,
+    "sma_slope_20": 0.0218,
+    "open_eq_high": 0.0211,
+    "roc_12": 0.0206,
+    "is_friday": 0.0204,
+    "vol_ratio": 0.0202,
+    "open_eq_low": 0.0201
+  }
+}
