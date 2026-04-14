@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JoSho Trader — Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: '#2563EB',
+            profit: '#22C55E',
+            loss: '#EF4444',
+            dark: { 900: '#0A0A1A', 800: '#111127', 700: '#1A1A3A' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background: #0A0A1A; font-family: 'Inter', system-ui, sans-serif; }
+    .card { background: #111127; border: 1px solid #1E1E3F; border-radius: 12px; }
+    .glow { box-shadow: 0 0 20px rgba(37, 99, 235, 0.1); }
+    @keyframes pulse-green { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+    .live-dot { animation: pulse-green 2s infinite; }
+    .up { color: #22C55E; }
+    .down { color: #EF4444; }
+    .neutral { color: #94A3B8; }
+  </style>
+</head>
+<body class="text-gray-200 min-h-screen">
+
+  <!-- Header -->
+  <header class="border-b border-gray-800 px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 bg-brand rounded-lg flex items-center justify-center font-bold text-white text-sm">JT</div>
+      <h1 class="text-xl font-bold text-white">JoSho Trader</h1>
+      <span id="mode-badge" class="px-2 py-0.5 rounded text-xs font-medium bg-yellow-500/20 text-yellow-400">PAPER</span>
+    </div>
+    <div class="flex items-center gap-4 text-sm text-gray-400">
+      <span class="flex items-center gap-1.5">
+        <span id="health-dot" class="w-2 h-2 rounded-full bg-gray-500"></span>
+        <span id="health-text">Connecting...</span>
+      </span>
+      <span id="clock"></span>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
+
+    <!-- Top Stats -->
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+      <div class="card p-4 glow">
+        <p class="text-xs text-gray-500 uppercase tracking-wider">Balance</p>
+        <p id="balance" class="text-2xl font-bold text-white mt-1">--</p>
+      </div>
+      <div class="card p-4">
+        <p class="text-xs text-gray-500 uppercase tracking-wider">F&O Available</p>
+        <p id="fno-balance" class="text-2xl font-bold text-white mt-1">--</p>
+      </div>
+      <div class="card p-4">
+        <p class="text-xs text-gray-500 uppercase tracking-wider">Total Value</p>
+        <p id="total-value" class="text-2xl font-bold text-white mt-1">--</p>
+      </div>
+      <div class="card p-4">
+        <p class="text-xs text-gray-500 uppercase tracking-wider">Day P&L</p>
+        <p id="day-pnl" class="text-2xl font-bold mt-1">--</p>
+      </div>
+      <div class="card p-4">
+        <p class="text-xs text-gray-500 uppercase tracking-wider">Sentiment</p>
+        <p id="sentiment" class="text-2xl font-bold mt-1">--</p>
+      </div>
+    </div>
+
+    <!-- Watchlist + Positions -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+      <!-- Watchlist (2 cols) -->
+      <div class="lg:col-span-2 card p-5">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-lg font-semibold text-white">Watchlist</h2>
+          <span class="text-xs text-gray-500" id="quotes-time">--</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-gray-500 text-xs uppercase border-b border-gray-800">
+                <th class="text-left py-2 pr-4">Symbol</th>
+                <th class="text-right py-2 px-3">LTP</th>
+                <th class="text-right py-2 px-3">Change</th>
+                <th class="text-right py-2 px-3">%</th>
+                <th class="text-right py-2 px-3 hidden md:table-cell">Volume</th>
+                <th class="text-right py-2 px-3 hidden md:table-cell">High</th>
+                <th class="text-right py-2 px-3 hidden md:table-cell">Low</th>
+              </tr>
+            </thead>
+            <tbody id="watchlist-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Right column: Risk + Holdings -->
+      <div class="space-y-6">
+
+        <!-- Risk Status -->
+        <div class="card p-5">
+          <h2 class="text-lg font-semibold text-white mb-3">Risk Manager</h2>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between">
+              <span class="text-gray-400">Kill Switch</span>
+              <span id="kill-switch" class="font-medium">--</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-400">Trades Today</span>
+              <span id="trades-today" class="text-white">--</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-400">Open Positions</span>
+              <span id="open-positions" class="text-white">--</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-400">Loss Budget</span>
+              <span id="loss-budget" class="text-white">--</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-400">Max Drawdown</span>
+              <span id="max-dd" class="text-white">--</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Holdings -->
+        <div class="card p-5">
+          <h2 class="text-lg font-semibold text-white mb-3">Holdings</h2>
+          <div id="holdings-list" class="space-y-2 text-sm"></div>
+          <div class="border-t border-gray-800 mt-3 pt-3 flex justify-between text-sm">
+            <span class="text-gray-400">Holdings Value</span>
+            <span id="holdings-value" class="text-white font-medium">--</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- News & Sentiment -->
+    <div class="card p-5">
+      <h2 class="text-lg font-semibold text-white mb-4">Market News & Sentiment</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <div class="bg-dark-900 rounded-lg p-3 text-center">
+          <p class="text-xs text-gray-500">Bullish</p>
+          <p id="bull-count" class="text-2xl font-bold text-profit">--</p>
+        </div>
+        <div class="bg-dark-900 rounded-lg p-3 text-center">
+          <p class="text-xs text-gray-500">Bearish</p>
+          <p id="bear-count" class="text-2xl font-bold text-loss">--</p>
+        </div>
+        <div class="bg-dark-900 rounded-lg p-3 text-center">
+          <p class="text-xs text-gray-500">Neutral</p>
+          <p id="neutral-count" class="text-2xl font-bold neutral">--</p>
+        </div>
+      </div>
+      <div id="news-list" class="space-y-2 text-sm"></div>
+    </div>
+
+    <!-- Trade Log -->
+    <div class="card p-5">
+      <h2 class="text-lg font-semibold text-white mb-3">Recent Trades</h2>
+      <div id="trades-list" class="text-sm text-gray-400">No trades yet. Paper trading mode active.</div>
+    </div>
+
+  </main>
+
+  <footer class="border-t border-gray-800 py-4 text-center text-xs text-gray-600">
+    JoSho Trader v1.0 &mdash; Groww API &mdash; Built by Sijoy Almeida
+  </footer>
+
+  <script>
+    const API = '';  // same origin
+    const fmt = (n) => new Intl.NumberFormat('en-IN').format(n);
+    const fmtR = (n) => 'Rs.' + fmt(Math.round(n));
+
+    function setColor(el, val) {
+      el.classList.remove('up', 'down', 'neutral');
+      el.classList.add(val > 0 ? 'up' : val < 0 ? 'down' : 'neutral');
+    }
+
+    async function fetchJSON(url) {
+      try {
+        const r = await fetch(API + url);
+        return await r.json();
+      } catch(e) {
+        console.error(url, e);
+        return null;
+      }
+    }
+
+    async function updateAccount() {
+      const d = await fetchJSON('/api/account');
+      if (!d) return;
+      document.getElementById('balance').textContent = fmtR(d.balance);
+      document.getElementById('fno-balance').textContent = fmtR(d.fno_available);
+      document.getElementById('total-value').textContent = fmtR(d.total_value);
+      document.getElementById('holdings-value').textContent = fmtR(d.holdings_value);
+
+      const hl = document.getElementById('holdings-list');
+      hl.innerHTML = d.holdings.map(h =>
+        `<div class="flex justify-between">
+          <span class="text-gray-300">${h.symbol || 'N/A'}</span>
+          <span class="text-gray-400">${h.qty} @ Rs.${h.avg_price.toFixed(2)}</span>
+        </div>`
+      ).join('');
+    }
+
+    async function updateQuotes() {
+      const d = await fetchJSON('/api/quotes');
+      if (!d) return;
+      document.getElementById('quotes-time').textContent = new Date(d.timestamp).toLocaleTimeString();
+      const body = document.getElementById('watchlist-body');
+      body.innerHTML = d.quotes.map(q => {
+        const cls = q.change_pct > 0 ? 'up' : q.change_pct < 0 ? 'down' : 'neutral';
+        return `<tr class="border-b border-gray-800/50 hover:bg-gray-800/30">
+          <td class="py-2.5 pr-4 font-medium text-white">${q.symbol}</td>
+          <td class="text-right py-2.5 px-3 font-mono">${q.ltp.toLocaleString('en-IN')}</td>
+          <td class="text-right py-2.5 px-3 ${cls} font-mono">${q.change > 0 ? '+' : ''}${q.change.toFixed(2)}</td>
+          <td class="text-right py-2.5 px-3 ${cls} font-medium">${q.change_pct > 0 ? '+' : ''}${q.change_pct.toFixed(2)}%</td>
+          <td class="text-right py-2.5 px-3 text-gray-500 hidden md:table-cell">${fmt(q.volume)}</td>
+          <td class="text-right py-2.5 px-3 text-gray-500 hidden md:table-cell">${q.high.toLocaleString('en-IN')}</td>
+          <td class="text-right py-2.5 px-3 text-gray-500 hidden md:table-cell">${q.low.toLocaleString('en-IN')}</td>
+        </tr>`;
+      }).join('');
+    }
+
+    async function updateRisk() {
+      const d = await fetchJSON('/api/risk');
+      if (!d) return;
+      const pnlEl = document.getElementById('day-pnl');
+      pnlEl.textContent = fmtR(d.total_pnl);
+      setColor(pnlEl, d.total_pnl);
+
+      document.getElementById('kill-switch').textContent = d.killed ? 'ACTIVE' : 'OFF';
+      document.getElementById('kill-switch').className = d.killed ? 'font-medium text-loss' : 'font-medium text-profit';
+      document.getElementById('trades-today').textContent = d.trades;
+      document.getElementById('open-positions').textContent = d.open_positions;
+      document.getElementById('loss-budget').textContent = fmtR(d.remaining_loss_budget);
+      document.getElementById('max-dd').textContent = fmtR(d.max_drawdown);
+
+      const badge = document.getElementById('mode-badge');
+      badge.textContent = d.paper ? 'PAPER' : 'LIVE';
+      badge.className = d.paper
+        ? 'px-2 py-0.5 rounded text-xs font-medium bg-yellow-500/20 text-yellow-400'
+        : 'px-2 py-0.5 rounded text-xs font-medium bg-red-500/20 text-red-400';
+    }
+
+    async function updateSentiment() {
+      const d = await fetchJSON('/api/sentiment');
+      if (!d || !d.market) return;
+      const m = d.market;
+      const el = document.getElementById('sentiment');
+      el.textContent = m.label;
+      setColor(el, m.overall);
+
+      document.getElementById('bull-count').textContent = m.bullish_count;
+      document.getElementById('bear-count').textContent = m.bearish_count;
+      document.getElementById('neutral-count').textContent = m.neutral_count;
+
+      const nl = document.getElementById('news-list');
+      nl.innerHTML = (m.top_headlines || []).map(h => {
+        const cls = h.sentiment === 'BULLISH' ? 'text-profit' : h.sentiment === 'BEARISH' ? 'text-loss' : 'text-gray-400';
+        return `<div class="flex items-start gap-2 py-1.5 border-b border-gray-800/30">
+          <span class="text-xs px-1.5 py-0.5 rounded ${cls} bg-gray-800 whitespace-nowrap">${h.sentiment}</span>
+          <span class="text-gray-300">${h.title}</span>
+          <span class="text-gray-600 text-xs whitespace-nowrap ml-auto">${h.source}</span>
+        </div>`;
+      }).join('');
+    }
+
+    async function updateHealth() {
+      const d = await fetchJSON('/api/health');
+      const dot = document.getElementById('health-dot');
+      const txt = document.getElementById('health-text');
+      if (d && d.status === 'ok') {
+        dot.className = 'w-2 h-2 rounded-full bg-profit live-dot';
+        txt.textContent = 'Connected';
+      } else {
+        dot.className = 'w-2 h-2 rounded-full bg-loss';
+        txt.textContent = 'Disconnected';
+      }
+    }
+
+    async function updateTrades() {
+      const d = await fetchJSON('/api/trades');
+      if (!d || !d.length) return;
+      const el = document.getElementById('trades-list');
+      el.innerHTML = d.slice(-10).reverse().map(t => {
+        const cls = t.side === 'BUY' ? 'text-profit' : 'text-loss';
+        return `<div class="flex items-center gap-3 py-1.5 border-b border-gray-800/30 text-sm">
+          <span class="${cls} font-medium w-10">${t.side}</span>
+          <span class="text-white">${t.symbol}</span>
+          <span class="text-gray-400">${t.qty}x @ Rs.${t.price}</span>
+          <span class="text-gray-600 ml-auto text-xs">${t.paper ? 'PAPER' : 'LIVE'}</span>
+          <span class="text-gray-600 text-xs">${new Date(t.timestamp).toLocaleTimeString()}</span>
+        </div>`;
+      }).join('');
+    }
+
+    // Clock
+    setInterval(() => {
+      document.getElementById('clock').textContent = new Date().toLocaleTimeString('en-IN');
+    }, 1000);
+
+    // Initial load
+    async function refresh() {
+      await Promise.all([
+        updateHealth(),
+        updateAccount(),
+        updateRisk(),
+        updateQuotes(),
+        updateTrades(),
+      ]);
+      // Sentiment loads slower, don't block
+      updateSentiment();
+    }
+
+    refresh();
+    setInterval(refresh, 15000);  // refresh every 15 seconds
+  </script>
+</body>
+</html>
