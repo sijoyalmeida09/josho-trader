@@ -1,21 +1,1749 @@
 {
   "target_accuracy": 0.97,
-  "loop_count": 3,
-  "last_updated": "2026-04-14T02:30:00",
+  "loop_count": 4,
+  "last_updated": "2026-04-13T23:35:26.352492",
   "best_results": {
-    "SBIN": {"large_drop_winrate": 0.947, "ml_accuracy": 0.621, "pattern": "LargeDropMeanReversion", "trades": 38},
-    "ICICIBANK": {"large_drop_winrate": null, "ml_accuracy": 0.671, "pattern": "XGBoost_V2", "trades": null},
-    "HDFCBANK": {"large_drop_winrate": 0.762, "ml_accuracy": 0.580, "pattern": "LargeDropMeanReversion", "trades": 21},
-    "BAJFINANCE": {"large_drop_winrate": 0.706, "ml_accuracy": 0.463, "pattern": "LargeDropMeanReversion", "trades": 17}
+    "SBIN": {
+      "large_drop_winrate": 0.947,
+      "ml_accuracy": 0.621,
+      "pattern": "LargeDropMeanReversion",
+      "trades": 38
+    },
+    "ICICIBANK": {
+      "large_drop_winrate": 0.7,
+      "vol_drop_winrate": 0.5909,
+      "ml_accuracy": 0.4596,
+      "best_drop_threshold": -0.1,
+      "trades": 10,
+      "score": 56.8
+    },
+    "HDFCBANK": {
+      "large_drop_winrate": 0.762,
+      "ml_accuracy": 0.58,
+      "pattern": "LargeDropMeanReversion",
+      "trades": 21
+    },
+    "BAJFINANCE": {
+      "large_drop_winrate": 0.706,
+      "ml_accuracy": 0.463,
+      "pattern": "LargeDropMeanReversion",
+      "trades": 17
+    },
+    "360ONE": {
+      "large_drop_winrate": 0.75,
+      "vol_drop_winrate": 0.5294,
+      "ml_accuracy": 0.5324,
+      "best_drop_threshold": -0.08,
+      "trades": 4,
+      "score": 61.21
+    },
+    "ABB": {
+      "large_drop_winrate": 0.75,
+      "vol_drop_winrate": 0.6364,
+      "ml_accuracy": 0.4785,
+      "best_drop_threshold": -0.1,
+      "trades": 4,
+      "score": 57.99
+    },
+    "ABCAPITAL": {
+      "large_drop_winrate": 0.7778,
+      "vol_drop_winrate": 1.0,
+      "ml_accuracy": 0.5167,
+      "best_drop_threshold": -0.08,
+      "trades": 9,
+      "score": 67.7
+    },
+    "ADANIENSOL": {
+      "large_drop_winrate": 0.5882,
+      "vol_drop_winrate": 0.2857,
+      "ml_accuracy": 0.5273,
+      "best_drop_threshold": -0.05,
+      "trades": 17,
+      "score": 48.49
+    },
+    "ADANIENT": {
+      "large_drop_winrate": 0.6667,
+      "vol_drop_winrate": 0.5745,
+      "ml_accuracy": 0.5172,
+      "best_drop_threshold": -0.1,
+      "trades": 30,
+      "score": 57.86
+    },
+    "ADANIGREEN": {
+      "large_drop_winrate": 0.5909,
+      "vol_drop_winrate": 0.5385,
+      "ml_accuracy": 0.4803,
+      "best_drop_threshold": -0.05,
+      "trades": 44,
+      "score": 57.59
+    },
+    "ADANIPORTS": {
+      "large_drop_winrate": 0.6154,
+      "vol_drop_winrate": 0.6774,
+      "ml_accuracy": 0.5,
+      "best_drop_threshold": -0.1,
+      "trades": 13,
+      "score": 56.9
+    },
+    "ADANIPOWER": {
+      "large_drop_winrate": 0.6471,
+      "vol_drop_winrate": 0.5926,
+      "ml_accuracy": 0.5142,
+      "best_drop_threshold": -0.1,
+      "trades": 17,
+      "score": 57.26
+    },
+    "ALKEM": {
+      "large_drop_winrate": 0.75,
+      "vol_drop_winrate": 0.375,
+      "ml_accuracy": 0.5529,
+      "best_drop_threshold": -0.07,
+      "trades": 4,
+      "score": 57.69
+    },
+    "AMBER": {
+      "large_drop_winrate": 0.5125,
+      "vol_drop_winrate": 0.4737,
+      "ml_accuracy": 0.4624,
+      "best_drop_threshold": -0.03,
+      "trades": 160,
+      "score": 54.13
+    },
+    "AMBUJACEM": {
+      "large_drop_winrate": 1.0,
+      "vol_drop_winrate": 0.6154,
+      "ml_accuracy": 0.5391,
+      "best_drop_threshold": -0.1,
+      "trades": 9,
+      "score": 69.38
+    },
+    "ANGELONE": {
+      "large_drop_winrate": 0.75,
+      "vol_drop_winrate": 0.5,
+      "ml_accuracy": 0.4704,
+      "best_drop_threshold": -0.1,
+      "trades": 4,
+      "score": 53.47
+    },
+    "APLAPOLLO": {
+      "large_drop_winrate": 0.6,
+      "vol_drop_winrate": 0.6,
+      "ml_accuracy": 0.4772,
+      "best_drop_threshold": -0.06,
+      "trades": 20,
+      "score": 55.84
+    },
+    "APOLLOHOSP": {
+      "large_drop_winrate": 0.5417,
+      "vol_drop_winrate": 0.4762,
+      "ml_accuracy": 0.5124,
+      "best_drop_threshold": -0.07,
+      "trades": 24,
+      "score": 54.06
+    },
+    "ASHOKLEY": {
+      "large_drop_winrate": 0.5682,
+      "vol_drop_winrate": 0.5357,
+      "ml_accuracy": 0.4501,
+      "best_drop_threshold": -0.07,
+      "trades": 44,
+      "score": 54.51
+    },
+    "ASIANPAINT": {
+      "large_drop_winrate": 0.7143,
+      "vol_drop_winrate": 0.5455,
+      "ml_accuracy": 0.4967,
+      "best_drop_threshold": -0.08,
+      "trades": 7,
+      "score": 56.64
+    },
+    "ASTRAL": {
+      "large_drop_winrate": 0.5926,
+      "vol_drop_winrate": 0.6364,
+      "ml_accuracy": 0.5425,
+      "best_drop_threshold": -0.07,
+      "trades": 27,
+      "score": 59.2
+    },
+    "AUBANK": {
+      "large_drop_winrate": 0.6,
+      "vol_drop_winrate": 0.5625,
+      "ml_accuracy": 0.5267,
+      "best_drop_threshold": -0.05,
+      "trades": 40,
+      "score": 58.34
+    },
+    "AUROPHARMA": {
+      "large_drop_winrate": 0.5066,
+      "vol_drop_winrate": 0.4561,
+      "ml_accuracy": 0.4615,
+      "best_drop_threshold": -0.03,
+      "trades": 683,
+      "score": 52.48
+    },
+    "AXISBANK": {
+      "large_drop_winrate": 0.7,
+      "vol_drop_winrate": 0.5455,
+      "ml_accuracy": 0.4838,
+      "best_drop_threshold": -0.1,
+      "trades": 10,
+      "score": 57.24
+    },
+    "BAJAJ-AUTO": {
+      "large_drop_winrate": 0.5714,
+      "vol_drop_winrate": 0.3684,
+      "ml_accuracy": 0.4723,
+      "best_drop_threshold": -0.1,
+      "trades": 7,
+      "score": 49.07
+    },
+    "BAJAJFINSV": {
+      "large_drop_winrate": 0.5426,
+      "vol_drop_winrate": 0.6923,
+      "ml_accuracy": 0.5753,
+      "best_drop_threshold": -0.05,
+      "trades": 94,
+      "score": 60.74
+    },
+    "BAJAJHLDNG": {
+      "large_drop_winrate": 0.5018,
+      "vol_drop_winrate": 0.5238,
+      "ml_accuracy": 0.462,
+      "best_drop_threshold": -0.03,
+      "trades": 279,
+      "score": 52.49
+    },
+    "BANDHANBNK": {
+      "large_drop_winrate": 0.4921,
+      "vol_drop_winrate": 0.4348,
+      "ml_accuracy": 0.5341,
+      "best_drop_threshold": -0.05,
+      "trades": 63,
+      "score": 55.01
+    },
+    "BANKBARODA": {
+      "large_drop_winrate": 0.5938,
+      "vol_drop_winrate": 0.6154,
+      "ml_accuracy": 0.455,
+      "best_drop_threshold": -0.08,
+      "trades": 32,
+      "score": 56.31
+    },
+    "BANKINDIA": {
+      "large_drop_winrate": 0.5577,
+      "vol_drop_winrate": 0.4286,
+      "ml_accuracy": 0.4929,
+      "best_drop_threshold": -0.08,
+      "trades": 52,
+      "score": 54.38
+    },
+    "BDL": {
+      "large_drop_winrate": 0.5568,
+      "vol_drop_winrate": 0.5,
+      "ml_accuracy": 0.5492,
+      "best_drop_threshold": -0.04,
+      "trades": 88,
+      "score": 57.8
+    },
+    "BEL": {
+      "large_drop_winrate": 0.6,
+      "vol_drop_winrate": 0.4286,
+      "ml_accuracy": 0.4295,
+      "best_drop_threshold": -0.1,
+      "trades": 10,
+      "score": 50.52
+    },
+    "BHARATFORG": {
+      "large_drop_winrate": 0.5266,
+      "vol_drop_winrate": 0.6216,
+      "ml_accuracy": 0.4769,
+      "best_drop_threshold": -0.05,
+      "trades": 207,
+      "score": 57.21
+    },
+    "BHARTIARTL": {
+      "large_drop_winrate": 0.5848,
+      "vol_drop_winrate": 0.4333,
+      "ml_accuracy": 0.5146,
+      "best_drop_threshold": -0.04,
+      "trades": 171,
+      "score": 57.71
+    },
+    "BHEL": {
+      "large_drop_winrate": 0.7188,
+      "vol_drop_winrate": 0.5098,
+      "ml_accuracy": 0.4714,
+      "best_drop_threshold": -0.1,
+      "trades": 32,
+      "score": 58.38
+    },
+    "BIOCON": {
+      "large_drop_winrate": 0.6296,
+      "vol_drop_winrate": 0.4815,
+      "ml_accuracy": 0.5527,
+      "best_drop_threshold": -0.07,
+      "trades": 27,
+      "score": 58.62
+    },
+    "BLUESTARCO": {
+      "large_drop_winrate": 0.5,
+      "vol_drop_winrate": 0.8333,
+      "ml_accuracy": 0.4908,
+      "best_drop_threshold": -0.08,
+      "trades": 14,
+      "score": 55.15
+    },
+    "BOSCHLTD": {
+      "large_drop_winrate": 0.6173,
+      "vol_drop_winrate": 0.5,
+      "ml_accuracy": 0.4741,
+      "best_drop_threshold": -0.04,
+      "trades": 81,
+      "score": 56.83
+    },
+    "BPCL": {
+      "large_drop_winrate": 0.5,
+      "vol_drop_winrate": 0.4324,
+      "ml_accuracy": 0.5032,
+      "best_drop_threshold": -0.1,
+      "trades": 14,
+      "score": 50.42
+    },
+    "BRITANNIA": {
+      "large_drop_winrate": 0.5256,
+      "vol_drop_winrate": 0.4167,
+      "ml_accuracy": 0.5205,
+      "best_drop_threshold": -0.03,
+      "trades": 215,
+      "score": 54.22
+    },
+    "BSE": {
+      "large_drop_winrate": 0.6364,
+      "vol_drop_winrate": 0.6,
+      "ml_accuracy": 0.5215,
+      "best_drop_threshold": -0.07,
+      "trades": 11,
+      "score": 56.91
+    },
+    "CAMS": {
+      "large_drop_winrate": 0.6,
+      "vol_drop_winrate": 0.3333,
+      "ml_accuracy": 0.5103,
+      "best_drop_threshold": -0.04,
+      "trades": 30,
+      "score": 54.32
+    },
+    "CANBK": {
+      "large_drop_winrate": 0.7143,
+      "vol_drop_winrate": 0.6111,
+      "ml_accuracy": 0.4337,
+      "best_drop_threshold": -0.1,
+      "trades": 21,
+      "score": 57.57
+    },
+    "CDSL": {
+      "large_drop_winrate": 0.6667,
+      "vol_drop_winrate": 0.5714,
+      "ml_accuracy": 0.562,
+      "best_drop_threshold": -0.1,
+      "trades": 3,
+      "score": 58.86
+    },
+    "CGPOWER": {
+      "large_drop_winrate": 0.5517,
+      "vol_drop_winrate": 0.5,
+      "ml_accuracy": 0.487,
+      "best_drop_threshold": -0.07,
+      "trades": 58,
+      "score": 56.1
+    },
+    "CHOLAFIN": {
+      "large_drop_winrate": 0.5476,
+      "vol_drop_winrate": 0.4,
+      "ml_accuracy": 0.4631,
+      "best_drop_threshold": -0.06,
+      "trades": 84,
+      "score": 53.52
+    },
+    "CIPLA": {
+      "large_drop_winrate": 0.8182,
+      "vol_drop_winrate": 0.5667,
+      "ml_accuracy": 0.4861,
+      "best_drop_threshold": -0.1,
+      "trades": 11,
+      "score": 61.61
+    },
+    "COALINDIA": {
+      "large_drop_winrate": 0.8,
+      "vol_drop_winrate": 0.7,
+      "ml_accuracy": 0.4345,
+      "best_drop_threshold": -0.05,
+      "trades": 25,
+      "score": 60.25
+    },
+    "COCHINSHIP": {
+      "large_drop_winrate": 0.7143,
+      "vol_drop_winrate": 0.6667,
+      "ml_accuracy": 0.4289,
+      "best_drop_threshold": -0.07,
+      "trades": 14,
+      "score": 58.39
+    },
+    "COFORGE": {
+      "large_drop_winrate": 0.5882,
+      "vol_drop_winrate": 0.5,
+      "ml_accuracy": 0.5445,
+      "best_drop_threshold": -0.08,
+      "trades": 34,
+      "score": 56.23
+    },
+    "COLPAL": {
+      "large_drop_winrate": 0.8,
+      "vol_drop_winrate": 0.3333,
+      "ml_accuracy": 0.4852,
+      "best_drop_threshold": -0.07,
+      "trades": 5,
+      "score": 55.19
+    },
+    "CONCOR": {
+      "large_drop_winrate": 0.75,
+      "vol_drop_winrate": 0.2941,
+      "ml_accuracy": 0.5331,
+      "best_drop_threshold": -0.1,
+      "trades": 8,
+      "score": 56.43
+    },
+    "CROMPTON": {
+      "large_drop_winrate": 0.5833,
+      "vol_drop_winrate": 0.5,
+      "ml_accuracy": 0.4665,
+      "best_drop_threshold": -0.04,
+      "trades": 36,
+      "score": 53.98
+    },
+    "CUMMINSIND": {
+      "large_drop_winrate": 0.6667,
+      "vol_drop_winrate": 0.3043,
+      "ml_accuracy": 0.4313,
+      "best_drop_threshold": -0.1,
+      "trades": 3,
+      "score": 50.37
+    },
+    "DABUR": {
+      "large_drop_winrate": 0.8182,
+      "vol_drop_winrate": 0.5833,
+      "ml_accuracy": 0.5019,
+      "best_drop_threshold": -0.1,
+      "trades": 11,
+      "score": 62.21
+    },
+    "DALBHARAT": {
+      "large_drop_winrate": 0.8333,
+      "vol_drop_winrate": 0.5714,
+      "ml_accuracy": 0.4985,
+      "best_drop_threshold": -0.08,
+      "trades": 6,
+      "score": 59.93
+    },
+    "DELHIVERY": {
+      "large_drop_winrate": 0.6667,
+      "vol_drop_winrate": 0.4286,
+      "ml_accuracy": 0.4606,
+      "best_drop_threshold": -0.1,
+      "trades": 3,
+      "score": 56.11
+    },
+    "DIVISLAB": {
+      "large_drop_winrate": 0.6471,
+      "vol_drop_winrate": 0.5833,
+      "ml_accuracy": 0.524,
+      "best_drop_threshold": -0.07,
+      "trades": 34,
+      "score": 58.89
+    },
+    "DIXON": {
+      "large_drop_winrate": 0.5455,
+      "vol_drop_winrate": 0.25,
+      "ml_accuracy": 0.491,
+      "best_drop_threshold": -0.03,
+      "trades": 154,
+      "score": 50.2
+    },
+    "DLF": {
+      "large_drop_winrate": 0.6909,
+      "vol_drop_winrate": 0.7778,
+      "ml_accuracy": 0.5291,
+      "best_drop_threshold": -0.08,
+      "trades": 55,
+      "score": 65.46
+    },
+    "DMART": {
+      "large_drop_winrate": 0.5294,
+      "vol_drop_winrate": 0.3,
+      "ml_accuracy": 0.4683,
+      "best_drop_threshold": -0.05,
+      "trades": 17,
+      "score": 46.52
+    },
+    "DRREDDY": {
+      "large_drop_winrate": 0.4925,
+      "vol_drop_winrate": 0.4186,
+      "ml_accuracy": 0.4957,
+      "best_drop_threshold": -0.03,
+      "trades": 400,
+      "score": 52.6
+    },
+    "EICHERMOT": {
+      "large_drop_winrate": 0.6429,
+      "vol_drop_winrate": 0.5,
+      "ml_accuracy": 0.4989,
+      "best_drop_threshold": -0.1,
+      "trades": 14,
+      "score": 54.57
+    },
+    "ETERNAL": {
+      "large_drop_winrate": 0.6,
+      "vol_drop_winrate": 0.3846,
+      "ml_accuracy": 0.5769,
+      "best_drop_threshold": -0.1,
+      "trades": 5,
+      "score": 55.12
+    },
+    "EXIDEIND": {
+      "large_drop_winrate": 0.6667,
+      "vol_drop_winrate": 0.5652,
+      "ml_accuracy": 0.5205,
+      "best_drop_threshold": -0.1,
+      "trades": 3,
+      "score": 56.37
+    },
+    "FEDERALBNK": {
+      "large_drop_winrate": 0.5556,
+      "vol_drop_winrate": 0.6053,
+      "ml_accuracy": 0.4766,
+      "best_drop_threshold": -0.08,
+      "trades": 36,
+      "score": 55.47
+    },
+    "FORCEMOT": {
+      "large_drop_winrate": 0.6667,
+      "vol_drop_winrate": 0.5,
+      "ml_accuracy": 0.4144,
+      "best_drop_threshold": -0.08,
+      "trades": 9,
+      "score": 52.11
+    },
+    "FORTIS": {
+      "large_drop_winrate": 0.5833,
+      "vol_drop_winrate": 0.4737,
+      "ml_accuracy": 0.4284,
+      "best_drop_threshold": -0.08,
+      "trades": 12,
+      "score": 49.97
+    },
+    "GAIL": {
+      "large_drop_winrate": 0.5455,
+      "vol_drop_winrate": 0.5,
+      "ml_accuracy": 0.5415,
+      "best_drop_threshold": -0.1,
+      "trades": 11,
+      "score": 54.45
+    },
+    "GLENMARK": {
+      "large_drop_winrate": 0.5218,
+      "vol_drop_winrate": 0.5385,
+      "ml_accuracy": 0.4964,
+      "best_drop_threshold": -0.03,
+      "trades": 458,
+      "score": 56.75
+    },
+    "GMRAIRPORT": {
+      "large_drop_winrate": 0.7174,
+      "vol_drop_winrate": 0.8261,
+      "ml_accuracy": 0.5022,
+      "best_drop_threshold": -0.08,
+      "trades": 46,
+      "score": 66.31
+    },
+    "GODFRYPHLP": {
+      "large_drop_winrate": 0.5179,
+      "vol_drop_winrate": 0.5556,
+      "ml_accuracy": 0.4865,
+      "best_drop_threshold": -0.05,
+      "trades": 195,
+      "score": 54.88
+    },
+    "GODREJCP": {
+      "large_drop_winrate": 0.6154,
+      "vol_drop_winrate": 0.4286,
+      "ml_accuracy": 0.5213,
+      "best_drop_threshold": -0.06,
+      "trades": 26,
+      "score": 55.65
+    },
+    "GODREJPROP": {
+      "large_drop_winrate": 0.6667,
+      "vol_drop_winrate": 0.4667,
+      "ml_accuracy": 0.5384,
+      "best_drop_threshold": -0.1,
+      "trades": 6,
+      "score": 55.54
+    },
+    "GRASIM": {
+      "large_drop_winrate": 0.5505,
+      "vol_drop_winrate": 0.5263,
+      "ml_accuracy": 0.4833,
+      "best_drop_threshold": -0.04,
+      "trades": 109,
+      "score": 55.92
+    },
+    "HAL": {
+      "large_drop_winrate": 0.5208,
+      "vol_drop_winrate": 0.375,
+      "ml_accuracy": 0.5374,
+      "best_drop_threshold": -0.04,
+      "trades": 48,
+      "score": 54.72
+    },
+    "HAVELLS": {
+      "large_drop_winrate": 0.6667,
+      "vol_drop_winrate": 0.4848,
+      "ml_accuracy": 0.451,
+      "best_drop_threshold": -0.1,
+      "trades": 9,
+      "score": 51.87
+    },
+    "HCLTECH": {
+      "large_drop_winrate": 0.625,
+      "vol_drop_winrate": 0.4643,
+      "ml_accuracy": 0.5023,
+      "best_drop_threshold": -0.1,
+      "trades": 8,
+      "score": 54.66
+    },
+    "HDFCAMC": {
+      "large_drop_winrate": 0.6667,
+      "vol_drop_winrate": 0.5,
+      "ml_accuracy": 0.4884,
+      "best_drop_threshold": -0.1,
+      "trades": 3,
+      "score": 52.97
+    },
+    "HDFCLIFE": {
+      "large_drop_winrate": 0.5455,
+      "vol_drop_winrate": 0.4,
+      "ml_accuracy": 0.5526,
+      "best_drop_threshold": -0.06,
+      "trades": 11,
+      "score": 52.49
+    },
+    "HEROMOTOCO": {
+      "large_drop_winrate": 0.6667,
+      "vol_drop_winrate": 0.6957,
+      "ml_accuracy": 0.5326,
+      "best_drop_threshold": -0.08,
+      "trades": 3,
+      "score": 58.79
+    },
+    "HINDALCO": {
+      "large_drop_winrate": 0.5484,
+      "vol_drop_winrate": 0.5588,
+      "ml_accuracy": 0.4481,
+      "best_drop_threshold": -0.08,
+      "trades": 31,
+      "score": 53.85
+    },
+    "HINDPETRO": {
+      "large_drop_winrate": 0.5806,
+      "vol_drop_winrate": 0.3778,
+      "ml_accuracy": 0.5116,
+      "best_drop_threshold": -0.08,
+      "trades": 31,
+      "score": 53.75
+    },
+    "HINDUNILVR": {
+      "large_drop_winrate": 0.6207,
+      "vol_drop_winrate": 0.6875,
+      "ml_accuracy": 0.5032,
+      "best_drop_threshold": -0.06,
+      "trades": 29,
+      "score": 58.78
+    },
+    "HINDZINC": {
+      "large_drop_winrate": 0.5889,
+      "vol_drop_winrate": 0.2941,
+      "ml_accuracy": 0.4896,
+      "best_drop_threshold": -0.04,
+      "trades": 180,
+      "score": 54.88
+    },
+    "HUDCO": {
+      "large_drop_winrate": 0.8,
+      "vol_drop_winrate": 0.3333,
+      "ml_accuracy": 0.4167,
+      "best_drop_threshold": -0.08,
+      "trades": 10,
+      "score": 53.34
+    },
+    "HYUNDAI": {
+      "large_drop_winrate": 0.6667,
+      "vol_drop_winrate": 0,
+      "ml_accuracy": 0.4737,
+      "best_drop_threshold": -0.05,
+      "trades": 3,
+      "score": 41.86
+    },
+    "ICICIGI": {
+      "large_drop_winrate": 0.875,
+      "vol_drop_winrate": 0.5,
+      "ml_accuracy": 0.4324,
+      "best_drop_threshold": -0.06,
+      "trades": 8,
+      "score": 59.36
+    },
+    "ICICIPRULI": {
+      "large_drop_winrate": 0.6923,
+      "vol_drop_winrate": 0.625,
+      "ml_accuracy": 0.5556,
+      "best_drop_threshold": -0.06,
+      "trades": 13,
+      "score": 59.81
+    },
+    "IDEA": {
+      "large_drop_winrate": 0.5763,
+      "vol_drop_winrate": 0.5122,
+      "ml_accuracy": 0.5693,
+      "best_drop_threshold": -0.08,
+      "trades": 59,
+      "score": 59.11
+    },
+    "IDFCFIRSTB": {
+      "large_drop_winrate": 0.7,
+      "vol_drop_winrate": 0.5833,
+      "ml_accuracy": 0.4841,
+      "best_drop_threshold": -0.08,
+      "trades": 10,
+      "score": 55.48
+    },
+    "IEX": {
+      "large_drop_winrate": 0.6667,
+      "vol_drop_winrate": 0.4,
+      "ml_accuracy": 0.4777,
+      "best_drop_threshold": -0.07,
+      "trades": 15,
+      "score": 52.22
+    },
+    "INDHOTEL": {
+      "large_drop_winrate": 0.5506,
+      "vol_drop_winrate": 0.4091,
+      "ml_accuracy": 0.4382,
+      "best_drop_threshold": -0.05,
+      "trades": 89,
+      "score": 54.64
+    },
+    "INDIANB": {
+      "large_drop_winrate": 0.7333,
+      "vol_drop_winrate": 0.3617,
+      "ml_accuracy": 0.4606,
+      "best_drop_threshold": -0.1,
+      "trades": 15,
+      "score": 54.51
+    },
+    "INDIGO": {
+      "large_drop_winrate": 0.6316,
+      "vol_drop_winrate": 0.5,
+      "ml_accuracy": 0.4419,
+      "best_drop_threshold": -0.07,
+      "trades": 19,
+      "score": 52.58
+    },
+    "INDUSINDBK": {
+      "large_drop_winrate": 0.5625,
+      "vol_drop_winrate": 0.3704,
+      "ml_accuracy": 0.5068,
+      "best_drop_threshold": -0.08,
+      "trades": 48,
+      "score": 54.18
+    },
+    "INDUSTOWER": {
+      "large_drop_winrate": 0.8889,
+      "vol_drop_winrate": 0.56,
+      "ml_accuracy": 0.48,
+      "best_drop_threshold": -0.1,
+      "trades": 9,
+      "score": 61.43
+    },
+    "INFY": {
+      "large_drop_winrate": 0.5072,
+      "vol_drop_winrate": 0.3878,
+      "ml_accuracy": 0.489,
+      "best_drop_threshold": -0.03,
+      "trades": 418,
+      "score": 54.16
+    },
+    "INOXWIND": {
+      "large_drop_winrate": 0.5625,
+      "vol_drop_winrate": 0.5882,
+      "ml_accuracy": 0.4675,
+      "best_drop_threshold": -0.06,
+      "trades": 64,
+      "score": 55.57
+    },
+    "IOC": {
+      "large_drop_winrate": 0.625,
+      "vol_drop_winrate": 0.4286,
+      "ml_accuracy": 0.5261,
+      "best_drop_threshold": -0.08,
+      "trades": 32,
+      "score": 55.74
+    },
+    "IREDA": {
+      "large_drop_winrate": 0.6667,
+      "vol_drop_winrate": 0.2857,
+      "ml_accuracy": 0.4082,
+      "best_drop_threshold": -0.07,
+      "trades": 3,
+      "score": 48.24
+    },
+    "IRFC": {
+      "large_drop_winrate": 1.0,
+      "vol_drop_winrate": 0.6,
+      "ml_accuracy": 0.5223,
+      "best_drop_threshold": -0.1,
+      "trades": 3,
+      "score": 67.57
+    },
+    "ITC": {
+      "large_drop_winrate": 0.6667,
+      "vol_drop_winrate": 0.5714,
+      "ml_accuracy": 0.513,
+      "best_drop_threshold": -0.1,
+      "trades": 6,
+      "score": 57.53
+    },
+    "JINDALSTEL": {
+      "large_drop_winrate": 0.5468,
+      "vol_drop_winrate": 0.537,
+      "ml_accuracy": 0.476,
+      "best_drop_threshold": -0.04,
+      "trades": 481,
+      "score": 56.17
+    },
+    "JIOFIN": {
+      "large_drop_winrate": 0.6471,
+      "vol_drop_winrate": 0.25,
+      "ml_accuracy": 0.4775,
+      "best_drop_threshold": -0.04,
+      "trades": 17,
+      "score": 51.99
+    },
+    "JSWENERGY": {
+      "large_drop_winrate": 1.0,
+      "vol_drop_winrate": 0.75,
+      "ml_accuracy": 0.4615,
+      "best_drop_threshold": -0.1,
+      "trades": 5,
+      "score": 69.65
+    },
+    "JSWSTEEL": {
+      "large_drop_winrate": 0.556,
+      "vol_drop_winrate": 0.4286,
+      "ml_accuracy": 0.5197,
+      "best_drop_threshold": -0.03,
+      "trades": 518,
+      "score": 55.08
+    },
+    "JUBLFOOD": {
+      "large_drop_winrate": 0.575,
+      "vol_drop_winrate": 0.4643,
+      "ml_accuracy": 0.4642,
+      "best_drop_threshold": -0.06,
+      "trades": 40,
+      "score": 52.67
+    },
+    "KALYANKJIL": {
+      "large_drop_winrate": 0.6667,
+      "vol_drop_winrate": 0.5,
+      "ml_accuracy": 0.5556,
+      "best_drop_threshold": -0.07,
+      "trades": 9,
+      "score": 58.69
+    },
+    "KAYNES": {
+      "large_drop_winrate": 0.8333,
+      "vol_drop_winrate": 0.75,
+      "ml_accuracy": 0.5068,
+      "best_drop_threshold": -0.1,
+      "trades": 6,
+      "score": 62.74
+    },
+    "KEI": {
+      "large_drop_winrate": 0.5294,
+      "vol_drop_winrate": 0.4242,
+      "ml_accuracy": 0.5423,
+      "best_drop_threshold": -0.1,
+      "trades": 17,
+      "score": 52.78
+    },
+    "KFINTECH": {
+      "large_drop_winrate": 0.5,
+      "vol_drop_winrate": 0.4,
+      "ml_accuracy": 0.4126,
+      "best_drop_threshold": -0.04,
+      "trades": 46,
+      "score": 50.55
+    },
+    "KOTAKBANK": {
+      "large_drop_winrate": 0.6351,
+      "vol_drop_winrate": 0.7143,
+      "ml_accuracy": 0.5485,
+      "best_drop_threshold": -0.06,
+      "trades": 74,
+      "score": 64.81
+    },
+    "KPITTECH": {
+      "large_drop_winrate": 0.5,
+      "vol_drop_winrate": 0.4375,
+      "ml_accuracy": 0.5331,
+      "best_drop_threshold": -0.08,
+      "trades": 8,
+      "score": 51.47
+    },
+    "LAURUSLABS": {
+      "large_drop_winrate": 0.5484,
+      "vol_drop_winrate": 0.4286,
+      "ml_accuracy": 0.4639,
+      "best_drop_threshold": -0.05,
+      "trades": 31,
+      "score": 52.12
+    },
+    "LICHSGFIN": {
+      "large_drop_winrate": 0.6364,
+      "vol_drop_winrate": 0.5517,
+      "ml_accuracy": 0.5059,
+      "best_drop_threshold": -0.08,
+      "trades": 33,
+      "score": 57.44
+    },
+    "LICI": {
+      "large_drop_winrate": 1.0,
+      "vol_drop_winrate": 1.0,
+      "ml_accuracy": 0.4458,
+      "best_drop_threshold": -0.07,
+      "trades": 3,
+      "score": 70.78
+    },
+    "LODHA": {
+      "large_drop_winrate": 0.6316,
+      "vol_drop_winrate": 0.5385,
+      "ml_accuracy": 0.4578,
+      "best_drop_threshold": -0.06,
+      "trades": 19,
+      "score": 55.44
+    },
+    "LT": {
+      "large_drop_winrate": 0.5,
+      "vol_drop_winrate": 0.4118,
+      "ml_accuracy": 0.4018,
+      "best_drop_threshold": -0.07,
+      "trades": 22,
+      "score": 46.85
+    },
+    "LTF": {
+      "large_drop_winrate": 0.6429,
+      "vol_drop_winrate": 0.5909,
+      "ml_accuracy": 0.4718,
+      "best_drop_threshold": -0.07,
+      "trades": 28,
+      "score": 56.99
+    },
+    "LTM": {
+      "large_drop_winrate": 1.0,
+      "vol_drop_winrate": 0.2727,
+      "ml_accuracy": 0.5991,
+      "best_drop_threshold": -0.08,
+      "trades": 3,
+      "score": 66.13
+    },
+    "LUPIN": {
+      "large_drop_winrate": 0.6296,
+      "vol_drop_winrate": 0.5455,
+      "ml_accuracy": 0.4854,
+      "best_drop_threshold": -0.06,
+      "trades": 54,
+      "score": 59.0
+    },
+    "M&M": {
+      "large_drop_winrate": 0.5641,
+      "vol_drop_winrate": 0.7097,
+      "ml_accuracy": 0.5021,
+      "best_drop_threshold": -0.08,
+      "trades": 39,
+      "score": 58.24
+    },
+    "MANAPPURAM": {
+      "large_drop_winrate": 0.5094,
+      "vol_drop_winrate": 0.3611,
+      "ml_accuracy": 0.5348,
+      "best_drop_threshold": -0.07,
+      "trades": 53,
+      "score": 53.96
+    },
+    "MANKIND": {
+      "large_drop_winrate": 0.4118,
+      "vol_drop_winrate": 0,
+      "ml_accuracy": 0.4435,
+      "best_drop_threshold": -0.03,
+      "trades": 34,
+      "score": 39.25
+    },
+    "MARICO": {
+      "large_drop_winrate": 0.6364,
+      "vol_drop_winrate": 0.48,
+      "ml_accuracy": 0.5136,
+      "best_drop_threshold": -0.07,
+      "trades": 22,
+      "score": 57.87
+    },
+    "MARUTI": {
+      "large_drop_winrate": 0.5882,
+      "vol_drop_winrate": 0.6471,
+      "ml_accuracy": 0.5053,
+      "best_drop_threshold": -0.05,
+      "trades": 68,
+      "score": 59.52
+    },
+    "MAXHEALTH": {
+      "large_drop_winrate": 0.5,
+      "vol_drop_winrate": 0.3333,
+      "ml_accuracy": 0.488,
+      "best_drop_threshold": -0.07,
+      "trades": 4,
+      "score": 48.57
+    },
+    "MAZDOCK": {
+      "large_drop_winrate": 1.0,
+      "vol_drop_winrate": 1.0,
+      "ml_accuracy": 0.46,
+      "best_drop_threshold": -0.1,
+      "trades": 3,
+      "score": 72.23
+    },
+    "MCX": {
+      "large_drop_winrate": 0.5,
+      "vol_drop_winrate": 0.4783,
+      "ml_accuracy": 0.4552,
+      "best_drop_threshold": -0.1,
+      "trades": 8,
+      "score": 50.01
+    },
+    "MFSL": {
+      "large_drop_winrate": 0.5455,
+      "vol_drop_winrate": 0.5405,
+      "ml_accuracy": 0.5,
+      "best_drop_threshold": -0.1,
+      "trades": 22,
+      "score": 53.56
+    },
+    "MOTHERSON": {
+      "large_drop_winrate": 0.4778,
+      "vol_drop_winrate": 0.4255,
+      "ml_accuracy": 0.5377,
+      "best_drop_threshold": -0.03,
+      "trades": 519,
+      "score": 55.04
+    },
+    "MOTILALOFS": {
+      "large_drop_winrate": 0.5,
+      "vol_drop_winrate": 0.3684,
+      "ml_accuracy": 0.4907,
+      "best_drop_threshold": -0.05,
+      "trades": 122,
+      "score": 50.76
+    },
+    "MPHASIS": {
+      "large_drop_winrate": 0.8333,
+      "vol_drop_winrate": 0.6129,
+      "ml_accuracy": 0.5292,
+      "best_drop_threshold": -0.1,
+      "trades": 6,
+      "score": 62.61
+    },
+    "MUTHOOTFIN": {
+      "large_drop_winrate": 0.5455,
+      "vol_drop_winrate": 0.5385,
+      "ml_accuracy": 0.4493,
+      "best_drop_threshold": -0.07,
+      "trades": 22,
+      "score": 53.98
+    },
+    "NAM-INDIA": {
+      "large_drop_winrate": 0.7045,
+      "vol_drop_winrate": 0.5556,
+      "ml_accuracy": 0.5053,
+      "best_drop_threshold": -0.05,
+      "trades": 44,
+      "score": 61.62
+    },
+    "NATIONALUM": {
+      "large_drop_winrate": 0.5156,
+      "vol_drop_winrate": 0.425,
+      "ml_accuracy": 0.441,
+      "best_drop_threshold": -0.05,
+      "trades": 225,
+      "score": 51.94
+    },
+    "NAUKRI": {
+      "large_drop_winrate": 0.75,
+      "vol_drop_winrate": 0.3478,
+      "ml_accuracy": 0.5341,
+      "best_drop_threshold": -0.1,
+      "trades": 4,
+      "score": 55.8
+    },
+    "NBCC": {
+      "large_drop_winrate": 0.7778,
+      "vol_drop_winrate": 0.75,
+      "ml_accuracy": 0.4892,
+      "best_drop_threshold": -0.08,
+      "trades": 27,
+      "score": 64.39
+    },
+    "NESTLEIND": {
+      "large_drop_winrate": 0.75,
+      "vol_drop_winrate": 0.5,
+      "ml_accuracy": 0.5094,
+      "best_drop_threshold": -0.07,
+      "trades": 4,
+      "score": 55.88
+    },
+    "NHPC": {
+      "large_drop_winrate": 0.8333,
+      "vol_drop_winrate": 0.7273,
+      "ml_accuracy": 0.4946,
+      "best_drop_threshold": -0.08,
+      "trades": 6,
+      "score": 64.04
+    },
+    "NMDC": {
+      "large_drop_winrate": 0.6,
+      "vol_drop_winrate": 0.6522,
+      "ml_accuracy": 0.461,
+      "best_drop_threshold": -0.1,
+      "trades": 10,
+      "score": 56.07
+    },
+    "NTPC": {
+      "large_drop_winrate": 0.5556,
+      "vol_drop_winrate": 0.6667,
+      "ml_accuracy": 0.4541,
+      "best_drop_threshold": -0.08,
+      "trades": 9,
+      "score": 53.14
+    },
+    "NUVAMA": {
+      "large_drop_winrate": 1.0,
+      "vol_drop_winrate": 0.6667,
+      "ml_accuracy": 0.5981,
+      "best_drop_threshold": -0.08,
+      "trades": 4,
+      "score": 73.5
+    },
+    "NYKAA": {
+      "large_drop_winrate": 0.4286,
+      "vol_drop_winrate": 0.4,
+      "ml_accuracy": 0.4742,
+      "best_drop_threshold": -0.06,
+      "trades": 14,
+      "score": 45.38
+    },
+    "OBEROIRLTY": {
+      "large_drop_winrate": 0.6,
+      "vol_drop_winrate": 0.3077,
+      "ml_accuracy": 0.5,
+      "best_drop_threshold": -0.08,
+      "trades": 5,
+      "score": 49.19
+    },
+    "OFSS": {
+      "large_drop_winrate": 0.875,
+      "vol_drop_winrate": 0.75,
+      "ml_accuracy": 0.4959,
+      "best_drop_threshold": -0.1,
+      "trades": 8,
+      "score": 64.44
+    },
+    "OIL": {
+      "large_drop_winrate": 0.8125,
+      "vol_drop_winrate": 0.4615,
+      "ml_accuracy": 0.459,
+      "best_drop_threshold": -0.08,
+      "trades": 16,
+      "score": 60.26
+    },
+    "ONGC": {
+      "large_drop_winrate": 0.6667,
+      "vol_drop_winrate": 0.5,
+      "ml_accuracy": 0.4692,
+      "best_drop_threshold": -0.1,
+      "trades": 24,
+      "score": 56.64
+    },
+    "PAGEIND": {
+      "large_drop_winrate": 1.0,
+      "vol_drop_winrate": 0.4615,
+      "ml_accuracy": 0.4564,
+      "best_drop_threshold": -0.1,
+      "trades": 4,
+      "score": 62.23
+    },
+    "PATANJALI": {
+      "large_drop_winrate": 0.6591,
+      "vol_drop_winrate": 0.4762,
+      "ml_accuracy": 0.5348,
+      "best_drop_threshold": -0.08,
+      "trades": 44,
+      "score": 59.12
+    },
+    "PAYTM": {
+      "large_drop_winrate": 0.5385,
+      "vol_drop_winrate": 0.3333,
+      "ml_accuracy": 0.5102,
+      "best_drop_threshold": -0.06,
+      "trades": 26,
+      "score": 53.71
+    },
+    "PERSISTENT": {
+      "large_drop_winrate": 0.5312,
+      "vol_drop_winrate": 0.3125,
+      "ml_accuracy": 0.5441,
+      "best_drop_threshold": -0.04,
+      "trades": 96,
+      "score": 53.93
+    },
+    "PETRONET": {
+      "large_drop_winrate": 0.5532,
+      "vol_drop_winrate": 0.6429,
+      "ml_accuracy": 0.5278,
+      "best_drop_threshold": -0.06,
+      "trades": 47,
+      "score": 59.18
+    },
+    "PFC": {
+      "large_drop_winrate": 0.8333,
+      "vol_drop_winrate": 0.5556,
+      "ml_accuracy": 0.4502,
+      "best_drop_threshold": -0.1,
+      "trades": 6,
+      "score": 60.42
+    },
+    "PGEL": {
+      "large_drop_winrate": 0.4713,
+      "vol_drop_winrate": 0.5312,
+      "ml_accuracy": 0.5377,
+      "best_drop_threshold": -0.05,
+      "trades": 174,
+      "score": 54.92
+    },
+    "PHOENIXLTD": {
+      "large_drop_winrate": 0.6154,
+      "vol_drop_winrate": 0.5652,
+      "ml_accuracy": 0.5178,
+      "best_drop_threshold": -0.08,
+      "trades": 26,
+      "score": 58.5
+    },
+    "PIDILITIND": {
+      "large_drop_winrate": 0.8,
+      "vol_drop_winrate": 0.75,
+      "ml_accuracy": 0.5277,
+      "best_drop_threshold": -0.1,
+      "trades": 5,
+      "score": 63.44
+    },
+    "PIIND": {
+      "large_drop_winrate": 0.7391,
+      "vol_drop_winrate": 0.5833,
+      "ml_accuracy": 0.4652,
+      "best_drop_threshold": -0.06,
+      "trades": 23,
+      "score": 58.97
+    },
+    "PNB": {
+      "large_drop_winrate": 0.8333,
+      "vol_drop_winrate": 0.6,
+      "ml_accuracy": 0.4442,
+      "best_drop_threshold": -0.1,
+      "trades": 18,
+      "score": 60.81
+    },
+    "PNBHOUSING": {
+      "large_drop_winrate": 0.5556,
+      "vol_drop_winrate": 0.4,
+      "ml_accuracy": 0.4942,
+      "best_drop_threshold": -0.1,
+      "trades": 9,
+      "score": 49.41
+    },
+    "POLICYBZR": {
+      "large_drop_winrate": 0.8,
+      "vol_drop_winrate": 0.5,
+      "ml_accuracy": 0.5103,
+      "best_drop_threshold": -0.08,
+      "trades": 5,
+      "score": 59.91
+    },
+    "POLYCAB": {
+      "large_drop_winrate": 0.8,
+      "vol_drop_winrate": 0.5,
+      "ml_accuracy": 0.5452,
+      "best_drop_threshold": -0.1,
+      "trades": 5,
+      "score": 60.1
+    },
+    "POWERGRID": {
+      "large_drop_winrate": 0.7143,
+      "vol_drop_winrate": 0.9,
+      "ml_accuracy": 0.4544,
+      "best_drop_threshold": -0.1,
+      "trades": 7,
+      "score": 62.82
+    },
+    "POWERINDIA": {
+      "large_drop_winrate": 0.6667,
+      "vol_drop_winrate": 0.3,
+      "ml_accuracy": 0.4853,
+      "best_drop_threshold": -0.08,
+      "trades": 6,
+      "score": 50.22
+    },
+    "PPLPHARMA": {
+      "large_drop_winrate": 0.6,
+      "vol_drop_winrate": 0.3333,
+      "ml_accuracy": 0.54,
+      "best_drop_threshold": -0.05,
+      "trades": 15,
+      "score": 53.71
+    },
+    "PREMIERENE": {
+      "large_drop_winrate": 0.52,
+      "vol_drop_winrate": 0.5,
+      "ml_accuracy": 0.4194,
+      "best_drop_threshold": -0.04,
+      "trades": 25,
+      "score": 40.64
+    },
+    "PRESTIGE": {
+      "large_drop_winrate": 0.6667,
+      "vol_drop_winrate": 0.7368,
+      "ml_accuracy": 0.4755,
+      "best_drop_threshold": -0.06,
+      "trades": 39,
+      "score": 60.63
+    },
+    "RBLBANK": {
+      "large_drop_winrate": 0.6875,
+      "vol_drop_winrate": 0.4231,
+      "ml_accuracy": 0.5057,
+      "best_drop_threshold": -0.1,
+      "trades": 16,
+      "score": 54.62
+    },
+    "RECLTD": {
+      "large_drop_winrate": 0.75,
+      "vol_drop_winrate": 0.5625,
+      "ml_accuracy": 0.5024,
+      "best_drop_threshold": -0.1,
+      "trades": 8,
+      "score": 59.02
+    },
+    "RELIANCE": {
+      "large_drop_winrate": 0.625,
+      "vol_drop_winrate": 0.6316,
+      "ml_accuracy": 0.5252,
+      "best_drop_threshold": -0.1,
+      "trades": 8,
+      "score": 56.57
+    },
+    "RVNL": {
+      "large_drop_winrate": 0.6667,
+      "vol_drop_winrate": 0.4286,
+      "ml_accuracy": 0.4391,
+      "best_drop_threshold": -0.1,
+      "trades": 6,
+      "score": 52.21
+    },
+    "SAIL": {
+      "large_drop_winrate": 0.5455,
+      "vol_drop_winrate": 0.46,
+      "ml_accuracy": 0.525,
+      "best_drop_threshold": -0.1,
+      "trades": 33,
+      "score": 54.01
+    },
+    "SAMMAANCAP": {
+      "large_drop_winrate": 0.5652,
+      "vol_drop_winrate": 0.5152,
+      "ml_accuracy": 0.4881,
+      "best_drop_threshold": -0.08,
+      "trades": 46,
+      "score": 56.47
+    },
+    "SBICARD": {
+      "large_drop_winrate": 0.6667,
+      "vol_drop_winrate": 0.3333,
+      "ml_accuracy": 0.5639,
+      "best_drop_threshold": -0.07,
+      "trades": 3,
+      "score": 51.56
+    },
+    "SBILIFE": {
+      "large_drop_winrate": 0.7692,
+      "vol_drop_winrate": 0.6667,
+      "ml_accuracy": 0.464,
+      "best_drop_threshold": -0.05,
+      "trades": 13,
+      "score": 61.63
+    },
+    "SHREECEM": {
+      "large_drop_winrate": 0.5395,
+      "vol_drop_winrate": 0.5,
+      "ml_accuracy": 0.524,
+      "best_drop_threshold": -0.05,
+      "trades": 76,
+      "score": 57.08
+    },
+    "SHRIRAMFIN": {
+      "large_drop_winrate": 0.7647,
+      "vol_drop_winrate": 0.6667,
+      "ml_accuracy": 0.4678,
+      "best_drop_threshold": -0.1,
+      "trades": 17,
+      "score": 61.09
+    },
+    "SIEMENS": {
+      "large_drop_winrate": 0.6364,
+      "vol_drop_winrate": 0.375,
+      "ml_accuracy": 0.4309,
+      "best_drop_threshold": -0.1,
+      "trades": 11,
+      "score": 50.7
+    },
+    "SOLARINDS": {
+      "large_drop_winrate": 0.7,
+      "vol_drop_winrate": 0.5333,
+      "ml_accuracy": 0.4917,
+      "best_drop_threshold": -0.1,
+      "trades": 10,
+      "score": 56.22
+    },
+    "SONACOMS": {
+      "large_drop_winrate": 0.5495,
+      "vol_drop_winrate": 0.375,
+      "ml_accuracy": 0.5024,
+      "best_drop_threshold": -0.03,
+      "trades": 91,
+      "score": 52.49
+    },
+    "SRF": {
+      "large_drop_winrate": 0.5652,
+      "vol_drop_winrate": 0.4828,
+      "ml_accuracy": 0.532,
+      "best_drop_threshold": -0.1,
+      "trades": 23,
+      "score": 52.77
+    },
+    "SUNPHARMA": {
+      "large_drop_winrate": 0.72,
+      "vol_drop_winrate": 0.4884,
+      "ml_accuracy": 0.4609,
+      "best_drop_threshold": -0.08,
+      "trades": 25,
+      "score": 56.89
+    },
+    "SUPREMEIND": {
+      "large_drop_winrate": 0.5682,
+      "vol_drop_winrate": 0.6875,
+      "ml_accuracy": 0.4917,
+      "best_drop_threshold": -0.05,
+      "trades": 88,
+      "score": 58.68
+    },
+    "SUZLON": {
+      "large_drop_winrate": 0.6452,
+      "vol_drop_winrate": 0.4915,
+      "ml_accuracy": 0.5411,
+      "best_drop_threshold": -0.1,
+      "trades": 31,
+      "score": 57.12
+    },
+    "SWIGGY": {
+      "large_drop_winrate": 0.5556,
+      "vol_drop_winrate": 0.0,
+      "ml_accuracy": 0.3333,
+      "best_drop_threshold": -0.03,
+      "trades": 45,
+      "score": 42.36
+    },
+    "TATACONSUM": {
+      "large_drop_winrate": 0.625,
+      "vol_drop_winrate": 0.4167,
+      "ml_accuracy": 0.4669,
+      "best_drop_threshold": -0.1,
+      "trades": 8,
+      "score": 51.75
+    },
+    "TATAELXSI": {
+      "large_drop_winrate": 0.6154,
+      "vol_drop_winrate": 0.3333,
+      "ml_accuracy": 0.5408,
+      "best_drop_threshold": -0.1,
+      "trades": 13,
+      "score": 53.5
+    },
+    "TATAPOWER": {
+      "large_drop_winrate": 0.6471,
+      "vol_drop_winrate": 0.52,
+      "ml_accuracy": 0.4296,
+      "best_drop_threshold": -0.1,
+      "trades": 17,
+      "score": 54.51
+    },
+    "TATASTEEL": {
+      "large_drop_winrate": 0.542,
+      "vol_drop_winrate": 0.5161,
+      "ml_accuracy": 0.4635,
+      "best_drop_threshold": -0.05,
+      "trades": 238,
+      "score": 55.48
+    },
+    "TATATECH": {
+      "large_drop_winrate": 0.5238,
+      "vol_drop_winrate": 0.0,
+      "ml_accuracy": 0.6522,
+      "best_drop_threshold": -0.03,
+      "trades": 21,
+      "score": 42.33
+    },
+    "TCS": {
+      "large_drop_winrate": 0.6667,
+      "vol_drop_winrate": 0.5357,
+      "ml_accuracy": 0.5309,
+      "best_drop_threshold": -0.1,
+      "trades": 3,
+      "score": 57.12
+    },
+    "TECHM": {
+      "large_drop_winrate": 0.4878,
+      "vol_drop_winrate": 0.4118,
+      "ml_accuracy": 0.5286,
+      "best_drop_threshold": -0.05,
+      "trades": 82,
+      "score": 55.17
+    },
+    "TIINDIA": {
+      "large_drop_winrate": 0.5147,
+      "vol_drop_winrate": 0.4444,
+      "ml_accuracy": 0.4804,
+      "best_drop_threshold": -0.04,
+      "trades": 68,
+      "score": 53.66
+    },
+    "TITAN": {
+      "large_drop_winrate": 0.5789,
+      "vol_drop_winrate": 0.56,
+      "ml_accuracy": 0.5285,
+      "best_drop_threshold": -0.1,
+      "trades": 19,
+      "score": 55.71
+    },
+    "TORNTPHARM": {
+      "large_drop_winrate": 0.5,
+      "vol_drop_winrate": 0.5385,
+      "ml_accuracy": 0.4903,
+      "best_drop_threshold": -0.04,
+      "trades": 116,
+      "score": 56.36
+    },
+    "TORNTPOWER": {
+      "large_drop_winrate": 0.5625,
+      "vol_drop_winrate": 0.25,
+      "ml_accuracy": 0.5258,
+      "best_drop_threshold": -0.08,
+      "trades": 16,
+      "score": 50.58
+    },
+    "TRENT": {
+      "large_drop_winrate": 0.6667,
+      "vol_drop_winrate": 0.6,
+      "ml_accuracy": 0.5128,
+      "best_drop_threshold": -0.1,
+      "trades": 6,
+      "score": 55.46
+    },
+    "TVSMOTOR": {
+      "large_drop_winrate": 0.6324,
+      "vol_drop_winrate": 0.5938,
+      "ml_accuracy": 0.4609,
+      "best_drop_threshold": -0.07,
+      "trades": 68,
+      "score": 58.81
+    },
+    "ULTRACEMCO": {
+      "large_drop_winrate": 0.5,
+      "vol_drop_winrate": 0.6111,
+      "ml_accuracy": 0.4986,
+      "best_drop_threshold": -0.05,
+      "trades": 68,
+      "score": 57.03
+    },
+    "UNIONBANK": {
+      "large_drop_winrate": 0.6471,
+      "vol_drop_winrate": 0.5278,
+      "ml_accuracy": 0.5104,
+      "best_drop_threshold": -0.1,
+      "trades": 17,
+      "score": 55.71
+    },
+    "UNITDSPR": {
+      "large_drop_winrate": 0.6667,
+      "vol_drop_winrate": 0.0,
+      "ml_accuracy": 0.2778,
+      "best_drop_threshold": -0.05,
+      "trades": 3,
+      "score": 33.19
+    },
+    "UNOMINDA": {
+      "large_drop_winrate": 0.5696,
+      "vol_drop_winrate": 0.5926,
+      "ml_accuracy": 0.5147,
+      "best_drop_threshold": -0.06,
+      "trades": 79,
+      "score": 59.48
+    },
+    "UPL": {
+      "large_drop_winrate": 0.537,
+      "vol_drop_winrate": 0.4286,
+      "ml_accuracy": 0.5032,
+      "best_drop_threshold": -0.07,
+      "trades": 54,
+      "score": 53.7
+    },
+    "VBL": {
+      "large_drop_winrate": 0.75,
+      "vol_drop_winrate": 0.6667,
+      "ml_accuracy": 0.4764,
+      "best_drop_threshold": -0.07,
+      "trades": 4,
+      "score": 60.17
+    },
+    "VEDL": {
+      "large_drop_winrate": 0.7143,
+      "vol_drop_winrate": 0.5424,
+      "ml_accuracy": 0.4765,
+      "best_drop_threshold": -0.1,
+      "trades": 28,
+      "score": 58.44
+    },
+    "VMM": {
+      "large_drop_winrate": 0.64,
+      "vol_drop_winrate": 0.0,
+      "ml_accuracy": 0.4694,
+      "best_drop_threshold": -0.03,
+      "trades": 25,
+      "score": 52.63
+    },
+    "VOLTAS": {
+      "large_drop_winrate": 0.5185,
+      "vol_drop_winrate": 0.3333,
+      "ml_accuracy": 0.4937,
+      "best_drop_threshold": -0.08,
+      "trades": 27,
+      "score": 50.8
+    },
+    "WAAREEENER": {
+      "large_drop_winrate": 0.6667,
+      "vol_drop_winrate": 0.5,
+      "ml_accuracy": 0.5439,
+      "best_drop_threshold": -0.08,
+      "trades": 3,
+      "score": 52.21
+    },
+    "WIPRO": {
+      "large_drop_winrate": 0.5769,
+      "vol_drop_winrate": 0.4524,
+      "ml_accuracy": 0.523,
+      "best_drop_threshold": -0.1,
+      "trades": 26,
+      "score": 55.07
+    },
+    "YESBANK": {
+      "large_drop_winrate": 0.5,
+      "vol_drop_winrate": 0.4857,
+      "ml_accuracy": 0.5311,
+      "best_drop_threshold": -0.06,
+      "trades": 124,
+      "score": 55.42
+    },
+    "ZYDUSLIFE": {
+      "large_drop_winrate": 0.5714,
+      "vol_drop_winrate": 0.3158,
+      "ml_accuracy": 0.497,
+      "best_drop_threshold": -0.08,
+      "trades": 7,
+      "score": 48.97
+    }
   },
-  "algorithms_tested": ["xgboost_v2", "lightgbm", "random_forest", "extra_trees", "gradient_boosting", "adaboost", "stacking", "voting"],
-  "patterns_tested": ["large_drop", "rsi2", "rsi2_enhanced", "connors_rsi", "triple_confirmation"],
+  "algorithms_tested": [
+    "xgboost_v2",
+    "lightgbm",
+    "random_forest",
+    "extra_trees",
+    "gradient_boosting",
+    "adaboost",
+    "stacking",
+    "voting"
+  ],
+  "patterns_tested": [
+    "large_drop",
+    "rsi2",
+    "rsi2_enhanced",
+    "connors_rsi",
+    "triple_confirmation"
+  ],
   "improvements_log": [
-    {"loop": 1, "change": "Binary classification", "impact": "+22% accuracy"},
-    {"loop": 1, "change": "WorldQuant alpha factors", "impact": "+5% accuracy"},
-    {"loop": 1, "change": "Purged train/test split", "impact": "honest evaluation"},
-    {"loop": 2, "change": "5yr data + 210 model combos", "impact": "65.9% best walk-forward"},
-    {"loop": 3, "change": "High win-rate patterns", "impact": "94.7% SBIN large drop"}
+    {
+      "loop": 1,
+      "change": "Binary classification",
+      "impact": "+22% accuracy"
+    },
+    {
+      "loop": 1,
+      "change": "WorldQuant alpha factors",
+      "impact": "+5% accuracy"
+    },
+    {
+      "loop": 1,
+      "change": "Purged train/test split",
+      "impact": "honest evaluation"
+    },
+    {
+      "loop": 2,
+      "change": "5yr data + 210 model combos",
+      "impact": "65.9% best walk-forward"
+    },
+    {
+      "loop": 3,
+      "change": "High win-rate patterns",
+      "impact": "94.7% SBIN large drop"
+    },
+    {
+      "loop": 4,
+      "stocks_scored": 212,
+      "elite_count": 9,
+      "best_winrate": 1.0,
+      "avg_score": 55.92
+    }
   ],
   "next_ideas": [
     "Narrower drop thresholds (3%, 4%, 7% instead of just 5%)",

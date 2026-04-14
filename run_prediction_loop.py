@@ -46,7 +46,7 @@ def save_memory(memory: dict):
 
 def test_large_drop(df: pd.DataFrame, threshold: float = -0.05) -> dict:
     """Test large drop mean reversion at various thresholds."""
-    returns = df["Close"].pct_change()
+    returns = df["Close"].pct_change(fill_method=None)
     next_day_return = df["Close"].shift(-1) / df["Close"] - 1
 
     drop_days = returns < threshold
@@ -107,7 +107,7 @@ def test_rsi2_pattern(df: pd.DataFrame) -> dict:
 
 def test_volume_drop(df: pd.DataFrame, drop_thresh: float = -0.05, vol_mult: float = 2.0) -> dict:
     """High volume drops revert more — volume-confirmed large drop."""
-    returns = df["Close"].pct_change()
+    returns = df["Close"].pct_change(fill_method=None)
     vol_avg = df["Volume"].rolling(20).mean()
     vol_ratio = df["Volume"] / vol_avg
 
@@ -251,7 +251,10 @@ def run_loop():
     for i, csv_path in enumerate(csv_files):
         symbol = csv_path.stem
         try:
-            df = pd.read_csv(csv_path, index_col=0, parse_dates=True)
+            # yfinance saves with 3-row header: Price, Ticker, Date
+            # Skip rows 1,2 (Ticker and empty Date rows)
+            df = pd.read_csv(csv_path, header=0, skiprows=[1, 2], index_col=0, parse_dates=True)
+            df = df.apply(pd.to_numeric, errors="coerce").dropna()
             if len(df) < 200:
                 log.debug(f"[{i+1}/{len(csv_files)}] {symbol}: too few rows ({len(df)}), skip")
                 continue
