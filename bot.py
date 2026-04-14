@@ -52,9 +52,16 @@ def test_connection():
         holdings = client.get_holdings()
         log.info(f"Holdings response: {json.dumps(holdings, indent=2, default=str)[:500]}")
 
-        # Test LTP
-        ltp = client.get_ltp("RELIANCE-EQ", exchange="NSE", segment="CASH")
-        log.info(f"RELIANCE LTP: ₹{ltp}")
+        # Test quote (LTP)
+        quote = client.get_quote("RELIANCE-EQ", exchange="NSE", segment="CASH")
+        ltp = quote.get("last_price", "N/A")
+        change = quote.get("day_change_perc", 0)
+        log.info(f"RELIANCE LTP: Rs.{ltp} ({change:+.2f}%)")
+
+        # Test margin
+        margin = client.get_margin()
+        clear_cash = margin.get("clear_cash", 0)
+        log.info(f"Available margin: Rs.{clear_cash:,.0f}")
 
         return True
     except Exception as e:

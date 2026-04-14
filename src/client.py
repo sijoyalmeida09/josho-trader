@@ -4,9 +4,8 @@ Handles token generation, session management, and reconnection.
 """
 
 import os
-import hashlib
-import time
 import logging
+import time
 from typing import Optional
 
 from dotenv import load_dotenv
@@ -34,67 +33,47 @@ class GrowwClient:
 
         log.info("Authenticating with Groww API...")
 
-        # Try TOTP flow first (the JWT token contains role=auth-totp)
-        try:
-            import pyotp
-            totp_gen = pyotp.TOTP(self.secret)
-            totp_code = totp_gen.now()
-            log.info(f"Using TOTP auth (code: {totp_code})")
-
-            self._token = GrowwAPI.get_access_token(
-                api_key=self.api_key,
-                totp=totp_code,
-            )
-            self._api = GrowwAPI(self._token)
-            self._token_expiry = time.time() + 3600 * 8
-            log.info("Connected to Groww API via TOTP")
-            return self._api
-        except Exception as e1:
-            log.warning(f"TOTP auth failed: {e1}")
-
-        # Fallback: API Key + Secret (approval-based)
+        # Get access token using API Key + Secret
         try:
             self._token = GrowwAPI.get_access_token(
                 api_key=self.api_key,
                 secret=self.secret,
             )
             self._api = GrowwAPI(self._token)
-            self._token_expiry = time.time() + 3600 * 8
-            log.info("Connected to Groww API via API Key+Secret")
+            self._token_expiry = time.time() + 3600 * 8  # 8 hour session
+            log.info("Connected to Groww API")
             return self._api
-        except Exception as e2:
-            log.error(f"API Key+Secret auth also failed: {e2}")
-
-        # Last resort: use the API key directly as access token
-        # (if it's already a valid JWT session token)
-        try:
-            log.info("Attempting direct token usage...")
-            self._api = GrowwAPI(self.api_key)
-            self._token = self.api_key
-            self._token_expiry = time.time() + 3600 * 8
-            # Test with a simple call
-            self._api.get_positions_for_user()
-            log.info("Connected to Groww API via direct token")
-            return self._api
-        except Exception as e3:
-            log.error(f"Direct token also failed: {e3}")
-            raise RuntimeError(
-                "All auth methods failed. "
-                "Go to groww.in/trade-api/api-keys and approve today's session, "
-                "or regenerate your API key."
-            )
+        except Exception as e:
+            log.error(f"Groww auth failed: {e}")
+            raise
 
     @property
     def api(self) -> GrowwAPI:
         """Get the authenticated API instance, reconnecting if needed."""
         return self.connect()
 
-    # ── Convenience Methods ───────────────────────────────────────
+    # ── Account ───────────────────────────────────────────────────
 
-    def get_positions(self) -> dict:
+    def get_profile(self) -> dict:
+        """Get user profile."""
+        try:
+            return self.api.get_user_profile()
+        except Exception as e:
+            log.error(f"Failed to get profile: {e}")
+            return {}
+
+    def get_margin(self) -> dict:
+        """Get available margin details."""
+        try:
+            return self.api.get_available_margin_details()
+        except Exception as e:
+            log.error(f"Failed to get margin: {e}")
+            return {}
+
+    def get_positions(self, segment: Optional[str] = None) -> dict:
         """Get all open positions."""
         try:
-            return self.api.get_positions_for_user()
+            return self.api.get_positions_for_user(segment=segment)
         except Exception as e:
             log.error(f"Failed to get positions: {e}")
             return {}
@@ -107,35 +86,87 @@ class GrowwClient:
             log.error(f"Failed to get holdings: {e}")
             return {}
 
-    def get_profile(self) -> dict:
-        """Get user profile."""
-        try:
-            return self.api.get_user_profile()
-        except Exception as e:
-            log.error(f"Failed to get profile: {e}")
-            return {}
+    # ── Market Data ───────────────────────────────────────────────
 
-    def get_option_chain(self, symbol: str, expiry: str) -> dict:
-        """Get option chain from Groww API."""
+    def get_quote(self, symbol: str, exchange: str = "NSE", segment: str = "CASH") -> dict:
+        """Get full quote for a symbol (OHLC, depth, volume, circuit limits)."""
         try:
-            return self.api.get_option_chain(
+            return self.api.get_quote(
                 trading_symbol=symbol,
-                expiry_date=expiry,
+                exchange=exchange,
+                segment=segment,
             )
         except Exception as e:
-            log.error(f"Option chain failed for {symbol}: {e}")
+            log.error(f"Quote failed for {symbol}: {e}")
             return {}
 
-    def get_expiries(self, symbol: str) -> dict:
-        """Get available expiry dates."""
+    def get_ohlc(self, symbol: str, exchange: str = "NSE", segment: str = "CASH") -> dict:
+        """Get OHLC data."""
         try:
-            return self.api.get_expiries(trading_symbol=symbol)
+            return self.api.get_ohlc(
+                trading_symbol=symbol,
+                exchange=exchange,
+                segment=segment,
+            )
         except Exception as e:
-            log.error(f"Expiries failed for {symbol}: {e}")
+            log.error(f"OHLC failed for {symbol}: {e}")
+            return {}
+
+    def get_ltp_price(self, symbol: str, exchange: str = "NSE", segment: str = "CASH") -> Optional[float]:
+        """Get LTP via quote (since get_ltp has tuple format)."""
+        quote = self.get_quote(symbol, exchange, segment)
+        return quote.get("last_price")
+
+    def get_historical(
+        self,
+        symbol: str,
+        exchange: str,
+        segment: str,
+        interval: str = "1d",
+        from_date: str = "",
+        to_date: str = "",
+    ) -> dict:
+        """Get historical candle data."""
+        try:
+            return self.api.get_historical_candles(
+                trading_symbol=symbol,
+                exchange=exchange,
+                segment=segment,
+                interval=interval,
+                from_date=from_date,
+                to_date=to_date,
+            )
+        except Exception as e:
+            log.error(f"Historical data failed for {symbol}: {e}")
+            return {}
+
+    # ── F&O Specific ──────────────────────────────────────────────
+
+    def get_option_chain(self, underlying: str, expiry_date: str, exchange: str = "NSE") -> dict:
+        """Get option chain for an underlying (NIFTY, BANKNIFTY, etc)."""
+        try:
+            return self.api.get_option_chain(
+                exchange=exchange,
+                underlying=underlying,
+                expiry_date=expiry_date,
+            )
+        except Exception as e:
+            log.error(f"Option chain failed for {underlying}: {e}")
+            return {}
+
+    def get_expiries(self, underlying: str, exchange: str = "NSE") -> dict:
+        """Get available expiry dates for an underlying."""
+        try:
+            return self.api.get_expiries(
+                exchange=exchange,
+                underlying_symbol=underlying,
+            )
+        except Exception as e:
+            log.error(f"Expiries failed for {underlying}: {e}")
             return {}
 
     def get_greeks(self, symbol: str, exchange: str = "NSE") -> dict:
-        """Get option greeks."""
+        """Get option greeks (delta, gamma, theta, vega, IV)."""
         try:
             return self.api.get_greeks(
                 trading_symbol=symbol,
@@ -145,30 +176,7 @@ class GrowwClient:
             log.error(f"Greeks failed for {symbol}: {e}")
             return {}
 
-    def get_ltp(self, symbol: str, exchange: str = "NSE", segment: str = "FNO") -> Optional[float]:
-        """Get last traded price for a symbol."""
-        try:
-            data = self.api.get_ltp(
-                trading_symbol=symbol,
-                exchange=exchange,
-                segment=segment,
-            )
-            return data.get("payload", {}).get("ltp")
-        except Exception as e:
-            log.error(f"LTP fetch failed for {symbol}: {e}")
-            return None
-
-    def get_quote(self, symbol: str, exchange: str = "NSE", segment: str = "FNO") -> dict:
-        """Get full quote for a symbol."""
-        try:
-            return self.api.get_quote(
-                trading_symbol=symbol,
-                exchange=exchange,
-                segment=segment,
-            )
-        except Exception as e:
-            log.error(f"Quote fetch failed for {symbol}: {e}")
-            return {}
+    # ── Orders ────────────────────────────────────────────────────
 
     def place_order(
         self,
@@ -177,22 +185,25 @@ class GrowwClient:
         side: str,  # "BUY" or "SELL"
         order_type: str = "MARKET",
         price: float = 0,
+        trigger_price: float = None,
         product: str = "NRML",
         segment: str = "FNO",
         exchange: str = "NSE",
+        validity: str = "DAY",
     ) -> dict:
-        """Place an F&O order."""
+        """Place an order (equity or F&O)."""
         try:
             return self.api.place_order(
                 trading_symbol=symbol,
                 quantity=qty,
-                validity="DAY",
+                validity=validity,
                 exchange=exchange,
                 segment=segment,
                 product=product,
                 order_type=order_type,
                 transaction_type=side,
                 price=price,
+                trigger_price=trigger_price,
             )
         except Exception as e:
             log.error(f"Order failed: {side} {qty}x {symbol} @ {price}: {e}")
@@ -213,6 +224,33 @@ class GrowwClient:
         except Exception as e:
             log.error(f"Cancel failed for {order_id}: {e}")
             return {"status": "FAILED", "error": str(e)}
+
+    def get_orders(self) -> dict:
+        """Get all orders for today."""
+        try:
+            return self.api.get_order_list()
+        except Exception as e:
+            log.error(f"Order list failed: {e}")
+            return {}
+
+    def get_order_status(self, order_id: str) -> dict:
+        """Get status of a specific order."""
+        try:
+            return self.api.get_order_status(groww_order_id=order_id)
+        except Exception as e:
+            log.error(f"Order status failed for {order_id}: {e}")
+            return {}
+
+    # ── WebSocket ─────────────────────────────────────────────────
+
+    def get_socket_token(self) -> str:
+        """Get token for WebSocket live feed connection."""
+        try:
+            result = self.api.generate_socket_token()
+            return result.get("token", "")
+        except Exception as e:
+            log.error(f"Socket token failed: {e}")
+            return ""
 
 
 # Singleton
