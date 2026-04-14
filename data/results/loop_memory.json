@@ -1,0 +1,32 @@
+{
+  "target_accuracy": 0.97,
+  "loop_count": 3,
+  "last_updated": "2026-04-14T02:30:00",
+  "best_results": {
+    "SBIN": {"large_drop_winrate": 0.947, "ml_accuracy": 0.621, "pattern": "LargeDropMeanReversion", "trades": 38},
+    "ICICIBANK": {"large_drop_winrate": null, "ml_accuracy": 0.671, "pattern": "XGBoost_V2", "trades": null},
+    "HDFCBANK": {"large_drop_winrate": 0.762, "ml_accuracy": 0.580, "pattern": "LargeDropMeanReversion", "trades": 21},
+    "BAJFINANCE": {"large_drop_winrate": 0.706, "ml_accuracy": 0.463, "pattern": "LargeDropMeanReversion", "trades": 17}
+  },
+  "algorithms_tested": ["xgboost_v2", "lightgbm", "random_forest", "extra_trees", "gradient_boosting", "adaboost", "stacking", "voting"],
+  "patterns_tested": ["large_drop", "rsi2", "rsi2_enhanced", "connors_rsi", "triple_confirmation"],
+  "improvements_log": [
+    {"loop": 1, "change": "Binary classification", "impact": "+22% accuracy"},
+    {"loop": 1, "change": "WorldQuant alpha factors", "impact": "+5% accuracy"},
+    {"loop": 1, "change": "Purged train/test split", "impact": "honest evaluation"},
+    {"loop": 2, "change": "5yr data + 210 model combos", "impact": "65.9% best walk-forward"},
+    {"loop": 3, "change": "High win-rate patterns", "impact": "94.7% SBIN large drop"}
+  ],
+  "next_ideas": [
+    "Narrower drop thresholds (3%, 4%, 7% instead of just 5%)",
+    "Time-of-day filter (morning drops vs afternoon drops)",
+    "Volume filter on drops (high volume drops revert more)",
+    "Combine ML confidence + pattern win rate",
+    "Sector-specific models (banking, IT, pharma)",
+    "VIX-regime filter (drops during low VIX revert more)",
+    "Multi-day pattern (drop day 1 + confirmation day 2)",
+    "CatBoost algorithm (handles categorical features)",
+    "FinBERT sentiment as feature",
+    "Options flow data as feature"
+  ]
+}
