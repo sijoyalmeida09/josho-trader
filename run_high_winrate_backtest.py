@@ -64,7 +64,7 @@ CONFIG = BacktestConfig(
     initial_capital=100_000.0,    # Rs 1 lakh
     commission_pct=0.03,          # Zerodha-like
     slippage_pct=0.05,
-    position_size_pct=95.0,       # near full allocation per trade (single stock)
+    position_size_pct=20.0,       # 20% per trade to avoid compounding distortion
     max_positions=1,              # one position at a time
     risk_free_rate=6.5,
 )
@@ -131,6 +131,10 @@ def run_all():
         for strat in strategies:
             # Reset strategy state
             strat._in_position = False
+
+            # Precompute ConnorsRSI indicators on full dataset
+            if hasattr(strat, "precompute"):
+                strat.precompute(df)
 
             try:
                 engine = BacktestEngine(strat, df, CONFIG)

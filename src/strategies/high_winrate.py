@@ -10,6 +10,7 @@ Strategies:
 
 Each strategy extends Strategy from base.py and works with
 the BacktestEngine's bar-by-bar analyze() interface.
+All strategies support precompute() for O(n) backtesting instead of O(n^2).
 """
 
 import numpy as np
@@ -33,27 +34,26 @@ def _rsi_custom(series: pd.Series, period: int) -> pd.Series:
 
 
 def _streak_series(close: pd.Series) -> pd.Series:
-    """Count consecutive up/down day streak. Positive = up, negative = down."""
-    diff = close.diff()
-    streak = pd.Series(0, index=close.index, dtype=float)
-    for i in range(1, len(close)):
-        if diff.iloc[i] > 0:
-            streak.iloc[i] = max(streak.iloc[i - 1], 0) + 1
-        elif diff.iloc[i] < 0:
-            streak.iloc[i] = min(streak.iloc[i - 1], 0) - 1
-        else:
-            streak.iloc[i] = 0
-    return streak
+    """Count consecutive up/down day streak using numpy."""
+    vals = close.values
+    diff_vals = np.diff(vals)
+    streak_arr = np.zeros(len(vals), dtype=float)
+    for i in range(len(diff_vals)):
+        if diff_vals[i] > 0:
+            streak_arr[i + 1] = max(streak_arr[i], 0) + 1
+        elif diff_vals[i] < 0:
+            streak_arr[i + 1] = min(streak_arr[i], 0) - 1
+    return pd.Series(streak_arr, index=close.index, dtype=float)
 
 
 def _percentile_rank(series: pd.Series, lookback: int = 100) -> pd.Series:
     """Percentile rank of each value within its trailing window."""
-    result = pd.Series(np.nan, index=series.index, dtype=float)
-    for i in range(lookback, len(series)):
-        window = series.iloc[i - lookback : i + 1]
-        current = series.iloc[i]
-        result.iloc[i] = (window < current).sum() / lookback * 100
-    return result
+    def _pct_rank(window):
+        return (window[:-1] < window[-1]).sum() / lookback * 100
+
+    return series.rolling(
+        window=lookback + 1, min_periods=lookback + 1
+    ).apply(_pct_rank, raw=True)
 
 
 # ── Strategy 1: RSI2 Mean Reversion ──────────────────────────────
@@ -88,33 +88,52 @@ class RSI2MeanReversion(Strategy):
         self.trend_sma_period = trend_sma_period
         self.enhanced = enhanced
         self._in_position = False
+        self._pc = None  # precomputed cache
 
     def get_required_symbols(self) -> list[str]:
         return [self.symbol]
+
+    def precompute(self, full_df: pd.DataFrame) -> None:
+        """Precompute all indicators once on full dataset."""
+        close = full_df["close"]
+        self._pc = {
+            "rsi2": _rsi_custom(close, self.rsi_period),
+            "sma200": close.rolling(window=self.trend_sma_period).mean(),
+            "sma5": close.rolling(window=self.exit_sma_period).mean(),
+            "close": close,
+        }
 
     def analyze(self, market_data: dict) -> list[Signal]:
         df = market_data.get(self.symbol)
         if df is None:
             df = market_data.get("default")
-        if df is None or len(df) < self.trend_sma_period + 5:
+        if df is None:
             return []
 
-        close = df["close"]
-        rsi2 = _rsi_custom(close, self.rsi_period)
-        sma200 = close.rolling(window=self.trend_sma_period).mean()
-        sma5 = close.rolling(window=self.exit_sma_period).mean()
+        idx = len(df) - 1
+        if idx < self.trend_sma_period + 5:
+            return []
 
-        current_close = close.iloc[-1]
-        current_rsi = rsi2.iloc[-1]
-        current_sma200 = sma200.iloc[-1]
-        current_sma5 = sma5.iloc[-1]
+        # Use precomputed values by index
+        if self._pc is not None:
+            current_close = self._pc["close"].iloc[idx]
+            current_rsi = self._pc["rsi2"].iloc[idx]
+            current_sma200 = self._pc["sma200"].iloc[idx]
+            current_sma5 = self._pc["sma5"].iloc[idx]
+            rsi2_series = self._pc["rsi2"]
+        else:
+            close = df["close"]
+            rsi2_series = _rsi_custom(close, self.rsi_period)
+            current_close = close.iloc[-1]
+            current_rsi = rsi2_series.iloc[-1]
+            current_sma200 = close.rolling(window=self.trend_sma_period).mean().iloc[-1]
+            current_sma5 = close.rolling(window=self.exit_sma_period).mean().iloc[-1]
 
         if pd.isna(current_rsi) or pd.isna(current_sma200):
             return []
 
         signals = []
 
-        # Exit condition: price above 5-day SMA
         if self._in_position:
             if current_close > current_sma5:
                 self._in_position = False
@@ -127,13 +146,11 @@ class RSI2MeanReversion(Strategy):
                 ))
             return signals
 
-        # Entry condition: uptrend + RSI(2) oversold
         if current_close > current_sma200:
             if self.enhanced:
-                # Require 3 consecutive bars with RSI(2) < 10
-                if len(rsi2) >= 3:
-                    last3 = rsi2.iloc[-3:]
-                    if all(v < 10 for v in last3 if not pd.isna(v)):
+                if idx >= 2:
+                    vals = [rsi2_series.iloc[idx - 2], rsi2_series.iloc[idx - 1], rsi2_series.iloc[idx]]
+                    if all(not pd.isna(v) and v < 10 for v in vals):
                         self._in_position = True
                         signals.append(Signal(
                             signal_type=SignalType.BUY,
@@ -194,40 +211,55 @@ class ConnorsRSI(Strategy):
         self.trend_sma_period = trend_sma_period
         self.exit_sma_period = exit_sma_period
         self._in_position = False
+        self._pc = None
 
     def get_required_symbols(self) -> list[str]:
         return [self.symbol]
+
+    def precompute(self, full_df: pd.DataFrame) -> None:
+        """Precompute all indicators once on the full dataset."""
+        close = full_df["close"]
+        rsi3 = _rsi_custom(close, self.rsi_period)
+        streak = _streak_series(close)
+        streak_rsi = _rsi_custom(streak, self.streak_rsi_period)
+        daily_return = close.pct_change()
+        pct_rank = _percentile_rank(daily_return, self.pct_rank_lookback)
+        self._pc = {
+            "connors": (rsi3 + streak_rsi + pct_rank) / 3,
+            "sma200": close.rolling(window=self.trend_sma_period).mean(),
+            "sma5": close.rolling(window=self.exit_sma_period).mean(),
+            "close": close,
+        }
 
     def analyze(self, market_data: dict) -> list[Signal]:
         df = market_data.get(self.symbol)
         if df is None:
             df = market_data.get("default")
-        if df is None or len(df) < max(self.trend_sma_period, self.pct_rank_lookback) + 10:
+        if df is None:
             return []
 
-        close = df["close"]
+        idx = len(df) - 1
+        min_needed = max(self.trend_sma_period, self.pct_rank_lookback) + 10
+        if idx < min_needed:
+            return []
 
-        # Component 1: RSI(3)
-        rsi3 = _rsi_custom(close, self.rsi_period)
-
-        # Component 2: Streak RSI
-        streak = _streak_series(close)
-        streak_rsi = _rsi_custom(streak, self.streak_rsi_period)
-
-        # Component 3: Percentile rank of daily return
-        daily_return = close.pct_change()
-        pct_rank = _percentile_rank(daily_return, self.pct_rank_lookback)
-
-        # Connors RSI = average of 3 components
-        connors = (rsi3 + streak_rsi + pct_rank) / 3
-
-        sma200 = close.rolling(window=self.trend_sma_period).mean()
-        sma5 = close.rolling(window=self.exit_sma_period).mean()
-
-        current_close = close.iloc[-1]
-        current_connors = connors.iloc[-1]
-        current_sma200 = sma200.iloc[-1]
-        current_sma5 = sma5.iloc[-1]
+        if self._pc is not None:
+            current_close = self._pc["close"].iloc[idx]
+            current_connors = self._pc["connors"].iloc[idx]
+            current_sma200 = self._pc["sma200"].iloc[idx]
+            current_sma5 = self._pc["sma5"].iloc[idx]
+        else:
+            close = df["close"]
+            rsi3 = _rsi_custom(close, self.rsi_period)
+            streak = _streak_series(close)
+            streak_rsi = _rsi_custom(streak, self.streak_rsi_period)
+            daily_return = close.pct_change()
+            pct_rank = _percentile_rank(daily_return, self.pct_rank_lookback)
+            connors = (rsi3 + streak_rsi + pct_rank) / 3
+            current_close = close.iloc[-1]
+            current_connors = connors.iloc[-1]
+            current_sma200 = close.rolling(window=self.trend_sma_period).mean().iloc[-1]
+            current_sma5 = close.rolling(window=self.exit_sma_period).mean().iloc[-1]
 
         if pd.isna(current_connors) or pd.isna(current_sma200):
             return []
@@ -304,27 +336,51 @@ class TripleConfirmationBounce(Strategy):
         self._in_position = False
         self._entry_price = 0.0
         self._bars_held = 0
+        self._pc = None
 
     def get_required_symbols(self) -> list[str]:
         return [self.symbol]
+
+    def precompute(self, full_df: pd.DataFrame) -> None:
+        """Precompute all indicators once."""
+        close = full_df["close"]
+        bb = bollinger_bands(full_df, self.bb_period, self.bb_std)
+        avg_vol = full_df["volume"].rolling(window=self.bb_period).mean()
+        self._pc = {
+            "rsi14": _rsi_custom(close, self.rsi_period),
+            "bb_lower": bb["lower"],
+            "bb_middle": bb["middle"],
+            "vol_ratio": full_df["volume"] / avg_vol,
+            "close": close,
+        }
 
     def analyze(self, market_data: dict) -> list[Signal]:
         df = market_data.get(self.symbol)
         if df is None:
             df = market_data.get("default")
-        if df is None or len(df) < self.bb_period + 5:
+        if df is None:
             return []
 
-        close = df["close"]
-        rsi14 = _rsi_custom(close, self.rsi_period)
-        bb = bollinger_bands(df, self.bb_period, self.bb_std)
-        vol_ratio = volume_surge(df, self.bb_period, self.volume_mult)
+        idx = len(df) - 1
+        if idx < self.bb_period + 5:
+            return []
 
-        current_close = close.iloc[-1]
-        current_rsi = rsi14.iloc[-1]
-        current_lower_bb = bb["lower"].iloc[-1]
-        current_middle_bb = bb["middle"].iloc[-1]
-        current_vol_ratio = vol_ratio.iloc[-1]
+        if self._pc is not None:
+            current_close = self._pc["close"].iloc[idx]
+            current_rsi = self._pc["rsi14"].iloc[idx]
+            current_lower_bb = self._pc["bb_lower"].iloc[idx]
+            current_middle_bb = self._pc["bb_middle"].iloc[idx]
+            current_vol_ratio = self._pc["vol_ratio"].iloc[idx]
+        else:
+            close = df["close"]
+            rsi14 = _rsi_custom(close, self.rsi_period)
+            bb = bollinger_bands(df, self.bb_period, self.bb_std)
+            avg_vol = df["volume"].rolling(window=self.bb_period).mean()
+            current_close = close.iloc[-1]
+            current_rsi = rsi14.iloc[-1]
+            current_lower_bb = bb["lower"].iloc[-1]
+            current_middle_bb = bb["middle"].iloc[-1]
+            current_vol_ratio = (df["volume"].iloc[-1] / avg_vol.iloc[-1])
 
         if any(pd.isna(v) for v in [current_rsi, current_lower_bb, current_vol_ratio]):
             return []
@@ -334,44 +390,34 @@ class TripleConfirmationBounce(Strategy):
         if self._in_position:
             self._bars_held += 1
 
-            # Stop loss
             loss_pct = (current_close - self._entry_price) / self._entry_price * 100
             if loss_pct < -self.stop_loss_pct:
                 self._in_position = False
                 signals.append(Signal(
-                    signal_type=SignalType.EXIT,
-                    symbol=self.symbol,
-                    price=current_close,
-                    reason="stop_loss",
+                    signal_type=SignalType.EXIT, symbol=self.symbol,
+                    price=current_close, reason="stop_loss",
                     strategy_name=self.name,
                 ))
                 return signals
 
-            # Time stop
             if self._bars_held >= self.time_stop_bars:
                 self._in_position = False
                 signals.append(Signal(
-                    signal_type=SignalType.EXIT,
-                    symbol=self.symbol,
-                    price=current_close,
-                    reason="time_stop",
+                    signal_type=SignalType.EXIT, symbol=self.symbol,
+                    price=current_close, reason="time_stop",
                     strategy_name=self.name,
                 ))
                 return signals
 
-            # Profit exit: above middle BB or RSI > 50
             if current_close > current_middle_bb or current_rsi > self.rsi_exit:
                 self._in_position = False
                 signals.append(Signal(
-                    signal_type=SignalType.EXIT,
-                    symbol=self.symbol,
-                    price=current_close,
-                    reason="profit_target",
+                    signal_type=SignalType.EXIT, symbol=self.symbol,
+                    price=current_close, reason="profit_target",
                     strategy_name=self.name,
                 ))
             return signals
 
-        # Entry: all 3 conditions
         if (
             current_rsi < self.rsi_entry
             and current_close < current_lower_bb
@@ -381,8 +427,7 @@ class TripleConfirmationBounce(Strategy):
             self._entry_price = current_close
             self._bars_held = 0
             signals.append(Signal(
-                signal_type=SignalType.BUY,
-                symbol=self.symbol,
+                signal_type=SignalType.BUY, symbol=self.symbol,
                 price=current_close,
                 stop_loss=current_close * (1 - self.stop_loss_pct / 100),
                 confidence=0.8,
@@ -425,66 +470,72 @@ class LargeDropMeanReversion(Strategy):
         self._in_position = False
         self._entry_price = 0.0
         self._bars_held = 0
+        self._pc = None
 
     def get_required_symbols(self) -> list[str]:
         return [self.symbol]
+
+    def precompute(self, full_df: pd.DataFrame) -> None:
+        close = full_df["close"]
+        self._pc = {
+            "close": close,
+            "daily_ret": close.pct_change() * 100,
+        }
 
     def analyze(self, market_data: dict) -> list[Signal]:
         df = market_data.get(self.symbol)
         if df is None:
             df = market_data.get("default")
-        if df is None or len(df) < 3:
+        if df is None:
             return []
 
-        close = df["close"]
-        current_close = close.iloc[-1]
-        prev_close = close.iloc[-2]
-        daily_return = (current_close - prev_close) / prev_close * 100
+        idx = len(df) - 1
+        if idx < 2:
+            return []
+
+        if self._pc is not None:
+            current_close = self._pc["close"].iloc[idx]
+            daily_return = self._pc["daily_ret"].iloc[idx]
+        else:
+            close = df["close"]
+            current_close = close.iloc[-1]
+            prev_close = close.iloc[-2]
+            daily_return = (current_close - prev_close) / prev_close * 100
 
         signals = []
 
         if self._in_position:
             self._bars_held += 1
 
-            # Stop loss
             loss_pct = (current_close - self._entry_price) / self._entry_price * 100
             if loss_pct < -self.stop_loss_pct:
                 self._in_position = False
                 signals.append(Signal(
-                    signal_type=SignalType.EXIT,
-                    symbol=self.symbol,
-                    price=current_close,
-                    reason="stop_loss",
+                    signal_type=SignalType.EXIT, symbol=self.symbol,
+                    price=current_close, reason="stop_loss",
                     strategy_name=self.name,
                 ))
                 return signals
 
-            # Target hit
             gain_pct = (current_close - self._entry_price) / self._entry_price * 100
             if gain_pct >= self.target_pct:
                 self._in_position = False
                 signals.append(Signal(
-                    signal_type=SignalType.EXIT,
-                    symbol=self.symbol,
-                    price=current_close,
-                    reason="target_hit",
+                    signal_type=SignalType.EXIT, symbol=self.symbol,
+                    price=current_close, reason="target_hit",
                     strategy_name=self.name,
                 ))
                 return signals
 
-            # Time stop (max hold)
             if self._bars_held >= self.max_hold_days:
                 self._in_position = False
                 signals.append(Signal(
-                    signal_type=SignalType.EXIT,
-                    symbol=self.symbol,
-                    price=current_close,
-                    reason="time_stop",
+                    signal_type=SignalType.EXIT, symbol=self.symbol,
+                    price=current_close, reason="time_stop",
                     strategy_name=self.name,
                 ))
             return signals
 
-        # Entry: single-day drop exceeds threshold
         if daily_return <= self.drop_threshold:
             self._in_position = True
             self._entry_price = current_close
@@ -492,11 +543,8 @@ class LargeDropMeanReversion(Strategy):
             stop = current_close * (1 - self.stop_loss_pct / 100)
             target = current_close * (1 + self.target_pct / 100)
             signals.append(Signal(
-                signal_type=SignalType.BUY,
-                symbol=self.symbol,
-                price=current_close,
-                stop_loss=stop,
-                target=target,
+                signal_type=SignalType.BUY, symbol=self.symbol,
+                price=current_close, stop_loss=stop, target=target,
                 confidence=0.78,
                 reason=f"large_drop={daily_return:.1f}%",
                 strategy_name=self.name,
@@ -514,7 +562,6 @@ class IronCondorSimulated(Strategy):
 
     Since we don't have options chain data, we simulate:
     - Entry when implied vol (approximated by ATR%) is above threshold
-    - Collect premium = f(ATR%)
     - Win if price stays within +/- strike_width% over holding period
     - Lose if price breaks out beyond the range
 
@@ -551,30 +598,52 @@ class IronCondorSimulated(Strategy):
         self._bars_held = 0
         self._upper_strike = 0.0
         self._lower_strike = 0.0
+        self._pc = None
 
     def get_required_symbols(self) -> list[str]:
         return [self.symbol]
 
-    def analyze(self, market_data: dict) -> list[Signal]:
-        df = market_data.get(self.symbol)
-        if df is None:
-            df = market_data.get("default")
-        if df is None or len(df) < 22:
-            return []
-
-        close = df["close"]
-        current_close = close.iloc[-1]
-
-        # Approximate implied vol using ATR% (14-day ATR / close * 100)
-        high = df["high"]
-        low = df["low"]
+    def precompute(self, full_df: pd.DataFrame) -> None:
+        close = full_df["close"]
+        high = full_df["high"]
+        low = full_df["low"]
         tr = pd.concat([
             high - low,
             (high - close.shift()).abs(),
             (low - close.shift()).abs(),
         ], axis=1).max(axis=1)
         atr14 = tr.rolling(14).mean()
-        atr_pct = (atr14.iloc[-1] / current_close) * 100
+        self._pc = {
+            "close": close,
+            "atr_pct": (atr14 / close) * 100,
+        }
+
+    def analyze(self, market_data: dict) -> list[Signal]:
+        df = market_data.get(self.symbol)
+        if df is None:
+            df = market_data.get("default")
+        if df is None:
+            return []
+
+        idx = len(df) - 1
+        if idx < 21:
+            return []
+
+        if self._pc is not None:
+            current_close = self._pc["close"].iloc[idx]
+            atr_pct = self._pc["atr_pct"].iloc[idx]
+        else:
+            close = df["close"]
+            current_close = close.iloc[-1]
+            high = df["high"]
+            low = df["low"]
+            tr = pd.concat([
+                high - low,
+                (high - close.shift()).abs(),
+                (low - close.shift()).abs(),
+            ], axis=1).max(axis=1)
+            atr14 = tr.rolling(14).mean()
+            atr_pct = (atr14.iloc[-1] / current_close) * 100
 
         if pd.isna(atr_pct):
             return []
@@ -584,14 +653,9 @@ class IronCondorSimulated(Strategy):
         if self._in_position:
             self._bars_held += 1
 
-            # Simulate P&L: premium erodes as time passes (theta decay)
-            # but price movement can cause losses
             price_move_pct = abs(current_close - self._entry_price) / self._entry_price * 100
-
-            # Theta decay: earn proportional premium per day
             time_decay_earned = self._premium_collected * (self._bars_held / self.hold_days)
 
-            # If price breached a strike, loss increases
             if current_close > self._upper_strike or current_close < self._lower_strike:
                 breach = max(
                     current_close - self._upper_strike,
@@ -599,59 +663,45 @@ class IronCondorSimulated(Strategy):
                     0,
                 )
                 unrealized_loss = (breach / self._entry_price) * 100
-
-                # Stop loss: 2x premium
                 if unrealized_loss > self._premium_collected * self.stop_loss_mult:
                     self._in_position = False
                     signals.append(Signal(
-                        signal_type=SignalType.EXIT,
-                        symbol=self.symbol,
-                        price=current_close,
-                        reason="ic_stop_loss_breach",
+                        signal_type=SignalType.EXIT, symbol=self.symbol,
+                        price=current_close, reason="ic_stop_loss_breach",
                         strategy_name=self.name,
                     ))
                     return signals
 
-            # Take profit: 50% of premium earned through decay
             if time_decay_earned >= self._premium_collected * (self.take_profit_pct / 100):
                 if price_move_pct < self.strike_width_pct * 0.7:
                     self._in_position = False
                     signals.append(Signal(
-                        signal_type=SignalType.EXIT,
-                        symbol=self.symbol,
-                        price=current_close,
-                        reason="ic_take_profit_50pct",
+                        signal_type=SignalType.EXIT, symbol=self.symbol,
+                        price=current_close, reason="ic_take_profit_50pct",
                         strategy_name=self.name,
                     ))
                     return signals
 
-            # Time exit: 1 day before expiry
             if self._bars_held >= self.hold_days - 1:
                 self._in_position = False
                 signals.append(Signal(
-                    signal_type=SignalType.EXIT,
-                    symbol=self.symbol,
-                    price=current_close,
-                    reason="ic_expiry_exit",
+                    signal_type=SignalType.EXIT, symbol=self.symbol,
+                    price=current_close, reason="ic_expiry_exit",
                     strategy_name=self.name,
                 ))
             return signals
 
-        # Entry: volatility above threshold (enough premium to sell)
         if atr_pct > self.min_vol_threshold:
             self._in_position = True
             self._entry_price = current_close
             self._bars_held = 0
             self._upper_strike = current_close * (1 + self.strike_width_pct / 100)
             self._lower_strike = current_close * (1 - self.strike_width_pct / 100)
-            # Premium approximation: ~0.3-0.5% of spot for 10-delta IC
             self._premium_collected = atr_pct * 0.25
 
             signals.append(Signal(
-                signal_type=SignalType.BUY,
-                symbol=self.symbol,
-                price=current_close,
-                confidence=0.86,
+                signal_type=SignalType.BUY, symbol=self.symbol,
+                price=current_close, confidence=0.86,
                 reason=f"ic_entry_atr_pct={atr_pct:.2f}",
                 strategy_name=self.name,
                 metadata={
