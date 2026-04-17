@@ -50,18 +50,27 @@ class PerpetualTrader:
 
     def __init__(self, client, capital: float = 5000, stock: str = "COALINDIA"):
         self.client = client
+        self.initial_capital = capital  # SACRED — never go below this
         self.capital = capital
         self.stock = stock
         self.exit_engine = ExitEngine()
         self.calc = ChargeCalculator()
 
+        # ── RATCHET: Money only goes UP ──────────────────
+        # locked_profits can NEVER be risked. Only unlocked capital trades.
+        # After every winning trade, profit moves to locked.
+        # Floor = initial_capital + locked_profits (always rises, never falls)
+        self.locked_profits = 0    # profits already secured (untouchable)
+        self.high_water_mark = capital  # highest capital ever seen
+        self.floor = capital       # minimum capital allowed (only goes UP)
+
         # State
-        self.position = None       # current position {symbol, type, entry, lot, cost, prices[], volumes[]}
-        self.history = []           # all closed trades
+        self.position = None
+        self.history = []
         self.total_pnl = 0
         self.trade_count = 0
         self.win_count = 0
-        self.cycle_count = 0       # call→put→call = 1 cycle
+        self.cycle_count = 0
         self.peak_prices = []
         self.valley_prices = []
 
@@ -78,20 +87,55 @@ class PerpetualTrader:
                 self.win_count = data.get("win_count", 0)
                 self.cycle_count = data.get("cycle_count", 0)
                 self.capital = data.get("capital", self.capital)
+                self.locked_profits = data.get("locked_profits", 0)
+                self.high_water_mark = data.get("high_water_mark", self.capital)
+                self.floor = data.get("floor", self.initial_capital)
             except:
                 pass
 
     def _save_state(self):
         STATE_FILE.write_text(json.dumps({
             "position": self.position,
-            "history": self.history[-50:],  # keep last 50 trades
+            "history": self.history[-50:],
             "total_pnl": round(self.total_pnl, 2),
             "trade_count": self.trade_count,
             "win_count": self.win_count,
             "cycle_count": self.cycle_count,
             "capital": round(self.capital, 2),
+            "locked_profits": round(self.locked_profits, 2),
+            "high_water_mark": round(self.high_water_mark, 2),
+            "floor": round(self.floor, 2),
+            "initial_capital": self.initial_capital,
             "last_updated": datetime.now(IST).isoformat(),
         }, indent=2))
+
+    def _ratchet_up(self, profit: float):
+        """Lock in profits — floor only goes UP, never down.
+        After a winning trade, profit becomes untouchable."""
+        if profit > 0:
+            # Lock 70% of profit (keep 30% for compounding risk)
+            lock_amount = profit * 0.7
+            self.locked_profits += lock_amount
+            self.floor = self.initial_capital + self.locked_profits
+            log.info(f"RATCHET: Locked Rs.{lock_amount:,.0f} | Floor now Rs.{self.floor:,.0f} | Locked total: Rs.{self.locked_profits:,.0f}")
+
+        # Update high water mark
+        if self.capital > self.high_water_mark:
+            self.high_water_mark = self.capital
+
+    def _check_floor(self) -> bool:
+        """Check if capital is above floor. If not, STOP TRADING."""
+        if self.capital < self.floor:
+            log.warning(f"FLOOR BREACH: Capital Rs.{self.capital:,.0f} < Floor Rs.{self.floor:,.0f} — STOPPING")
+            return False
+        return True
+
+    def get_risk_capital(self) -> float:
+        """How much can we risk? Only unlocked capital above the floor."""
+        available = self.capital - self.floor
+        # Never risk more than 20% of total capital per trade
+        max_risk = self.capital * 0.20
+        return min(max(available, 0) + max_risk * 0.5, self.capital * 0.35)
 
     def find_best_option(self, opt_type: str = "CE", max_cost: float = 0) -> dict:
         """Find the best call or put to enter right now."""
@@ -185,12 +229,18 @@ class PerpetualTrader:
             return {}
 
     def enter(self, opt_type: str = "CE") -> bool:
-        """Enter a new position (call or put)."""
+        """Enter a new position (call or put). Uses risk capital, not full capital."""
         if self.position:
             log.info(f"Already in position: {self.position['symbol']}")
             return False
 
-        option = self.find_best_option(opt_type, self.capital)
+        if not self._check_floor():
+            return False
+
+        risk_capital = self.get_risk_capital()
+        log.info(f"Risk capital: Rs.{risk_capital:,.0f} (total: Rs.{self.capital:,.0f}, floor: Rs.{self.floor:,.0f})")
+
+        option = self.find_best_option(opt_type, risk_capital)
         if not option:
             log.warning(f"No suitable {opt_type} found within Rs.{self.capital:,.0f}")
             return False
@@ -322,9 +372,12 @@ class PerpetualTrader:
         if net_pnl > 0:
             self.win_count += 1
 
+        # ── RATCHET: Lock in profits, floor only goes UP ──
+        self._ratchet_up(net_pnl)
+
         win = "WIN" if net_pnl > 0 else "LOSS"
         log.info(f"EXIT {win}: {sym} | Entry Rs.{entry} -> Rs.{ltp} | P&L Rs.{net_pnl:+,.0f} ({pnl_pct:+.1f}%)")
-        log.info(f"Capital now: Rs.{self.capital:,.0f} | Total P&L: Rs.{self.total_pnl:+,.0f} | Win rate: {self.win_count}/{self.trade_count}")
+        log.info(f"Capital: Rs.{self.capital:,.0f} | Floor: Rs.{self.floor:,.0f} | Locked: Rs.{self.locked_profits:,.0f} | Total P&L: Rs.{self.total_pnl:+,.0f}")
 
         self.position = None
         self._save_state()
