@@ -60,10 +60,12 @@ VIRTUAL_FILE = DATA_DIR / "virtual_trades.json"
 
 # F&O lot sizes (Apr 2026)
 LOT_SIZES = {
-    "HINDALCO": 550, "ADANIPOWER": 1250, "VEDL": 1500, "PNB": 4000,
-    "SAIL": 4000, "TATASTEEL": 1500, "JSWSTEEL": 500, "COALINDIA": 1500,
-    "BPCL": 1100, "ONGC": 3850, "TATAPOWER": 1350, "SUZLON": 4000,
-    "HFCL": 7000, "YESBANK": 5000, "NBCC": 7000, "NHPC": 7000, "IRFC": 5000,
+    # CORRECTED from Groww API instrument master (April 2026)
+    "HINDALCO": 700, "ADANIPOWER": 1250, "VEDL": 1150, "PNB": 8000,
+    "SAIL": 4700, "TATASTEEL": 5500, "JSWSTEEL": 675, "COALINDIA": 1350,
+    "BPCL": 1975, "ONGC": 3850, "TATAPOWER": 1450, "SUZLON": 9025,
+    "HFCL": 7000, "YESBANK": 31100, "NBCC": 6500, "NHPC": 6400, "IRFC": 4250,
+    "NIFTY": 75, "BANKNIFTY": 30, "FINNIFTY": 40,
 }
 
 # ── Groww Connection (with smart rate limiting) ─────────────
@@ -220,19 +222,39 @@ class TradingBrain:
                 return lot
         return 0
 
-    def estimate_fees(self, value: float, is_fno: bool = False) -> float:
-        """Estimate total transaction fees."""
-        if is_fno:
-            brokerage = 20 * 2
-            stt = value * 0.000625
-            exchange_txn = value * 0.00053
-        else:
-            brokerage = min(20, value * 0.0005) * 2
-            stt = value * 0.00025
-            exchange_txn = value * 0.0000345
-        gst = (brokerage + exchange_txn) * 0.18
-        stamp = value * 0.00003
-        return brokerage + stt + exchange_txn + gst + stamp
+    def estimate_fees(self, value: float, is_fno: bool = False, premium: float = 0, lot_size: int = 0) -> float:
+        """Estimate total transaction fees using CA-grade calculator.
+        Post-April 2026 Budget rates: STT on options sell = 0.15% (was 0.0625%)."""
+        try:
+            sys.path.insert(0, "C:/josho-trader/src")
+            from charges import estimate_fno_fees, estimate_equity_fees as est_eq
+            if is_fno and premium > 0 and lot_size > 0:
+                return estimate_fno_fees(premium, lot_size)
+            elif is_fno:
+                # Fallback: estimate premium from value
+                est_lot = lot_size or 1250
+                est_prem = value / est_lot if est_lot > 0 else value
+                return estimate_fno_fees(est_prem, est_lot)
+            else:
+                qty = int(value / premium) if premium > 0 else 1
+                return est_eq(premium or value, qty or 1)
+        except Exception:
+            # Fallback with CORRECTED rates (post-April 2026)
+            if is_fno:
+                brokerage = 20 * 2
+                stt = value * 0.0015  # 0.15% on sell (CORRECTED from 0.000625)
+                exchange_txn = value * 0.0003503 * 2  # both sides
+                sebi = value * 0.000001 * 2
+                ipft = value * 0.000001 * 2
+            else:
+                brokerage = min(20, value * 0.001) * 2
+                stt = value * 0.00025  # 0.025% sell side
+                exchange_txn = value * 0.0000297 * 2
+                sebi = value * 0.000001 * 2
+                ipft = value * 0.000001 * 2
+            gst = (brokerage + exchange_txn + sebi + ipft) * 0.18
+            stamp = value * 0.00003
+            return brokerage + stt + exchange_txn + sebi + ipft + gst + stamp
 
     def invested_amount(self) -> float:
         return sum(p.get("cost", 0) for p in self.positions if p.get("status") == "OPEN")

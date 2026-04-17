@@ -231,10 +231,11 @@ class LiveOptionsTrader:
         """Get actual lot size from Groww, with common lot sizes as fallback."""
         # NSE lot sizes as of Apr 2026 (update periodically)
         KNOWN_LOTS = {
-            "HINDALCO": 550, "ADANIPOWER": 1250, "VEDL": 1500, "PNB": 4000,
-            "SAIL": 4000, "TATASTEEL": 1500, "JSWSTEEL": 500, "COALINDIA": 1500,
-            "BPCL": 1100, "ONGC": 3850, "TATAPOWER": 1350, "SUZLON": 4000,
-            "HFCL": 7000, "YESBANK": 5000,
+            # CORRECTED from Groww API instrument master (April 2026)
+            "HINDALCO": 700, "ADANIPOWER": 1250, "VEDL": 1150, "PNB": 8000,
+            "SAIL": 4700, "TATASTEEL": 5500, "JSWSTEEL": 675, "COALINDIA": 1350,
+            "BPCL": 1975, "ONGC": 3850, "TATAPOWER": 1450, "SUZLON": 9025,
+            "HFCL": 7000, "YESBANK": 31100, "NBCC": 6500, "NHPC": 6400, "IRFC": 4250,
         }
         # Extract stock name from option symbol (e.g. HINDALCO26JUN1200CE -> HINDALCO)
         stock = ""
@@ -266,10 +267,22 @@ class LiveOptionsTrader:
             log.warning(f"Can't afford {option_symbol}: cost Rs.{cost:.0f} > remaining capital")
             return
 
-        # Estimate fees
-        brokerage = 20 * 2  # buy + sell flat
-        stt = cost * 0.000625
-        total_fees = brokerage + stt + cost * 0.00053 + (brokerage + cost * 0.0000345) * 0.18
+        # Estimate fees — CA-grade post-April 2026 Budget rates
+        try:
+            sys.path.insert(0, "C:/josho-trader/src")
+            from charges import ChargeCalculator
+            calc = ChargeCalculator()
+            # Use actual premium for accurate calculation
+            buy_charges = calc.options_buy(ltp, lot_size)
+            # Estimate sell at same premium (worst case for breakeven calc)
+            sell_charges = calc.options_sell(ltp, lot_size)
+            total_fees = buy_charges.total + sell_charges.total
+        except Exception:
+            # Fallback with CORRECTED rates
+            brokerage = 20 * 2
+            stt = cost * 0.0015  # 0.15% on sell (CORRECTED from 0.000625)
+            exchange_txn = cost * 0.0003503 * 2
+            total_fees = brokerage + stt + exchange_txn + (brokerage + exchange_txn) * 0.18
         breakeven_pct = (total_fees / cost) * 100
 
         # STRICT RULE: Expected profit at target MUST be > 2x total fees
