@@ -33,6 +33,15 @@ STATE_FILE = Path("C:/josho-trader/data/autopilot_state.json")
 SUPABASE_URL = os.environ.get("SUPABASE_URL", "https://ylfagpbsmbhnmomeosyx.supabase.co")
 SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "")
 
+# ── RISK MANAGEMENT ─────────────────────────────────────
+MAX_RISK_PER_TRADE_PCT = 15   # max 15% of capital per trade
+MAX_POSITIONS = 6              # max 6 simultaneous positions
+MAX_DAILY_LOSS = 2000          # stop trading if day loss > Rs.2000
+INTELLIGENCE_SCAN_INTERVAL = 15  # scan intelligence every 15 min (saves API calls)
+day_pnl = 0
+last_intel_scan = 0
+intel_signals = []
+
 
 def tg(msg):
     if TG and TC:
@@ -448,6 +457,80 @@ while True:
             if scan % 5 == 0:
                 j = tracker.journeys.get(sym, {})
                 log(f"HOLD {sym}: Rs.{ltp} ({pnl_pct:+.1f}%) | peak={j.get('max_price', '?')} | peaks={len(j.get('peaks', []))} valleys={len(j.get('valleys', []))}")
+
+    # ── INTELLIGENCE SCAN + AUTO-ENTRY ──────────────────────
+    # Scan for new opportunities every 15 min (saves API calls)
+    if scan % INTELLIGENCE_SCAN_INTERVAL == 0 and now.hour < 14:
+        try:
+            from intelligence import MarketBrain
+            brain = MarketBrain()
+            intel_signals = brain.scan_once()
+            last_intel_scan = time.time()
+
+            # Count open positions
+            open_count = len([p for p in pos_list if p.get("quantity", 0) > 0])
+
+            # Check if we should enter new positions based on intelligence
+            if open_count < MAX_POSITIONS and day_pnl > -MAX_DAILY_LOSS:
+                # Get balance
+                try:
+                    margin = client.get_margin()
+                    balance = margin.get("fno_margin_details", {}).get("option_buy_balance_available", 0)
+                except:
+                    balance = 0
+
+                max_per_trade = balance * (MAX_RISK_PER_TRADE_PCT / 100)
+
+                # Find bullish signals with HIGH+ magnitude
+                buy_signals = [s for s in intel_signals
+                               if s["analysis"].get("action") == "BUY"
+                               and s["analysis"].get("magnitude") in ("HIGH", "CRITICAL")
+                               and s["analysis"].get("confidence", 0) >= 60]
+
+                if buy_signals and max_per_trade > 500:
+                    log(f"INTEL: {len(buy_signals)} BUY signals, {len(intel_signals)} total, balance Rs.{balance:,.0f}")
+                    for sig in buy_signals[:1]:  # max 1 new entry per scan
+                        log(f"  Signal: {sig['headline'][:80]}")
+                        # Don't auto-enter yet — just alert via Telegram
+                        tg(f"INTEL BUY SIGNAL\n{sig['headline'][:100]}\nStocks: {sig['analysis'].get('affected_stocks', [])}\nMagnitude: {sig['analysis'].get('magnitude')}\nConfidence: {sig['analysis'].get('confidence')}%")
+
+                # Alert on bearish signals affecting our positions
+                for sig in intel_signals:
+                    if sig["analysis"].get("action") == "SELL" and sig["analysis"].get("magnitude") == "CRITICAL":
+                        affected = sig["analysis"].get("affected_stocks", [])
+                        for p in pos_list:
+                            sym = p["trading_symbol"]
+                            stock = ""
+                            for s in ["COALINDIA", "HINDALCO", "TATASTEEL", "ADANIPOWER", "SUZLON"]:
+                                if sym.startswith(s):
+                                    stock = s
+                                    break
+                            if stock in affected:
+                                tg(f"WARNING: {stock} position threatened\n{sig['headline'][:100]}\nAction: monitor closely")
+                                log(f"INTEL WARNING: {stock} threatened by {sig['headline'][:60]}")
+        except Exception as e:
+            log(f"Intelligence scan failed: {e}")
+
+    # ── PRE-MARKET SCAN (8:45-9:15 AM) ───────────────────
+    if now.hour == 8 and now.minute >= 45 and scan % 5 == 0:
+        try:
+            from intelligence import MacroFetcher
+            gift = MacroFetcher.get_gift_nifty()
+            indices = MacroFetcher.get_global_indices()
+            fgi = MacroFetcher.get_fear_greed()
+
+            pre_market = f"PRE-MARKET SCAN {now.strftime('%H:%M')}\n"
+            if gift:
+                pre_market += f"GIFT Nifty: {gift.get('change_pct', 0):+.1f}%\n"
+            for name, data in indices.items():
+                pre_market += f"{name}: {data.get('change_pct', 0):+.1f}%\n"
+            if fgi:
+                pre_market += f"Fear & Greed: {fgi.get('value', 50)} ({fgi.get('classification', '?')})\n"
+
+            tg(pre_market)
+            log(f"Pre-market scan sent")
+        except Exception as e:
+            log(f"Pre-market scan failed: {e}")
 
     # Telegram status every 10 scans
     if scan % 10 == 0:
