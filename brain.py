@@ -293,14 +293,78 @@ class TradingBrain:
         self._save_state()
         tg(f"BUY {sym}\nPremium: Rs.{premium} x {lot} = Rs.{cost:,.0f}\nTarget: +25% | Stop: -50%")
 
+    # ── Prediction Engine ─────────────────────────────────
+
+    def predict_return(self, symbol: str, ltp: float, prev: float, high: float, low: float, volume: int = 0) -> dict:
+        """Score a trade: predicted return %, confidence, risk-reward ratio.
+        Uses momentum, mean-reversion, volatility, and volume analysis."""
+
+        if prev == 0 or high == low:
+            return {"score": 0, "predicted_return": 0, "confidence": 0, "strategy": "SKIP"}
+
+        change_pct = ((ltp - prev) / prev) * 100
+        day_range = ((high - low) / prev) * 100
+        pos_in_range = (ltp - low) / (high - low) if (high - low) > 0 else 0.5
+
+        score = 0
+        strategy = ""
+        predicted_return = 0
+        confidence = 0
+
+        # ── OVERSOLD BOUNCE (mean reversion) ──
+        if change_pct < -1.5 and pos_in_range < 0.3:
+            # Stock down big, near day low = likely bounce
+            score += 40
+            score += min(abs(change_pct) * 5, 30)  # bigger drop = stronger bounce
+            score += (1 - pos_in_range) * 20  # closer to low = better entry
+            predicted_return = min(abs(change_pct) * 0.4, 3.0)  # expect 40% of drop to recover
+            confidence = 0.65
+            strategy = "OVERSOLD_BOUNCE"
+
+        # ── MOMENTUM BREAKOUT ──
+        elif change_pct > 2.0 and pos_in_range > 0.8:
+            # Stock up big, at day high = momentum continuation
+            score += 35
+            score += min(change_pct * 5, 25)
+            score += pos_in_range * 20
+            predicted_return = min(change_pct * 0.3, 2.5)  # expect 30% more of move
+            confidence = 0.60
+            strategy = "MOMENTUM"
+
+        # ── RANGE BREAKOUT ──
+        elif day_range > 3.0 and pos_in_range > 0.9:
+            # Wide range day, breaking out
+            score += 30
+            score += min(day_range * 3, 20)
+            predicted_return = min(day_range * 0.2, 2.0)
+            confidence = 0.55
+            strategy = "RANGE_BREAK"
+
+        # ── VOLUME SPIKE (if data available) ──
+        # High volume confirms the move
+        if volume > 0:
+            score += 10  # bonus for having volume data
+
+        return {
+            "score": min(score, 100),
+            "predicted_return": round(predicted_return, 2),
+            "confidence": confidence,
+            "strategy": strategy,
+            "change_pct": round(change_pct, 2),
+            "day_range": round(day_range, 2),
+            "pos_in_range": round(pos_in_range, 2),
+        }
+
     # ── Equity Signals ──────────────────────────────────
 
     def scan_equity(self):
-        """Quick scan for strong equity intraday signals."""
+        """Scan stocks, predict returns, only take trades where predicted profit > 3x fees."""
         STOCKS = [
             "TATASTEEL", "SUZLON", "TATAPOWER", "VEDL", "COALINDIA",
             "BPCL", "ONGC", "SAIL", "PNB", "BANKBARODA",
             "SBIN", "ICICIBANK", "HDFCBANK", "RELIANCE", "INFY",
+            "BAJFINANCE", "AXISBANK", "KOTAKBANK", "ITC", "BHARTIARTL",
+            "ADANIPOWER", "NHPC", "IRFC", "NBCC", "YESBANK",
         ]
 
         signals = []
@@ -310,33 +374,51 @@ class TradingBrain:
 
             ltp = q["last_price"]
             prev = q.get("ohlc", {}).get("close", 0)
+            high = q.get("ohlc", {}).get("high", ltp)
+            low = q.get("ohlc", {}).get("low", ltp)
+            volume = q.get("volume", 0)
+
             if prev == 0 or ltp < 15: continue
 
-            change_pct = ((ltp - prev) / prev) * 100
+            # Predict return
+            pred = self.predict_return(sym, ltp, prev, high, low, volume)
+            if pred["score"] < 40 or pred["predicted_return"] < 0.5:
+                continue  # skip weak signals
 
-            # Only take strong signals
-            if change_pct < -2.0:  # Oversold bounce
-                # Check fee viability
-                avail = self.available()
-                qty = int(min(avail * 0.4, avail) / ltp)  # 40% of available per trade
-                if qty == 0: continue
+            # Position sizing
+            avail = self.available()
+            max_per_trade = avail * 0.5  # max 50% per trade
+            qty = int(max_per_trade / ltp)
+            if qty == 0: continue
 
-                value = ltp * qty
-                fees = self.estimate_fees(value)
-                expected_profit = value * 0.01  # 1% target
+            value = ltp * qty
+            fees = self.estimate_fees(value)
+            expected_profit = value * (pred["predicted_return"] / 100)
 
-                if expected_profit > fees * 2:
-                    signals.append({"symbol": sym, "ltp": ltp, "qty": qty,
-                                    "change_pct": change_pct, "fees": fees,
-                                    "expected_profit": expected_profit})
+            # STRICT: predicted profit must be > 3x fees
+            if expected_profit < fees * 3:
+                log.info(f"  SKIP {sym}: predicted profit Rs.{expected_profit:.0f} < 3x fees Rs.{fees*3:.0f}")
+                continue
 
-            elif change_pct > 2.5:  # Momentum
-                avail = self.available()
-                qty = int(min(avail * 0.4, avail) / ltp)
-                if qty == 0: continue
+            net_return_pct = ((expected_profit - fees) / value) * 100
 
-                value = ltp * qty
-                fees = self.estimate_fees(value)
+            signals.append({
+                "symbol": sym, "ltp": ltp, "qty": qty,
+                "change_pct": pred["change_pct"],
+                "fees": fees,
+                "expected_profit": expected_profit,
+                "predicted_return": pred["predicted_return"],
+                "net_return_pct": net_return_pct,
+                "score": pred["score"],
+                "strategy": pred["strategy"],
+                "confidence": pred["confidence"],
+            })
+
+            log.info(f"  SIGNAL: {sym} @ Rs.{ltp:.2f} | {pred['strategy']} | predicted +{pred['predicted_return']}% | score={pred['score']} | net_return={net_return_pct:.2f}%")
+
+        # Sort by score, take best
+        signals.sort(key=lambda s: s["score"], reverse=True)
+        return signals[:2]  # Max 2 equity trades at a time
                 expected_profit = value * 0.01
 
                 if expected_profit > fees * 2:
@@ -369,8 +451,11 @@ class TradingBrain:
             "order": result,
         })
         self._save_state()
-        log.info(f"EQUITY BUY: {qty}x {sym} @ Rs.{ltp} = Rs.{cost:.0f} | fees=Rs.{fees:.0f}")
-        tg(f"BUY {qty}x {sym} @ Rs.{ltp:,.2f}\nValue: Rs.{cost:,.0f} | Target: +1.5%")
+        pred_ret = signal.get("predicted_return", "?")
+        strat = signal.get("strategy", "?")
+        net_ret = signal.get("net_return_pct", 0)
+        log.info(f"EQUITY BUY: {qty}x {sym} @ Rs.{ltp} = Rs.{cost:.0f} | {strat} | predicted +{pred_ret}% | net +{net_ret:.2f}% | fees=Rs.{fees:.0f}")
+        tg(f"BUY {qty}x {sym} @ Rs.{ltp:,.2f}\n{strat} | Predicted: +{pred_ret}%\nValue: Rs.{cost:,.0f} | Fees: Rs.{fees:.0f}\nNet return: +{net_ret:.2f}%")
 
     # ── Exit Management ─────────────────────────────────
 
