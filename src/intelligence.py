@@ -338,6 +338,68 @@ class MacroFetcher:
             pass
         return {}
 
+    @staticmethod
+    def get_fear_greed() -> dict:
+        """Fear & Greed Index — composite market sentiment (inspired by World Monitor)."""
+        try:
+            resp = requests.get("https://api.alternative.me/fng/?limit=1", timeout=10)
+            if resp.ok:
+                data = resp.json().get("data", [{}])[0]
+                return {
+                    "value": int(data.get("value", 50)),
+                    "classification": data.get("value_classification", "Neutral"),
+                    "source": "alternative.me",
+                }
+        except Exception:
+            pass
+        return {}
+
+    @staticmethod
+    def get_gdelt_events(query: str = "india") -> list:
+        """GDELT — 300+ event types, 15-min updates (World Monitor source).
+        Monitors global events that can move Indian markets."""
+        try:
+            resp = requests.get(
+                f"https://api.gdeltproject.org/api/v2/doc/doc?query={query}&mode=artlist&maxrecords=10&format=json",
+                timeout=15,
+                headers={"User-Agent": "Mozilla/5.0"},
+            )
+            if resp.ok:
+                data = resp.json()
+                articles = data.get("articles", [])
+                return [{"title": a.get("title", ""), "url": a.get("url", ""),
+                         "source": a.get("domain", ""), "tone": a.get("tone", 0)}
+                        for a in articles[:10]]
+        except Exception:
+            pass
+        return []
+
+    @staticmethod
+    def get_global_indices() -> dict:
+        """Global market indices — pre-market signals for Indian markets.
+        S&P/Dow futures at 4 AM IST predict Nifty opening."""
+        indices = {}
+        try:
+            # Yahoo Finance chart API for key indices
+            symbols = {"^GSPC": "SP500", "^DJI": "DOW", "^IXIC": "NASDAQ", "^N225": "NIKKEI"}
+            for sym, name in symbols.items():
+                resp = requests.get(
+                    f"https://query1.finance.yahoo.com/v8/finance/chart/{sym}?interval=1d&range=1d",
+                    headers={"User-Agent": "Mozilla/5.0"},
+                    timeout=10,
+                )
+                if resp.ok:
+                    result = resp.json().get("chart", {}).get("result", [{}])[0]
+                    meta = result.get("meta", {})
+                    prev = meta.get("chartPreviousClose", 0)
+                    price = meta.get("regularMarketPrice", 0)
+                    change = ((price - prev) / prev * 100) if prev > 0 else 0
+                    indices[name] = {"price": price, "change_pct": round(change, 2)}
+                time.sleep(0.5)
+        except Exception:
+            pass
+        return indices
+
 
 # ── SENTIMENT ANALYZER ───────────────────────────────────
 
@@ -515,6 +577,82 @@ class MarketBrain:
                 "time": now.isoformat(),
                 "priority": 1,
             })
+
+        # 4. GDELT — global event database (World Monitor source)
+        gdelt_events = self.macro.get_gdelt_events("india stock market")
+        for article in gdelt_events[:5]:
+            title = article.get("title", "")
+            if title in self.seen_headlines or len(title) < 20:
+                continue
+            self.seen_headlines.add(title)
+            # Only market-moving GDELT events
+            market_keywords = ["tariff", "sanction", "war", "crash", "rbi", "sebi", "modi", "trump", "oil", "crude"]
+            if any(kw in title.lower() for kw in market_keywords):
+                tone = article.get("tone", 0)
+                analysis = self.sentiment.analyze(title)
+                if analysis.get("confidence", 0) >= 50:
+                    signals.append({
+                        "source": "gdelt",
+                        "headline": title,
+                        "analysis": analysis,
+                        "time": now.isoformat(),
+                        "priority": 2,
+                        "tone": tone,
+                    })
+
+        # 5. Fear & Greed Index
+        fgi = self.macro.get_fear_greed()
+        if fgi:
+            value = fgi.get("value", 50)
+            classification = fgi.get("classification", "Neutral")
+            if value <= 20:
+                signals.append({
+                    "source": "fear_greed",
+                    "headline": f"EXTREME FEAR ({value}) — {classification}",
+                    "analysis": {
+                        "sentiment": "bullish",  # extreme fear = buying opportunity
+                        "magnitude": "HIGH",
+                        "action": "BUY",
+                        "affected_stocks": ["NIFTY", "BANKNIFTY"],
+                        "reason": "Extreme fear = contrarian buy signal",
+                    },
+                    "time": now.isoformat(),
+                    "priority": 1,
+                })
+            elif value >= 80:
+                signals.append({
+                    "source": "fear_greed",
+                    "headline": f"EXTREME GREED ({value}) — {classification}",
+                    "analysis": {
+                        "sentiment": "bearish",
+                        "magnitude": "MEDIUM",
+                        "action": "HOLD",
+                        "affected_stocks": [],
+                        "reason": "Extreme greed = reduce exposure, don't add new longs",
+                    },
+                    "time": now.isoformat(),
+                    "priority": 2,
+                })
+
+        # 6. Global indices — pre-market signal
+        indices = self.macro.get_global_indices()
+        big_movers = [(name, data) for name, data in indices.items() if abs(data.get("change_pct", 0)) > 1.5]
+        if big_movers:
+            for name, data in big_movers:
+                direction = "up" if data["change_pct"] > 0 else "down"
+                signals.append({
+                    "source": "global_markets",
+                    "headline": f"{name} {direction} {abs(data['change_pct']):.1f}%",
+                    "analysis": {
+                        "sentiment": "bullish" if direction == "up" else "bearish",
+                        "magnitude": "MEDIUM",
+                        "action": "HOLD",
+                        "affected_stocks": ["NIFTY"],
+                        "reason": f"{name} big move correlates with Indian market direction",
+                    },
+                    "time": now.isoformat(),
+                    "priority": 2,
+                })
 
         # Sort by priority
         signals.sort(key=lambda s: s.get("priority", 99))
