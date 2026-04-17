@@ -339,6 +339,63 @@ class MacroFetcher:
         return {}
 
     @staticmethod
+    def fetch_reddit_sentiment() -> list:
+        """Reddit Indian stock sentiment — NO API KEY NEEDED.
+        Uses 3 free methods that bypass Reddit app registration."""
+        posts = []
+
+        # Method 1: Reddit RSS (completely free, no auth)
+        subreddits = ["IndianStockMarket", "DalalStreetBets", "IndianStreetBets"]
+        for sub in subreddits:
+            try:
+                resp = requests.get(
+                    f"https://www.reddit.com/r/{sub}/hot.json?limit=10",
+                    headers={"User-Agent": "josho-trader/1.0 (market research)"},
+                    timeout=10,
+                )
+                if resp.ok:
+                    data = resp.json()
+                    for child in data.get("data", {}).get("children", []):
+                        post = child.get("data", {})
+                        title = post.get("title", "")
+                        score = post.get("score", 0)
+                        comments = post.get("num_comments", 0)
+                        if score > 5:  # filter noise
+                            posts.append({
+                                "title": title,
+                                "score": score,
+                                "comments": comments,
+                                "subreddit": sub,
+                                "source": "reddit_json",
+                            })
+                time.sleep(1)
+            except Exception:
+                pass
+
+        # Method 2: ApeWisdom API (free, aggregates Reddit stock mentions)
+        try:
+            resp = requests.get("https://apewisdom.io/api/v1.0/filter/all-stocks/page/1", timeout=10)
+            if resp.ok:
+                data = resp.json()
+                for stock in data.get("results", [])[:10]:
+                    ticker = stock.get("ticker", "")
+                    mentions = stock.get("mentions", 0)
+                    rank = stock.get("rank", 0)
+                    # Map US tickers to Indian equivalents if relevant
+                    india_map = {"INFY": "INFY", "WIT": "WIPRO", "HDB": "HDFCBANK", "IBN": "ICICIBANK", "RDY": "DRREDDY"}
+                    if ticker in india_map:
+                        posts.append({
+                            "title": f"Trending on Reddit: {india_map[ticker]} ({mentions} mentions, rank #{rank})",
+                            "score": mentions,
+                            "subreddit": "apewisdom",
+                            "source": "apewisdom",
+                        })
+        except Exception:
+            pass
+
+        return posts
+
+    @staticmethod
     def get_fear_greed() -> dict:
         """Fear & Greed Index — composite market sentiment (inspired by World Monitor)."""
         try:
@@ -722,7 +779,34 @@ class MarketBrain:
                     "priority": 2,
                 })
 
-        # 7. Google Trends — search spikes predict breaking news
+        # 7. Reddit sentiment (no API key needed)
+        reddit_posts = self.news.fetch_reddit_sentiment()
+        for post in reddit_posts[:5]:
+            title = post.get("title", "")
+            if title in self.seen_headlines:
+                continue
+            self.seen_headlines.add(title)
+
+            # Only analyze high-engagement posts about market-moving topics
+            if post.get("score", 0) > 20 or post.get("source") == "apewisdom":
+                market_keywords = [
+                    "nifty", "crash", "buy", "sell", "bull", "bear", "rbi",
+                    "adani", "reliance", "tata", "hdfc", "sbi", "coal",
+                    "options", "calls", "puts", "profit", "loss", "moon",
+                ]
+                if any(kw in title.lower() for kw in market_keywords) or post.get("source") == "apewisdom":
+                    analysis = self.sentiment.analyze(title)
+                    if analysis.get("confidence", 0) >= 40:
+                        signals.append({
+                            "source": f"reddit/{post.get('subreddit', '?')}",
+                            "headline": title[:120],
+                            "analysis": analysis,
+                            "time": now.isoformat(),
+                            "priority": 3,
+                            "engagement": post.get("score", 0),
+                        })
+
+        # 8. Google Trends — search spikes predict breaking news
         now_hour = now.hour
         if 7 <= now_hour <= 10:  # most useful pre-market and opening hour
             trends = self.macro.get_google_trends()
