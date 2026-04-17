@@ -416,17 +416,9 @@ class TradingBrain:
 
             log.info(f"  SIGNAL: {sym} @ Rs.{ltp:.2f} | {pred['strategy']} | predicted +{pred['predicted_return']}% | score={pred['score']} | net_return={net_return_pct:.2f}%")
 
-        # Sort by score, take best
-        signals.sort(key=lambda s: s["score"], reverse=True)
-        return signals[:2]  # Max 2 equity trades at a time
-                expected_profit = value * 0.01
-
-                if expected_profit > fees * 2:
-                    signals.append({"symbol": sym, "ltp": ltp, "qty": qty,
-                                    "change_pct": change_pct, "fees": fees,
-                                    "expected_profit": expected_profit})
-
-        return signals[:3]  # Max 3 signals per scan
+        # Sort by return-per-second: highest predicted return in shortest time = best use of money
+        signals.sort(key=lambda s: s["predicted_return"] * s["confidence"], reverse=True)
+        return signals[:2]
 
     def enter_equity(self, signal: dict):
         """Enter equity MIS position."""
@@ -487,6 +479,11 @@ class TradingBrain:
             target = pos.get("target_pct", 25 if is_fno else 1.5)
             stop = pos.get("stop_pct", -50 if is_fno else -1.0)
 
+            # Time in trade
+            entry_time = datetime.fromisoformat(pos["entry_time"])
+            now = datetime.now(IST)
+            minutes_held = (now - entry_time).total_seconds() / 60
+
             # EXIT: Target hit
             if pnl_pct >= target:
                 self._exit(pos, "TARGET", ltp, net_pnl)
@@ -497,14 +494,29 @@ class TradingBrain:
                 self._exit(pos, "STOP", ltp, net_pnl)
                 continue
 
+            # EXIT: Equity — take ANY profit after 30 min (don't hold, cycle fast)
+            if not is_fno and net_pnl > 0 and minutes_held > 30:
+                self._exit(pos, "PROFIT_CYCLE", ltp, net_pnl)
+                continue
+
+            # EXIT: Equity — cut small loss after 60 min (redeploy elsewhere)
+            if not is_fno and pnl_pct < -0.3 and minutes_held > 60:
+                self._exit(pos, "REDEPLOY", ltp, net_pnl)
+                continue
+
             # EXIT: MIS equity before 3:15 PM
             if not is_fno:
-                now = datetime.now(IST)
                 if now.hour == 15 and now.minute >= 10:
                     self._exit(pos, "MIS_CLOSE", ltp, net_pnl)
                     continue
 
-            log.info(f"HOLD: {sym} | {pnl_pct:+.1f}% | net=Rs.{net_pnl:+,.0f} | target=+{target}%")
+            # EXIT: F&O — take profit early if +15% in first day (cycle into next trade)
+            if is_fno and pnl_pct >= 15 and minutes_held < 360:
+                self._exit(pos, "FAST_FNO_PROFIT", ltp, net_pnl)
+                continue
+
+            return_per_min = net_pnl / max(minutes_held, 1)
+            log.info(f"HOLD: {sym} | {pnl_pct:+.1f}% | net=Rs.{net_pnl:+,.0f} | held={minutes_held:.0f}min | Rs.{return_per_min:+.1f}/min")
 
         self._save_state()
 
