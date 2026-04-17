@@ -59,14 +59,10 @@ STATE_FILE = DATA_DIR / "brain_state.json"
 VIRTUAL_FILE = DATA_DIR / "virtual_trades.json"
 
 # F&O lot sizes (Apr 2026)
-LOT_SIZES = {
-    # CORRECTED from Groww API instrument master (April 2026)
-    "HINDALCO": 700, "ADANIPOWER": 1250, "VEDL": 1150, "PNB": 8000,
-    "SAIL": 4700, "TATASTEEL": 5500, "JSWSTEEL": 675, "COALINDIA": 1350,
-    "BPCL": 1975, "ONGC": 3850, "TATAPOWER": 1450, "SUZLON": 9025,
-    "HFCL": 7000, "YESBANK": 31100, "NBCC": 6500, "NHPC": 6400, "IRFC": 4250,
-    "NIFTY": 75, "BANKNIFTY": 30, "FINNIFTY": 40,
-}
+# LOT SIZES: Always fetched from Groww instrument master via client.get_lot_size()
+# This dict is ONLY a last-resort fallback if API + lot_sizes.json both fail.
+# Update data/lot_sizes.json instead of this dict.
+LOT_SIZES = {}
 
 # ── Groww Connection (with smart rate limiting) ─────────────
 

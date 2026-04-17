@@ -423,10 +423,10 @@ while True:
             log(f"SELLING {sym}: {reason}")
             time.sleep(2)
             try:
-                result = client.place_order(
-                    symbol=sym, qty=qty, side="SELL",
+                # Use place_fno_order — auto-verifies lot size, never hardcodes
+                result = client.place_fno_order(
+                    symbol=sym, side="SELL",
                     order_type="MARKET", product="NRML",
-                    segment="FNO", exchange="NSE",
                 )
                 status = result.get("order_status", "UNKNOWN")
                 log(f"  Order: {status}")

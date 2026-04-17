@@ -138,37 +138,32 @@ class GrowwFnO:
             log.error(f"LTP failed for {symbol}: {e}")
             return 0
 
-    def buy_option(self, symbol: str, lot_size: int) -> dict:
-        """Buy an option (NRML, market order)."""
+    def buy_option(self, symbol: str, lot_size: int = 0) -> dict:
+        """Buy an option — auto-verifies lot size from instrument master."""
         try:
-            result = self.client.place_order(
-                symbol=symbol,
-                qty=lot_size,
-                side="BUY",
-                order_type="MARKET",
-                product="NRML",
-                segment="FNO",
-                exchange="NSE",
+            # ALWAYS verify lot from Groww, ignore passed lot_size
+            real_lot = self.client.get_lot_size(symbol)
+            if real_lot == 0:
+                log.error(f"Cannot buy {symbol}: lot size unknown")
+                return {"error": f"lot size unknown for {symbol}"}
+            result = self.client.place_fno_order(
+                symbol=symbol, side="BUY",
+                order_type="MARKET", product="NRML",
             )
-            log.info(f"BUY ORDER: {lot_size}x {symbol} -> {result}")
+            log.info(f"BUY ORDER: {real_lot}x {symbol} -> {result}")
             return result
         except Exception as e:
             log.error(f"BUY failed for {symbol}: {e}")
             return {"error": str(e)}
 
-    def sell_option(self, symbol: str, lot_size: int) -> dict:
-        """Sell/exit an option position."""
+    def sell_option(self, symbol: str, lot_size: int = 0) -> dict:
+        """Sell/exit — auto-verifies lot size from instrument master."""
         try:
-            result = self.client.place_order(
-                symbol=symbol,
-                qty=lot_size,
-                side="SELL",
-                order_type="MARKET",
-                product="NRML",
-                segment="FNO",
-                exchange="NSE",
+            result = client.place_fno_order(
+                symbol=symbol, side="SELL",
+                order_type="MARKET", product="NRML",
             )
-            log.info(f"SELL ORDER: {lot_size}x {symbol} -> {result}")
+            log.info(f"SELL ORDER: {symbol} -> {result}")
             return result
         except Exception as e:
             log.error(f"SELL failed for {symbol}: {e}")

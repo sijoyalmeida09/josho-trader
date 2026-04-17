@@ -219,6 +219,95 @@ class GrowwClient:
             log.error(f"Historical data failed for {symbol}: {e}")
             return {}
 
+    # ── Instrument Lookup (CRITICAL — always verify before ordering) ──
+
+    _lot_cache: dict = {}  # symbol -> lot_size cache (lives for session)
+
+    def get_lot_size(self, trading_symbol: str, exchange: str = "NSE") -> int:
+        """Get the REAL lot size. Priority:
+        1. Session cache (instant)
+        2. Groww instrument master API (authoritative)
+        3. data/lot_sizes.json (user-verified fallback)
+        NEVER uses hardcoded values. Returns 0 if unknown = order blocked."""
+        if trading_symbol in self._lot_cache:
+            return self._lot_cache[trading_symbol]
+
+        # Try API first
+        try:
+            inst = self.api.get_instrument_by_exchange_and_trading_symbol(
+                exchange=exchange, trading_symbol=trading_symbol,
+            )
+            lot = int(inst.get("lot_size", 0))
+            if lot > 0:
+                self._lot_cache[trading_symbol] = lot
+                log.info(f"Lot size for {trading_symbol}: {lot} (from instrument master)")
+                return lot
+        except Exception as e:
+            log.warning(f"Instrument API failed for {trading_symbol}: {e}")
+
+        # Fallback: read from user-verified JSON
+        try:
+            import json
+            lot_file = os.path.join(os.path.dirname(__file__), "..", "data", "lot_sizes.json")
+            if os.path.exists(lot_file):
+                data = json.loads(open(lot_file).read())
+                # Extract stock name from option symbol (e.g., COALINDIA26APR460CE -> COALINDIA)
+                stock = ""
+                for name in data:
+                    if name != "_README" and name != "_INSTRUCTIONS" and name != "_LAST_UPDATED":
+                        if trading_symbol.startswith(name):
+                            stock = name
+                            break
+                if stock and data[stock].get("min_lot", 0) > 0:
+                    lot = data[stock]["min_lot"]
+                    self._lot_cache[trading_symbol] = lot
+                    log.info(f"Lot size for {trading_symbol}: {lot} (from lot_sizes.json)")
+                    return lot
+        except Exception:
+            pass
+
+        log.error(f"LOT SIZE UNKNOWN for {trading_symbol} — ORDER BLOCKED")
+        return 0
+
+    def get_instrument(self, trading_symbol: str, exchange: str = "NSE") -> dict:
+        """Get full instrument details (lot size, tick size, buy/sell allowed)."""
+        try:
+            return self.api.get_instrument_by_exchange_and_trading_symbol(
+                exchange=exchange, trading_symbol=trading_symbol,
+            )
+        except Exception as e:
+            log.error(f"Instrument lookup failed for {trading_symbol}: {e}")
+            return {}
+
+    def place_fno_order(
+        self,
+        symbol: str,
+        side: str,
+        order_type: str = "MARKET",
+        price: float = 0,
+        product: str = "NRML",
+        exchange: str = "NSE",
+    ) -> dict:
+        """Place F&O order with AUTOMATIC lot size verification.
+        NEVER pass qty manually — this method fetches the correct lot size."""
+        lot = self.get_lot_size(symbol, exchange)
+        if lot == 0:
+            msg = f"Cannot place order: lot size unknown for {symbol}"
+            log.error(msg)
+            return {"status": "FAILED", "error": msg}
+
+        log.info(f"F&O {side}: {symbol} x {lot} (verified lot size)")
+        return self.place_order(
+            symbol=symbol,
+            qty=lot,
+            side=side,
+            order_type=order_type,
+            price=price,
+            product=product,
+            segment="FNO",
+            exchange=exchange,
+        )
+
     # ── F&O Specific ──────────────────────────────────────────────
 
     def get_option_chain(self, underlying: str, expiry_date: str, exchange: str = "NSE") -> dict:
