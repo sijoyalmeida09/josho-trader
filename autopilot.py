@@ -395,37 +395,48 @@ while True:
         # Record in journey tracker
         tracker.record(sym, entry, ltp, volume)
 
-        # ── EXIT DECISION: ALWAYS analyze journey first ──
+        # ── EXIT DECISION: Run 30+ strategies, exit only on consensus ──
         reason = None
 
         # Priority 1: HARD STOP (capital protection — non-negotiable)
         if pnl_pct <= HARD_STOP_PCT:
             reason = f"HARD STOP {pnl_pct:.1f}%"
 
-        # Priority 2: Full journey analysis
+        # Priority 2: Exit Engine (30+ strategies vote)
         else:
-            report = tracker.analyze(sym, entry, ltp)
+            try:
+                from exit_engine import should_exit as multi_exit
+                j = tracker.journeys.get(sym, {})
+                peak_prices = [p[0] for p in j.get("peaks", [])]
+                valley_prices = [p[0] for p in j.get("valleys", [])]
 
-            if report["recommendation"] == "EXIT" and report["confidence"] >= 70:
-                # Double-check: generate full report for Telegram
-                reason = (
-                    f"JOURNEY EXIT ({report['confidence']}% confident)\n"
-                    f"  Peaks: {report['peak_count']} | Valleys: {report['valley_count']}\n"
-                    f"  Higher peaks: {report['higher_peaks']} | Higher valleys: {report['higher_valleys']}\n"
-                    f"  Trend score: {report['trend_score']}/100\n"
-                    f"  Momentum: {report['momentum']} {report['momentum_direction']}\n"
-                    f"  Peak P&L: +{report['max_pnl_pct']}% | Now: {pnl_pct:+.1f}%\n"
-                    f"  Distance from peak: {report['distance_from_peak_pct']:.1f}%\n"
-                    f"  Reasons: {'; '.join(report['reasons'])}"
+                decision = multi_exit(
+                    entry=entry,
+                    ltp=ltp,
+                    prices=j.get("prices", [ltp]),
+                    volumes=j.get("volumes", []),
+                    peaks=peak_prices,
+                    valleys=valley_prices,
                 )
 
-            elif report["recommendation"] == "STRONG HOLD":
-                if scan % 10 == 0:
-                    log(f"STRONG HOLD {sym}: +{pnl_pct:.1f}% | trend={report['trend_score']} | {report['momentum']} {report['momentum_direction']} | peaks={report['peak_count']}")
-
-            elif report["recommendation"] == "WATCH":
-                if scan % 5 == 0:
-                    log(f"WATCH {sym}: +{pnl_pct:.1f}% | trend={report['trend_score']} | {'; '.join(report['reasons'])}")
+                if decision["exit"]:
+                    reason = (
+                        f"EXIT ENGINE ({decision['confidence']}% consensus)\n"
+                        f"  {decision['exit_count']}/{decision['total_strategies']} strategies agree\n"
+                        f"  Signals: {', '.join(decision['strategies_agree'][:5])}\n"
+                        f"  Reason: {decision['reason'][:150]}"
+                    )
+                elif scan % 10 == 0:
+                    # Journey report for logging
+                    report = tracker.analyze(sym, entry, ltp)
+                    log(f"HOLD {sym}: +{pnl_pct:.1f}% | exit_votes={decision['exit_count']}/{decision['total_strategies']} | trend={report.get('trend_score',0)} | peaks={report.get('peak_count',0)}")
+            except Exception as e:
+                # Fallback to journey tracker if exit engine fails
+                report = tracker.analyze(sym, entry, ltp)
+                if report["recommendation"] == "EXIT" and report["confidence"] >= 70:
+                    reason = f"JOURNEY EXIT: {'; '.join(report['reasons'])}"
+                elif scan % 10 == 0:
+                    log(f"HOLD {sym}: +{pnl_pct:.1f}% | trend={report.get('trend_score',0)} | {report.get('momentum','?')}")
 
         # Execute exit if reason found
         if reason:
