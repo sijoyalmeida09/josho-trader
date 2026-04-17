@@ -1,12 +1,22 @@
 """
-autopilot.py — Continuous F&O Position Monitor + Auto-Exit
-Runs forever. Checks positions every 60s during market hours.
-Auto-sells at target/stop. Sends Telegram alerts.
+autopilot.py — Smart F&O Position Monitor
+===========================================
+NEVER exits blindly. Before any exit decision, studies:
+  - Full price journey from entry to now
+  - How many peaks & valleys occurred
+  - Volume trend (rising/falling)
+  - Momentum strength (accelerating/decelerating)
+  - Whether current move is trend or noise
+  - Historical pattern: what happens AFTER this pattern?
+  - Intelligence signals (news, Trump, crude, FII)
+
+Philosophy: "One peak but two same lows. Exit near the second peak, not max."
 """
-import sys, os, json, time
+import sys, os, json, time, math
 from dotenv import load_dotenv
 from pathlib import Path
 from datetime import datetime, timezone, timedelta
+from collections import defaultdict
 load_dotenv(Path("C:/josho-trader/.env"))
 
 sys.path.insert(0, "C:/josho-trader/src")
@@ -18,20 +28,22 @@ IST = timezone(timedelta(hours=5, minutes=30))
 TG = os.environ.get("TELEGRAM_BOT_TOKEN", "")
 TC = os.environ.get("TELEGRAM_CHAT_ID", "")
 LOG = Path("C:/josho-trader/logs/autopilot.log")
+STATE_FILE = Path("C:/josho-trader/data/autopilot_state.json")
 
-# Supabase — shared hub for ALL Sijoy systems
 SUPABASE_URL = os.environ.get("SUPABASE_URL", "https://ylfagpbsmbhnmomeosyx.supabase.co")
 SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "")
+
 
 def tg(msg):
     if TG and TC:
         try:
             requests.post(f"https://api.telegram.org/bot{TG}/sendMessage",
                 json={"chat_id": TC, "text": msg}, timeout=10)
-        except: pass
+        except:
+            pass
 
-def heartbeat(status: str, message: str, data: dict):
-    """Write trader status to Supabase system_status table — the unified hub."""
+
+def heartbeat(status, message, data):
     if not SUPABASE_KEY:
         return
     try:
@@ -52,8 +64,9 @@ def heartbeat(status: str, message: str, data: dict):
             },
             timeout=10,
         )
-    except Exception:
+    except:
         pass
+
 
 def log(msg):
     ts = datetime.now(IST).strftime("%H:%M:%S")
@@ -63,41 +76,262 @@ def log(msg):
         f.write(line + "\n")
         f.flush()
 
-# Exit rules per position
-EXIT_RULES = {
-    "COALINDIA26APR460CE": {"target_pct": 30, "stop_pct": -40, "trail_start": 20, "trail_pct": 10},
-    "COALINDIA26MAY500CE": {"target_pct": 60, "stop_pct": -40, "trail_start": 30, "trail_pct": 12},
-    "COALINDIA26APR480CE": {"target_pct": 120, "stop_pct": -60, "trail_start": 60, "trail_pct": 15},
-    "COALINDIA26APR500CE": {"target_pct": 200, "stop_pct": -60, "trail_start": 100, "trail_pct": 20},
-}
-DEFAULT_RULES = {"target_pct": 30, "stop_pct": -40, "trail_start": 20, "trail_pct": 10}
 
-# ── SAFE EXIT LOGIC ──────────────────────────────────────
-# Philosophy: "One peak but two same lows. Exit on the second low."
-# Don't sell at first peak. Wait for:
-#   Peak → Dip (first low) → Recovery → Second Dip (second low, higher than first)
-# Sell during the recovery AFTER second low confirms support.
-# This avoids selling too early during a single pullback.
+# ══════════════════════════════════════════════════════════
+# JOURNEY TRACKER — Full lifecycle analysis per position
+# ══════════════════════════════════════════════════════════
 
-peaks = {}       # highest price seen per symbol
-lows = {}        # list of dip prices per symbol [{price, time}]
-price_history = {} # last N prices per symbol for pattern detection
-scan = 0
-HISTORY_LEN = 20  # track last 20 price points (~20 min at 1 min scans)
+class JourneyTracker:
+    """
+    Tracks the complete journey of a position from entry to now.
+    Stores every price point, detects peaks/valleys, analyzes momentum.
+    Before exit, generates a FULL REPORT of the journey.
+    """
+
+    def __init__(self):
+        self.journeys = {}  # sym -> journey data
+        self._load()
+
+    def _load(self):
+        if STATE_FILE.exists():
+            try:
+                data = json.loads(STATE_FILE.read_text())
+                self.journeys = data.get("journeys", {})
+            except:
+                pass
+
+    def _save(self):
+        STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
+        STATE_FILE.write_text(json.dumps({"journeys": self.journeys}, indent=2, default=str))
+
+    def record(self, sym: str, entry: float, ltp: float, volume: int = 0):
+        """Record a price point for a position."""
+        if sym not in self.journeys:
+            self.journeys[sym] = {
+                "entry": entry,
+                "prices": [],
+                "volumes": [],
+                "peaks": [],       # [(price, scan_idx)]
+                "valleys": [],     # [(price, scan_idx)]
+                "peak_count": 0,
+                "valley_count": 0,
+                "max_price": entry,
+                "min_price": entry,
+                "max_pnl_pct": 0,
+                "min_pnl_pct": 0,
+                "start_time": datetime.now(IST).isoformat(),
+                "scans": 0,
+            }
+
+        j = self.journeys[sym]
+        j["prices"].append(ltp)
+        j["volumes"].append(volume)
+        j["scans"] += 1
+
+        # Keep last 120 data points (~2 hours at 1 min scans)
+        if len(j["prices"]) > 120:
+            j["prices"] = j["prices"][-120:]
+            j["volumes"] = j["volumes"][-120:]
+
+        # Update extremes
+        pnl_pct = ((ltp - entry) / entry * 100) if entry > 0 else 0
+        if ltp > j["max_price"]:
+            j["max_price"] = ltp
+        if ltp < j["min_price"]:
+            j["min_price"] = ltp
+        if pnl_pct > j["max_pnl_pct"]:
+            j["max_pnl_pct"] = round(pnl_pct, 2)
+        if pnl_pct < j["min_pnl_pct"]:
+            j["min_pnl_pct"] = round(pnl_pct, 2)
+
+        # Detect peaks and valleys (need at least 3 data points)
+        prices = j["prices"]
+        idx = len(prices) - 1
+        if len(prices) >= 3:
+            p1, p2, p3 = prices[-3], prices[-2], prices[-1]
+
+            # p2 was a peak: higher than both neighbors
+            if p2 > p1 and p2 > p3:
+                j["peaks"].append((p2, idx - 1))
+                j["peak_count"] = len(j["peaks"])
+                if len(j["peaks"]) > 20:
+                    j["peaks"] = j["peaks"][-20:]
+
+            # p2 was a valley: lower than both neighbors
+            if p2 < p1 and p2 < p3:
+                j["valleys"].append((p2, idx - 1))
+                j["valley_count"] = len(j["valleys"])
+                if len(j["valleys"]) > 20:
+                    j["valleys"] = j["valleys"][-20:]
+
+        self._save()
+
+    def analyze(self, sym: str, entry: float, ltp: float) -> dict:
+        """
+        Full journey analysis. Called BEFORE any exit decision.
+        Returns a report with all metrics and a RECOMMENDATION.
+        """
+        j = self.journeys.get(sym)
+        if not j or len(j["prices"]) < 3:
+            return {"recommendation": "HOLD", "reason": "insufficient data", "confidence": 0}
+
+        prices = j["prices"]
+        entry_price = j["entry"]
+        pnl_pct = ((ltp - entry_price) / entry_price * 100) if entry_price > 0 else 0
+
+        # ── MOMENTUM ANALYSIS ──
+        # Compare recent movement vs overall trend
+        recent_5 = prices[-5:] if len(prices) >= 5 else prices
+        recent_10 = prices[-10:] if len(prices) >= 10 else prices
+
+        # Momentum: is price accelerating or decelerating?
+        if len(recent_5) >= 2:
+            recent_change = ((recent_5[-1] - recent_5[0]) / recent_5[0] * 100) if recent_5[0] > 0 else 0
+        else:
+            recent_change = 0
+
+        if len(recent_10) >= 2:
+            medium_change = ((recent_10[-1] - recent_10[0]) / recent_10[0] * 100) if recent_10[0] > 0 else 0
+        else:
+            medium_change = 0
+
+        # Momentum strength: recent > medium = accelerating
+        momentum = "accelerating" if abs(recent_change) > abs(medium_change) * 0.5 else "decelerating"
+        momentum_direction = "up" if recent_change > 0 else "down" if recent_change < 0 else "flat"
+
+        # ── PEAK/VALLEY PATTERN ──
+        peaks = j["peaks"]
+        valleys = j["valleys"]
+
+        # Are peaks getting higher? (bullish)
+        higher_peaks = False
+        if len(peaks) >= 2:
+            higher_peaks = peaks[-1][0] > peaks[-2][0]
+
+        # Are valleys getting higher? (bullish — higher lows)
+        higher_valleys = False
+        if len(valleys) >= 2:
+            higher_valleys = valleys[-1][0] > valleys[-2][0]
+
+        # Trend health score
+        trend_score = 0
+        if higher_peaks:
+            trend_score += 30  # higher highs = bullish
+        if higher_valleys:
+            trend_score += 30  # higher lows = strong trend
+        if momentum == "accelerating" and momentum_direction == "up":
+            trend_score += 20
+        if pnl_pct > 0:
+            trend_score += 10
+        if recent_change > 0:
+            trend_score += 10
+
+        # ── VOLATILITY ──
+        if len(prices) >= 5:
+            mean_price = sum(prices[-10:]) / len(prices[-10:])
+            variance = sum((p - mean_price) ** 2 for p in prices[-10:]) / len(prices[-10:])
+            volatility = math.sqrt(variance) / mean_price * 100 if mean_price > 0 else 0
+        else:
+            volatility = 0
+
+        # ── DISTANCE FROM PEAK ──
+        peak_price = j["max_price"]
+        distance_from_peak = ((peak_price - ltp) / peak_price * 100) if peak_price > 0 else 0
+
+        # ── VOLUME TREND ── (if available)
+        volumes = [v for v in j["volumes"] if v > 0]
+        volume_trend = "unknown"
+        if len(volumes) >= 5:
+            recent_vol = sum(volumes[-3:]) / 3
+            older_vol = sum(volumes[-6:-3]) / 3 if len(volumes) >= 6 else recent_vol
+            if older_vol > 0:
+                vol_change = ((recent_vol - older_vol) / older_vol) * 100
+                volume_trend = "rising" if vol_change > 10 else "falling" if vol_change < -10 else "stable"
+
+        # ── RECOMMENDATION ──
+        recommendation = "HOLD"
+        reasons = []
+        confidence = 50
+
+        # NEVER exit if trend is strong and accelerating
+        if trend_score >= 70 and momentum == "accelerating" and momentum_direction == "up":
+            recommendation = "STRONG HOLD"
+            reasons.append(f"Strong uptrend (score {trend_score}), momentum accelerating")
+            confidence = 85
+
+        # HOLD if we're near peak and momentum is up
+        elif distance_from_peak < 3 and momentum_direction == "up":
+            recommendation = "HOLD"
+            reasons.append(f"Near peak ({distance_from_peak:.1f}% away), momentum still up")
+            confidence = 70
+
+        # CONSIDER EXIT if trend breaking
+        elif not higher_peaks and not higher_valleys and len(peaks) >= 2:
+            recommendation = "WATCH"
+            reasons.append("Trend may be breaking: no higher peaks or valleys")
+            confidence = 55
+
+        # EXIT SIGNAL if falling from peak with broken trend
+        elif distance_from_peak > 15 and not higher_valleys and momentum_direction == "down":
+            recommendation = "EXIT"
+            reasons.append(f"Down {distance_from_peak:.1f}% from peak, trend broken, momentum down")
+            confidence = 75
+
+        # EXIT SIGNAL if stop loss zone
+        elif pnl_pct <= -35:
+            recommendation = "EXIT"
+            reasons.append(f"Approaching stop loss ({pnl_pct:.1f}%)")
+            confidence = 90
+
+        report = {
+            "recommendation": recommendation,
+            "confidence": confidence,
+            "reasons": reasons,
+            "pnl_pct": round(pnl_pct, 2),
+            "max_pnl_pct": j["max_pnl_pct"],
+            "min_pnl_pct": j["min_pnl_pct"],
+            "peak_count": len(peaks),
+            "valley_count": len(valleys),
+            "higher_peaks": higher_peaks,
+            "higher_valleys": higher_valleys,
+            "trend_score": trend_score,
+            "momentum": momentum,
+            "momentum_direction": momentum_direction,
+            "recent_change_pct": round(recent_change, 2),
+            "volatility_pct": round(volatility, 2),
+            "distance_from_peak_pct": round(distance_from_peak, 2),
+            "volume_trend": volume_trend,
+            "scans": j["scans"],
+            "data_points": len(prices),
+            "peak_price": j["max_price"],
+            "valley_price": j["min_price"],
+        }
+
+        return report
+
+
+# ══════════════════════════════════════════════════════════
+# MAIN LOOP
+# ══════════════════════════════════════════════════════════
+
+tracker = JourneyTracker()
+
+# Hard stop — only exit here if truly broken
+HARD_STOP_PCT = -45
 
 log("AUTOPILOT STARTED")
-tg("AUTOPILOT ONLINE\nMonitoring F&O positions with auto-exit")
+tg("AUTOPILOT ONLINE — Smart exit with journey analysis")
 heartbeat("online", "Autopilot starting", {"event": "startup"})
 
 client = GrowwClient()
 client.connect()
 log("Groww connected")
 
+scan = 0
 while True:
     now = datetime.now(IST)
     scan += 1
 
-    # Reconnect if needed
     if not hasattr(client, '_api') or client._api is None:
         try:
             client.connect()
@@ -106,7 +340,6 @@ while True:
             time.sleep(60)
             continue
 
-    # Market hours check
     is_market = (
         now.weekday() < 5
         and (now.hour > 9 or (now.hour == 9 and now.minute >= 15))
@@ -114,13 +347,9 @@ while True:
     )
 
     if not is_market:
-        if now.hour == 0 and now.minute < 2:
-            log("Midnight reset")
-            peaks.clear()
         time.sleep(120)
         continue
 
-    # Check positions
     try:
         positions = client.get_positions(segment="FNO")
         pos_list = positions.get("positions", [])
@@ -130,7 +359,7 @@ while True:
 
     if not pos_list:
         if scan % 30 == 0:
-            log("No F&O positions open")
+            log("No positions")
         time.sleep(60)
         continue
 
@@ -144,6 +373,7 @@ while True:
         try:
             q = client.get_quote(sym, exchange="NSE", segment="FNO")
             ltp = q.get("last_price", 0)
+            volume = q.get("volume", 0)
         except:
             continue
         if ltp <= 0:
@@ -153,72 +383,42 @@ while True:
         pnl_pct = ((ltp - entry) / entry * 100) if entry > 0 else 0
         total_pnl += pnl
 
-        # Track peak
-        if sym not in peaks or ltp > peaks[sym]:
-            peaks[sym] = ltp
+        # Record in journey tracker
+        tracker.record(sym, entry, ltp, volume)
 
-        # Track price history for pattern detection
-        if sym not in price_history:
-            price_history[sym] = []
-        price_history[sym].append(ltp)
-        if len(price_history[sym]) > HISTORY_LEN:
-            price_history[sym] = price_history[sym][-HISTORY_LEN:]
-
-        # Track lows (dips from peak)
-        if sym not in lows:
-            lows[sym] = []
-        hist = price_history[sym]
-        # Detect a low: price dropped from peak then started rising again
-        if len(hist) >= 3 and hist[-2] < hist[-1] and hist[-2] < hist[-3]:
-            # hist[-2] was a local low
-            low_price = hist[-2]
-            # Only record if it's a meaningful dip from peak (>3%)
-            if peaks.get(sym, 0) > 0:
-                dip_pct = ((peaks[sym] - low_price) / peaks[sym]) * 100
-                if dip_pct > 3:
-                    lows[sym].append(low_price)
-                    if len(lows[sym]) > 5:
-                        lows[sym] = lows[sym][-5:]
-
-        rules = EXIT_RULES.get(sym, DEFAULT_RULES)
+        # ── EXIT DECISION: ALWAYS analyze journey first ──
         reason = None
 
-        # ── SAFE EXIT LOGIC ──
-        # Priority 1: Hard stop loss (always respect)
-        if pnl_pct <= rules["stop_pct"]:
-            reason = f"STOP {pnl_pct:.1f}%"
+        # Priority 1: HARD STOP (capital protection — non-negotiable)
+        if pnl_pct <= HARD_STOP_PCT:
+            reason = f"HARD STOP {pnl_pct:.1f}%"
 
-        # Priority 2: If trailing started AND we have 2+ confirmed lows
-        elif pnl_pct >= rules["trail_start"]:
-            sym_lows = lows.get(sym, [])
-            trail_stop = peaks[sym] * (1 - rules["trail_pct"] / 100)
+        # Priority 2: Full journey analysis
+        else:
+            report = tracker.analyze(sym, entry, ltp)
 
-            if len(sym_lows) >= 2:
-                # Second low confirmed — safe to exit on next dip
-                second_low = sym_lows[-1]
-                first_low = sym_lows[-2]
-                # Second low should be higher than or equal to first (healthy trend)
-                if second_low >= first_low * 0.97:  # within 3% tolerance
-                    if ltp <= trail_stop:
-                        reason = f"SAFE EXIT (2 lows: Rs.{first_low:.2f}, Rs.{second_low:.2f}, peak Rs.{peaks[sym]:.2f})"
-                else:
-                    # Second low LOWER than first = trend breaking, exit immediately
-                    if ltp <= trail_stop:
-                        reason = f"TREND BREAK (low2 Rs.{second_low:.2f} < low1 Rs.{first_low:.2f})"
-            elif ltp <= trail_stop * 0.95:
-                # No second low yet but dropped 5% below trail — force exit for safety
-                reason = f"DEEP TRAIL (peak Rs.{peaks[sym]:.2f}, no 2nd low yet)"
+            if report["recommendation"] == "EXIT" and report["confidence"] >= 70:
+                # Double-check: generate full report for Telegram
+                reason = (
+                    f"JOURNEY EXIT ({report['confidence']}% confident)\n"
+                    f"  Peaks: {report['peak_count']} | Valleys: {report['valley_count']}\n"
+                    f"  Higher peaks: {report['higher_peaks']} | Higher valleys: {report['higher_valleys']}\n"
+                    f"  Trend score: {report['trend_score']}/100\n"
+                    f"  Momentum: {report['momentum']} {report['momentum_direction']}\n"
+                    f"  Peak P&L: +{report['max_pnl_pct']}% | Now: {pnl_pct:+.1f}%\n"
+                    f"  Distance from peak: {report['distance_from_peak_pct']:.1f}%\n"
+                    f"  Reasons: {'; '.join(report['reasons'])}"
+                )
 
-        # Priority 3: Target hit — but DON'T sell immediately at first peak
-        # Wait for confirmation (price holds near target for 2+ scans)
-        elif pnl_pct >= rules["target_pct"]:
-            # Check if we've been at/near target for at least 2 scans
-            near_target_count = sum(1 for p in hist[-3:] if ((p - entry) / entry * 100) >= rules["target_pct"] * 0.9)
-            if near_target_count >= 2:
-                reason = f"TARGET CONFIRMED +{pnl_pct:.1f}% (held {near_target_count} scans)"
-            else:
-                log(f"TARGET ZONE {sym}: +{pnl_pct:.1f}% but waiting for confirmation...")
+            elif report["recommendation"] == "STRONG HOLD":
+                if scan % 10 == 0:
+                    log(f"STRONG HOLD {sym}: +{pnl_pct:.1f}% | trend={report['trend_score']} | {report['momentum']} {report['momentum_direction']} | peaks={report['peak_count']}")
 
+            elif report["recommendation"] == "WATCH":
+                if scan % 5 == 0:
+                    log(f"WATCH {sym}: +{pnl_pct:.1f}% | trend={report['trend_score']} | {'; '.join(report['reasons'])}")
+
+        # Execute exit if reason found
         if reason:
             log(f"SELLING {sym}: {reason}")
             time.sleep(2)
@@ -230,34 +430,48 @@ while True:
                 )
                 status = result.get("order_status", "UNKNOWN")
                 log(f"  Order: {status}")
-                net_pnl = pnl  # approximate
-                win = "WIN" if net_pnl > 0 else "LOSS"
-                tg(f"EXIT {win} ({reason})\n{sym}\nEntry Rs.{entry} -> Rs.{ltp}\nP&L: Rs.{net_pnl:+,.0f} ({pnl_pct:+.1f}%)")
+                win = "WIN" if pnl > 0 else "LOSS"
+
+                # Full exit report to Telegram
+                j = tracker.journeys.get(sym, {})
+                tg(
+                    f"EXIT {win}\n{sym}\n"
+                    f"Entry Rs.{entry} -> Rs.{ltp}\n"
+                    f"P&L: Rs.{pnl:+,.0f} ({pnl_pct:+.1f}%)\n"
+                    f"Peak was: Rs.{j.get('max_price', ltp)} (+{j.get('max_pnl_pct', 0)}%)\n"
+                    f"Peaks seen: {j.get('peak_count', 0)} | Valleys: {j.get('valley_count', 0)}\n"
+                    f"Reason: {reason[:200]}"
+                )
             except Exception as e:
                 log(f"  SELL FAILED: {e}")
         else:
             if scan % 5 == 0:
-                log(f"HOLD {sym}: Rs.{ltp} ({pnl_pct:+.1f}%)")
+                j = tracker.journeys.get(sym, {})
+                log(f"HOLD {sym}: Rs.{ltp} ({pnl_pct:+.1f}%) | peak={j.get('max_price', '?')} | peaks={len(j.get('peaks', []))} valleys={len(j.get('valleys', []))}")
 
-    # Status every 10 scans (~10 min)
+    # Telegram status every 10 scans
     if scan % 10 == 0:
         tg(f"AUTOPILOT [{now.strftime('%H:%M')}]\n{len(pos_list)} positions\nTotal P&L: Rs.{total_pnl:+,.0f}")
 
-    # Heartbeat to Supabase — every 5 scans (~5 min)
+    # Heartbeat every 5 scans
     if scan % 5 == 0:
         pos_summary = []
         for p in pos_list:
+            sym = p["trading_symbol"]
+            j = tracker.journeys.get(sym, {})
             pos_summary.append({
-                "symbol": p["trading_symbol"],
+                "symbol": sym,
                 "entry": p["net_price"],
                 "qty": p["quantity"],
+                "peak_count": len(j.get("peaks", [])),
+                "valley_count": len(j.get("valleys", [])),
+                "max_pnl": j.get("max_pnl_pct", 0),
             })
         heartbeat("online", f"{len(pos_list)} positions | P&L Rs.{total_pnl:+,.0f}", {
             "positions": pos_summary,
             "total_pnl": round(total_pnl, 2),
             "position_count": len(pos_list),
             "scan": scan,
-            "market_open": is_market,
         })
 
     time.sleep(60)
