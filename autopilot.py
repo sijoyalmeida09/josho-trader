@@ -65,15 +65,25 @@ def log(msg):
 
 # Exit rules per position
 EXIT_RULES = {
-    "COALINDIA26APR460CE": {"target_pct": 25, "stop_pct": -40, "trail_start": 15, "trail_pct": 8},
-    "COALINDIA26MAY500CE": {"target_pct": 50, "stop_pct": -40, "trail_start": 25, "trail_pct": 10},
-    "COALINDIA26APR480CE": {"target_pct": 100, "stop_pct": -60, "trail_start": 50, "trail_pct": 15},
-    "COALINDIA26APR500CE": {"target_pct": 150, "stop_pct": -60, "trail_start": 80, "trail_pct": 20},
+    "COALINDIA26APR460CE": {"target_pct": 30, "stop_pct": -40, "trail_start": 20, "trail_pct": 10},
+    "COALINDIA26MAY500CE": {"target_pct": 60, "stop_pct": -40, "trail_start": 30, "trail_pct": 12},
+    "COALINDIA26APR480CE": {"target_pct": 120, "stop_pct": -60, "trail_start": 60, "trail_pct": 15},
+    "COALINDIA26APR500CE": {"target_pct": 200, "stop_pct": -60, "trail_start": 100, "trail_pct": 20},
 }
-DEFAULT_RULES = {"target_pct": 25, "stop_pct": -40, "trail_start": 15, "trail_pct": 8}
+DEFAULT_RULES = {"target_pct": 30, "stop_pct": -40, "trail_start": 20, "trail_pct": 10}
 
-peaks = {}
+# ── SAFE EXIT LOGIC ──────────────────────────────────────
+# Philosophy: "One peak but two same lows. Exit on the second low."
+# Don't sell at first peak. Wait for:
+#   Peak → Dip (first low) → Recovery → Second Dip (second low, higher than first)
+# Sell during the recovery AFTER second low confirms support.
+# This avoids selling too early during a single pullback.
+
+peaks = {}       # highest price seen per symbol
+lows = {}        # list of dip prices per symbol [{price, time}]
+price_history = {} # last N prices per symbol for pattern detection
 scan = 0
+HISTORY_LEN = 20  # track last 20 price points (~20 min at 1 min scans)
 
 log("AUTOPILOT STARTED")
 tg("AUTOPILOT ONLINE\nMonitoring F&O positions with auto-exit")
@@ -147,20 +157,67 @@ while True:
         if sym not in peaks or ltp > peaks[sym]:
             peaks[sym] = ltp
 
+        # Track price history for pattern detection
+        if sym not in price_history:
+            price_history[sym] = []
+        price_history[sym].append(ltp)
+        if len(price_history[sym]) > HISTORY_LEN:
+            price_history[sym] = price_history[sym][-HISTORY_LEN:]
+
+        # Track lows (dips from peak)
+        if sym not in lows:
+            lows[sym] = []
+        hist = price_history[sym]
+        # Detect a low: price dropped from peak then started rising again
+        if len(hist) >= 3 and hist[-2] < hist[-1] and hist[-2] < hist[-3]:
+            # hist[-2] was a local low
+            low_price = hist[-2]
+            # Only record if it's a meaningful dip from peak (>3%)
+            if peaks.get(sym, 0) > 0:
+                dip_pct = ((peaks[sym] - low_price) / peaks[sym]) * 100
+                if dip_pct > 3:
+                    lows[sym].append(low_price)
+                    if len(lows[sym]) > 5:
+                        lows[sym] = lows[sym][-5:]
+
         rules = EXIT_RULES.get(sym, DEFAULT_RULES)
         reason = None
 
-        # Target hit
-        if pnl_pct >= rules["target_pct"]:
-            reason = f"TARGET +{pnl_pct:.1f}%"
-        # Stop loss
-        elif pnl_pct <= rules["stop_pct"]:
+        # ── SAFE EXIT LOGIC ──
+        # Priority 1: Hard stop loss (always respect)
+        if pnl_pct <= rules["stop_pct"]:
             reason = f"STOP {pnl_pct:.1f}%"
-        # Trailing stop
+
+        # Priority 2: If trailing started AND we have 2+ confirmed lows
         elif pnl_pct >= rules["trail_start"]:
+            sym_lows = lows.get(sym, [])
             trail_stop = peaks[sym] * (1 - rules["trail_pct"] / 100)
-            if ltp <= trail_stop:
-                reason = f"TRAIL (peak Rs.{peaks[sym]:.2f})"
+
+            if len(sym_lows) >= 2:
+                # Second low confirmed — safe to exit on next dip
+                second_low = sym_lows[-1]
+                first_low = sym_lows[-2]
+                # Second low should be higher than or equal to first (healthy trend)
+                if second_low >= first_low * 0.97:  # within 3% tolerance
+                    if ltp <= trail_stop:
+                        reason = f"SAFE EXIT (2 lows: Rs.{first_low:.2f}, Rs.{second_low:.2f}, peak Rs.{peaks[sym]:.2f})"
+                else:
+                    # Second low LOWER than first = trend breaking, exit immediately
+                    if ltp <= trail_stop:
+                        reason = f"TREND BREAK (low2 Rs.{second_low:.2f} < low1 Rs.{first_low:.2f})"
+            elif ltp <= trail_stop * 0.95:
+                # No second low yet but dropped 5% below trail — force exit for safety
+                reason = f"DEEP TRAIL (peak Rs.{peaks[sym]:.2f}, no 2nd low yet)"
+
+        # Priority 3: Target hit — but DON'T sell immediately at first peak
+        # Wait for confirmation (price holds near target for 2+ scans)
+        elif pnl_pct >= rules["target_pct"]:
+            # Check if we've been at/near target for at least 2 scans
+            near_target_count = sum(1 for p in hist[-3:] if ((p - entry) / entry * 100) >= rules["target_pct"] * 0.9)
+            if near_target_count >= 2:
+                reason = f"TARGET CONFIRMED +{pnl_pct:.1f}% (held {near_target_count} scans)"
+            else:
+                log(f"TARGET ZONE {sym}: +{pnl_pct:.1f}% but waiting for confirmation...")
 
         if reason:
             log(f"SELLING {sym}: {reason}")
