@@ -780,7 +780,7 @@ class MarketBrain:
                 })
 
         # 7. Reddit sentiment (no API key needed)
-        reddit_posts = self.news.fetch_reddit_sentiment()
+        reddit_posts = self.macro.fetch_reddit_sentiment()
         for post in reddit_posts[:5]:
             title = post.get("title", "")
             if title in self.seen_headlines:
