@@ -17,7 +17,9 @@ log = logging.getLogger("josho.client")
 
 
 class GrowwClient:
-    """Authenticated Groww API client with auto-reconnect."""
+    """Authenticated Groww API client with token caching + auto-reconnect."""
+
+    TOKEN_CACHE_FILE = os.path.join(os.path.dirname(__file__), "..", "data", ".groww_token_cache")
 
     def __init__(self):
         self.api_key: str = os.environ["GROWW_API_KEY"]
@@ -27,17 +29,70 @@ class GrowwClient:
         self._api: Optional[GrowwAPI] = None
         self._token: Optional[str] = None
         self._token_expiry: float = 0
+        self._load_cached_token()
+
+    def _load_cached_token(self):
+        """Load token from disk cache to avoid re-auth on restart."""
+        try:
+            import json
+            if os.path.exists(self.TOKEN_CACHE_FILE):
+                data = json.loads(open(self.TOKEN_CACHE_FILE).read())
+                if data.get("expiry", 0) > time.time() + 300:  # valid for at least 5 more min
+                    self._token = data["token"]
+                    self._token_expiry = data["expiry"]
+                    log.info(f"Loaded cached token (expires in {int((data['expiry'] - time.time()) / 60)} min)")
+        except Exception:
+            pass
+
+    def _save_token_cache(self):
+        """Save token to disk so restarts don't need re-auth."""
+        try:
+            import json
+            os.makedirs(os.path.dirname(self.TOKEN_CACHE_FILE), exist_ok=True)
+            with open(self.TOKEN_CACHE_FILE, "w") as f:
+                json.dump({"token": self._token, "expiry": self._token_expiry}, f)
+        except Exception:
+            pass
 
     def connect(self) -> GrowwAPI:
         """Authenticate and return a live GrowwAPI instance.
-
-        Auth priority:
-        1. TOTP (auto-daily, no manual approval) — uses TOTP token + generated OTP
-        2. API Key + Secret (needs daily approval on dashboard)
+        Uses cached token if available — ZERO API calls on restart.
         """
-        if self._api and time.time() < self._token_expiry:
+        # Reuse cached token — NO API call needed
+        if self._token and time.time() < self._token_expiry:
+            if not self._api:
+                self._api = GrowwAPI(self._token)
+                log.info("Connected using cached token (no auth call)")
             return self._api
 
+        max_retries = 5
+        base_delay = 10  # seconds (was 5)
+        max_delay = 300
+
+        for attempt in range(1, max_retries + 1):
+            try:
+                return self._attempt_connect()
+            except Exception as e:
+                error_str = str(e).lower()
+                is_rate_limit = "rate" in error_str or "429" in error_str or "too many" in error_str or "throttl" in error_str
+
+                if attempt == max_retries:
+                    log.error(f"All connect attempts exhausted after {max_retries} retries: {e}")
+                    raise
+
+                delay = min(base_delay * (2 ** (attempt - 1)), max_delay)
+                if is_rate_limit:
+                    delay = min(delay * 2, max_delay)
+                    log.warning(f"Rate limited (attempt {attempt}/{max_retries}). Backing off {delay}s...")
+                else:
+                    log.warning(f"Connect failed (attempt {attempt}/{max_retries}): {e}. Retrying in {delay}s...")
+
+                time.sleep(delay)
+
+        raise RuntimeError("Failed to connect after all retries")
+
+    def _attempt_connect(self) -> GrowwAPI:
+        """Single connection attempt using available auth methods."""
         log.info("Authenticating with Groww API...")
 
         # Method 1: TOTP (fully automated, no daily approval needed)
@@ -53,25 +108,23 @@ class GrowwClient:
                     totp=totp_code,
                 )
                 self._api = GrowwAPI(self._token)
-                self._token_expiry = time.time() + 3600 * 8
-                log.info("Connected via TOTP (auto-daily)")
+                self._token_expiry = time.time() + 3600 * 4  # refresh every 4h for safety
+                self._save_token_cache()
+                log.info("Connected via TOTP (auto-daily) — token cached")
                 return self._api
             except Exception as e:
                 log.warning(f"TOTP auth failed: {e}")
 
         # Method 2: API Key + Secret (needs manual daily approval)
-        try:
-            self._token = GrowwAPI.get_access_token(
-                api_key=self.api_key,
-                secret=self.secret,
-            )
-            self._api = GrowwAPI(self._token)
-            self._token_expiry = time.time() + 3600 * 8
-            log.info("Connected via API Key + Secret")
-            return self._api
-        except Exception as e:
-            log.error(f"All auth methods failed: {e}")
-            raise
+        self._token = GrowwAPI.get_access_token(
+            api_key=self.api_key,
+            secret=self.secret,
+        )
+        self._api = GrowwAPI(self._token)
+        self._token_expiry = time.time() + 3600 * 4  # refresh every 4h for safety
+        self._save_token_cache()
+        log.info("Connected via API Key + Secret — token cached")
+        return self._api
 
     @property
     def api(self) -> GrowwAPI:
