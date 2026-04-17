@@ -1,0 +1,70 @@
+{
+  "xgboost": {
+    "accuracy": 0.4798,
+    "f1": 0.2543,
+    "precision": 0.3143,
+    "recall": 0.2136,
+    "auc": 0.4321,
+    "time_sec": 1.7
+  },
+  "lightgbm": {
+    "accuracy": 0.4677,
+    "f1": 0.3333,
+    "precision": 0.3474,
+    "recall": 0.3204,
+    "auc": 0.4633,
+    "time_sec": 1.2
+  },
+  "random_forest": {
+    "accuracy": 0.5403,
+    "f1": 0.2597,
+    "precision": 0.3922,
+    "recall": 0.1942,
+    "auc": 0.475,
+    "time_sec": 1.0
+  },
+  "extra_trees": {
+    "accuracy": 0.5565,
+    "f1": 0.2667,
+    "precision": 0.4255,
+    "recall": 0.1942,
+    "auc": 0.4837,
+    "time_sec": 0.8
+  },
+  "gradient_boosting": {
+    "accuracy": 0.5161,
+    "f1": 0.4783,
+    "precision": 0.4331,
+    "recall": 0.534,
+    "auc": 0.4886,
+    "time_sec": 6.4
+  },
+  "adaboost": {
+    "accuracy": 0.5403,
+    "f1": 0.3736,
+    "precision": 0.4304,
+    "recall": 0.3301,
+    "auc": 0.489,
+    "time_sec": 2.2
+  },
+  "ensemble_top3": {
+    "accuracy": 0.5403,
+    "auc": 0.4752,
+    "f1": 0.25,
+    "components": [
+      "extra_trees",
+      "random_forest",
+      "adaboost"
+    ]
+  },
+  "_meta": {
+    "stock": "COALINDIA",
+    "features": 115,
+    "samples": 1236,
+    "train_size": 988,
+    "test_size": 248,
+    "best_algorithm": "extra_trees",
+    "best_accuracy": 0.5565,
+    "trained_at": "2026-04-17 05:17"
+  }
+}

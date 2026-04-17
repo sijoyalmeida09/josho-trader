@@ -4,7 +4,7 @@
   "recall": 0.6538,
   "f1": 0.5763,
   "auc": 0.6631,
-  "train_time_sec": 0.63,
+  "train_time_sec": 0.64,
   "algorithm": "xgboost_v2",
   "description": "XGBoost V2 (baseline)",
   "symbol": "ICICIBANK",
@@ -16,5 +16,5 @@
   "down_count": 196,
   "scale_pos_weight": 0.9597,
   "n_features": 52,
-  "saved_at": "2026-04-13T22:06:41.615290"
+  "saved_at": "2026-04-17T05:05:34.120563"
 }

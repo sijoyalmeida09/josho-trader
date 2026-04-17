@@ -1,0 +1,70 @@
+{
+  "xgboost": {
+    "accuracy": 0.4516,
+    "f1": 0.15,
+    "precision": 0.4615,
+    "recall": 0.0896,
+    "auc": 0.4476,
+    "time_sec": 1.4
+  },
+  "lightgbm": {
+    "accuracy": 0.4798,
+    "f1": 0.2182,
+    "precision": 0.5806,
+    "recall": 0.1343,
+    "auc": 0.4288,
+    "time_sec": 0.9
+  },
+  "random_forest": {
+    "accuracy": 0.4677,
+    "f1": 0.12,
+    "precision": 0.5625,
+    "recall": 0.0672,
+    "auc": 0.4437,
+    "time_sec": 1.0
+  },
+  "extra_trees": {
+    "accuracy": 0.4677,
+    "f1": 0.1081,
+    "precision": 0.5714,
+    "recall": 0.0597,
+    "auc": 0.42,
+    "time_sec": 0.5
+  },
+  "gradient_boosting": {
+    "accuracy": 0.4395,
+    "f1": 0.2235,
+    "precision": 0.4444,
+    "recall": 0.1493,
+    "auc": 0.4233,
+    "time_sec": 4.7
+  },
+  "adaboost": {
+    "accuracy": 0.4597,
+    "f1": 0.1625,
+    "precision": 0.5,
+    "recall": 0.097,
+    "auc": 0.4425,
+    "time_sec": 1.6
+  },
+  "ensemble_top3": {
+    "accuracy": 0.4839,
+    "auc": 0.4288,
+    "f1": 0.1795,
+    "components": [
+      "lightgbm",
+      "random_forest",
+      "extra_trees"
+    ]
+  },
+  "_meta": {
+    "stock": "SBIN",
+    "features": 115,
+    "samples": 1236,
+    "train_size": 988,
+    "test_size": 248,
+    "best_algorithm": "ensemble_top3",
+    "best_accuracy": 0.4839,
+    "trained_at": "2026-04-17 05:21"
+  }
+}

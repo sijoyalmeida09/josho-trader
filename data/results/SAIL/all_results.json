@@ -1,0 +1,70 @@
+{
+  "xgboost": {
+    "accuracy": 0.4919,
+    "f1": 0.1818,
+    "precision": 0.5385,
+    "recall": 0.1094,
+    "auc": 0.568,
+    "time_sec": 2.1
+  },
+  "lightgbm": {
+    "accuracy": 0.4798,
+    "f1": 0.2629,
+    "precision": 0.4894,
+    "recall": 0.1797,
+    "auc": 0.511,
+    "time_sec": 1.2
+  },
+  "random_forest": {
+    "accuracy": 0.5,
+    "f1": 0.1389,
+    "precision": 0.625,
+    "recall": 0.0781,
+    "auc": 0.538,
+    "time_sec": 1.5
+  },
+  "extra_trees": {
+    "accuracy": 0.5202,
+    "f1": 0.2119,
+    "precision": 0.6957,
+    "recall": 0.125,
+    "auc": 0.5368,
+    "time_sec": 1.0
+  },
+  "gradient_boosting": {
+    "accuracy": 0.5,
+    "f1": 0.2791,
+    "precision": 0.5455,
+    "recall": 0.1875,
+    "auc": 0.5656,
+    "time_sec": 6.4
+  },
+  "adaboost": {
+    "accuracy": 0.5081,
+    "f1": 0.3146,
+    "precision": 0.56,
+    "recall": 0.2188,
+    "auc": 0.5611,
+    "time_sec": 1.8
+  },
+  "ensemble_top3": {
+    "accuracy": 0.496,
+    "auc": 0.5462,
+    "f1": 0.1497,
+    "components": [
+      "extra_trees",
+      "adaboost",
+      "random_forest"
+    ]
+  },
+  "_meta": {
+    "stock": "SAIL",
+    "features": 115,
+    "samples": 1236,
+    "train_size": 988,
+    "test_size": 248,
+    "best_algorithm": "extra_trees",
+    "best_accuracy": 0.5202,
+    "trained_at": "2026-04-17 05:18"
+  }
+}

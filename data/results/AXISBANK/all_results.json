@@ -1,0 +1,70 @@
+{
+  "xgboost": {
+    "accuracy": 0.6048,
+    "f1": 0.3636,
+    "precision": 0.56,
+    "recall": 0.2692,
+    "auc": 0.5638,
+    "time_sec": 2.6
+  },
+  "lightgbm": {
+    "accuracy": 0.5806,
+    "f1": 0.4091,
+    "precision": 0.5,
+    "recall": 0.3462,
+    "auc": 0.5298,
+    "time_sec": 1.0
+  },
+  "random_forest": {
+    "accuracy": 0.5887,
+    "f1": 0.2714,
+    "precision": 0.5278,
+    "recall": 0.1827,
+    "auc": 0.5192,
+    "time_sec": 1.2
+  },
+  "extra_trees": {
+    "accuracy": 0.6048,
+    "f1": 0.2576,
+    "precision": 0.6071,
+    "recall": 0.1635,
+    "auc": 0.5559,
+    "time_sec": 1.2
+  },
+  "gradient_boosting": {
+    "accuracy": 0.6048,
+    "f1": 0.4096,
+    "precision": 0.5484,
+    "recall": 0.3269,
+    "auc": 0.5577,
+    "time_sec": 18.4
+  },
+  "adaboost": {
+    "accuracy": 0.5444,
+    "f1": 0.3616,
+    "precision": 0.4384,
+    "recall": 0.3077,
+    "auc": 0.511,
+    "time_sec": 6.5
+  },
+  "ensemble_top3": {
+    "accuracy": 0.6169,
+    "auc": 0.564,
+    "f1": 0.3537,
+    "components": [
+      "xgboost",
+      "extra_trees",
+      "gradient_boosting"
+    ]
+  },
+  "_meta": {
+    "stock": "AXISBANK",
+    "features": 115,
+    "samples": 1236,
+    "train_size": 988,
+    "test_size": 248,
+    "best_algorithm": "ensemble_top3",
+    "best_accuracy": 0.6169,
+    "trained_at": "2026-04-17 05:22"
+  }
+}

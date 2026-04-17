@@ -1,0 +1,122 @@
+[
+  {
+    "feature": "nikkei_price",
+    "importance": 0.0479
+  },
+  {
+    "feature": "day_in_month",
+    "importance": 0.0385
+  },
+  {
+    "feature": "bb_lower",
+    "importance": 0.037
+  },
+  {
+    "feature": "hangseng_price",
+    "importance": 0.0356
+  },
+  {
+    "feature": "price_vs_sma200",
+    "importance": 0.0349
+  },
+  {
+    "feature": "usdinr_corr_20d",
+    "importance": 0.0245
+  },
+  {
+    "feature": "india_etf_return_5d",
+    "importance": 0.0239
+  },
+  {
+    "feature": "hangseng_return_5d",
+    "importance": 0.0237
+  },
+  {
+    "feature": "stoch_d",
+    "importance": 0.0237
+  },
+  {
+    "feature": "india_etf_price",
+    "importance": 0.0234
+  },
+  {
+    "feature": "india_etf_corr_20d",
+    "importance": 0.0222
+  },
+  {
+    "feature": "price_vs_sma50",
+    "importance": 0.0212
+  },
+  {
+    "feature": "macd_hist",
+    "importance": 0.0209
+  },
+  {
+    "feature": "crude_price",
+    "importance": 0.0208
+  },
+  {
+    "feature": "bb_position",
+    "importance": 0.0199
+  },
+  {
+    "feature": "gold_return_5d",
+    "importance": 0.0194
+  },
+  {
+    "feature": "atr_pct",
+    "importance": 0.0183
+  },
+  {
+    "feature": "crude_corr_20d",
+    "importance": 0.0176
+  },
+  {
+    "feature": "rsi_14",
+    "importance": 0.0175
+  },
+  {
+    "feature": "return_20d",
+    "importance": 0.0168
+  },
+  {
+    "feature": "gold_price",
+    "importance": 0.0166
+  },
+  {
+    "feature": "volatility_5d",
+    "importance": 0.0165
+  },
+  {
+    "feature": "sma20_vs_sma50",
+    "importance": 0.0155
+  },
+  {
+    "feature": "us10y_corr_20d",
+    "importance": 0.0152
+  },
+  {
+    "feature": "hangseng_corr_20d",
+    "importance": 0.0135
+  },
+  {
+    "feature": "sp500_return_5d",
+    "importance": 0.0134
+  },
+  {
+    "feature": "ema_200",
+    "importance": 0.0133
+  },
+  {
+    "feature": "us10y_price",
+    "importance": 0.0131
+  },
+  {
+    "feature": "price_vs_sma20",
+    "importance": 0.013
+  },
+  {
+    "feature": "ema_100",
+    "importance": 0.0127
+  }
+]

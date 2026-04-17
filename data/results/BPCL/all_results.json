@@ -1,0 +1,70 @@
+{
+  "xgboost": {
+    "accuracy": 0.4919,
+    "f1": 0.25,
+    "precision": 0.42,
+    "recall": 0.178,
+    "auc": 0.5089,
+    "time_sec": 1.8
+  },
+  "lightgbm": {
+    "accuracy": 0.4798,
+    "f1": 0.2629,
+    "precision": 0.4035,
+    "recall": 0.1949,
+    "auc": 0.5106,
+    "time_sec": 1.4
+  },
+  "random_forest": {
+    "accuracy": 0.4839,
+    "f1": 0.2558,
+    "precision": 0.4074,
+    "recall": 0.1864,
+    "auc": 0.5256,
+    "time_sec": 1.2
+  },
+  "extra_trees": {
+    "accuracy": 0.496,
+    "f1": 0.1722,
+    "precision": 0.3939,
+    "recall": 0.1102,
+    "auc": 0.523,
+    "time_sec": 0.7
+  },
+  "gradient_boosting": {
+    "accuracy": 0.504,
+    "f1": 0.3692,
+    "precision": 0.4675,
+    "recall": 0.3051,
+    "auc": 0.5449,
+    "time_sec": 6.0
+  },
+  "adaboost": {
+    "accuracy": 0.5403,
+    "f1": 0.24,
+    "precision": 0.5625,
+    "recall": 0.1525,
+    "auc": 0.6271,
+    "time_sec": 1.8
+  },
+  "ensemble_top3": {
+    "accuracy": 0.5,
+    "auc": 0.5591,
+    "f1": 0.3034,
+    "components": [
+      "adaboost",
+      "gradient_boosting",
+      "extra_trees"
+    ]
+  },
+  "_meta": {
+    "stock": "BPCL",
+    "features": 115,
+    "samples": 1236,
+    "train_size": 988,
+    "test_size": 248,
+    "best_algorithm": "adaboost",
+    "best_accuracy": 0.5403,
+    "trained_at": "2026-04-17 05:19"
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "xgboost": {
+    "accuracy": 0.5927,
+    "f1": 0.4229,
+    "precision": 0.3978,
+    "recall": 0.4512,
+    "auc": 0.5774,
+    "time_sec": 1.3
+  },
+  "lightgbm": {
+    "accuracy": 0.5444,
+    "f1": 0.3957,
+    "precision": 0.3524,
+    "recall": 0.4512,
+    "auc": 0.5538,
+    "time_sec": 0.6
+  },
+  "random_forest": {
+    "accuracy": 0.6694,
+    "f1": 0.2115,
+    "precision": 0.5,
+    "recall": 0.1341,
+    "auc": 0.5516,
+    "time_sec": 1.0
+  },
+  "extra_trees": {
+    "accuracy": 0.6492,
+    "f1": 0.1031,
+    "precision": 0.3333,
+    "recall": 0.061,
+    "auc": 0.5015,
+    "time_sec": 0.4
+  },
+  "gradient_boosting": {
+    "accuracy": 0.6492,
+    "f1": 0.315,
+    "precision": 0.4444,
+    "recall": 0.2439,
+    "auc": 0.5343,
+    "time_sec": 4.3
+  },
+  "adaboost": {
+    "accuracy": 0.6815,
+    "f1": 0.092,
+    "precision": 0.8,
+    "recall": 0.0488,
+    "auc": 0.5782,
+    "time_sec": 1.2
+  },
+  "ensemble_top3": {
+    "accuracy": 0.6653,
+    "auc": 0.5403,
+    "f1": 0.1075,
+    "components": [
+      "adaboost",
+      "random_forest",
+      "extra_trees"
+    ]
+  },
+  "_meta": {
+    "stock": "HDFCBANK",
+    "features": 115,
+    "samples": 1236,
+    "train_size": 988,
+    "test_size": 248,
+    "best_algorithm": "adaboost",
+    "best_accuracy": 0.6815,
+    "trained_at": "2026-04-17 05:21"
+  }
+}

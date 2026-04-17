@@ -4,8 +4,11 @@ Scans NIFTY, BANKNIFTY, top stocks for trading setups.
 """
 
 import logging
-from datetime import datetime, time
+from datetime import datetime, time, timezone, timedelta
 from typing import Optional
+
+# IST = UTC+5:30
+IST = timezone(timedelta(hours=5, minutes=30))
 
 from ..client import get_client
 
@@ -35,18 +38,10 @@ class MarketScanner:
 
     def is_market_open(self) -> bool:
         """Check if Indian market is currently open (9:15 AM - 3:30 PM IST)."""
-        now = datetime.utcnow()
-        # IST = UTC + 5:30
-        ist_hour = (now.hour + 5) % 24
-        ist_min = now.minute + 30
-        if ist_min >= 60:
-            ist_hour += 1
-            ist_min -= 60
-
+        now = datetime.now(IST)
+        current = time(now.hour, now.minute)
         market_open = time(9, 15)
         market_close = time(15, 30)
-        current = time(ist_hour, ist_min)
-
         return market_open <= current <= market_close
 
     def get_nifty_spot(self) -> Optional[float]:

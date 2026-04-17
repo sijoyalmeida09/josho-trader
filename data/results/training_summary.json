@@ -1,0 +1,90 @@
+{
+  "COALINDIA": {
+    "best": "extra_trees",
+    "accuracy": 0.5565
+  },
+  "TATASTEEL": {
+    "best": "xgboost",
+    "accuracy": 0.5282
+  },
+  "HINDALCO": {
+    "best": "gradient_boosting",
+    "accuracy": 0.5323
+  },
+  "VEDL": {
+    "best": "ensemble_top3",
+    "accuracy": 0.5161
+  },
+  "SAIL": {
+    "best": "extra_trees",
+    "accuracy": 0.5202
+  },
+  "JSWSTEEL": {
+    "best": "extra_trees",
+    "accuracy": 0.5968
+  },
+  "BPCL": {
+    "best": "adaboost",
+    "accuracy": 0.5403
+  },
+  "ONGC": {
+    "best": "extra_trees",
+    "accuracy": 0.5968
+  },
+  "TATAPOWER": {
+    "best": "extra_trees",
+    "accuracy": 0.5968
+  },
+  "ADANIPOWER": {
+    "best": "lightgbm",
+    "accuracy": 0.5565
+  },
+  "SUZLON": {
+    "best": "gradient_boosting",
+    "accuracy": 0.6492
+  },
+  "PNB": {
+    "best": "adaboost",
+    "accuracy": 0.6169
+  },
+  "SBIN": {
+    "best": "ensemble_top3",
+    "accuracy": 0.4839
+  },
+  "HDFCBANK": {
+    "best": "adaboost",
+    "accuracy": 0.6815
+  },
+  "ICICIBANK": {
+    "best": "xgboost",
+    "accuracy": 0.6976
+  },
+  "AXISBANK": {
+    "best": "ensemble_top3",
+    "accuracy": 0.6169
+  },
+  "BAJFINANCE": {
+    "best": "ensemble_top3",
+    "accuracy": 0.5524
+  },
+  "RELIANCE": {
+    "best": "random_forest",
+    "accuracy": 0.5927
+  },
+  "INFY": {
+    "best": "lightgbm",
+    "accuracy": 0.6008
+  },
+  "TCS": {
+    "best": "xgboost",
+    "accuracy": 0.5806
+  },
+  "ITC": {
+    "best": "extra_trees",
+    "accuracy": 0.4597
+  },
+  "BHARTIARTL": {
+    "best": "random_forest",
+    "accuracy": 0.5565
+  }
+}

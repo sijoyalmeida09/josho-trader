@@ -1,0 +1,70 @@
+{
+  "xgboost": {
+    "accuracy": 0.4556,
+    "f1": 0.3478,
+    "precision": 0.5373,
+    "recall": 0.2571,
+    "auc": 0.5234,
+    "time_sec": 2.4
+  },
+  "lightgbm": {
+    "accuracy": 0.4718,
+    "f1": 0.3907,
+    "precision": 0.56,
+    "recall": 0.3,
+    "auc": 0.5378,
+    "time_sec": 3.1
+  },
+  "random_forest": {
+    "accuracy": 0.4194,
+    "f1": 0.2088,
+    "precision": 0.4524,
+    "recall": 0.1357,
+    "auc": 0.5319,
+    "time_sec": 1.0
+  },
+  "extra_trees": {
+    "accuracy": 0.4879,
+    "f1": 0.2659,
+    "precision": 0.697,
+    "recall": 0.1643,
+    "auc": 0.5347,
+    "time_sec": 0.6
+  },
+  "gradient_boosting": {
+    "accuracy": 0.5323,
+    "f1": 0.5573,
+    "precision": 0.5984,
+    "recall": 0.5214,
+    "auc": 0.53,
+    "time_sec": 5.7
+  },
+  "adaboost": {
+    "accuracy": 0.4194,
+    "f1": 0.2421,
+    "precision": 0.46,
+    "recall": 0.1643,
+    "auc": 0.5086,
+    "time_sec": 1.6
+  },
+  "ensemble_top3": {
+    "accuracy": 0.4556,
+    "auc": 0.5419,
+    "f1": 0.3602,
+    "components": [
+      "gradient_boosting",
+      "extra_trees",
+      "lightgbm"
+    ]
+  },
+  "_meta": {
+    "stock": "HINDALCO",
+    "features": 115,
+    "samples": 1236,
+    "train_size": 988,
+    "test_size": 248,
+    "best_algorithm": "gradient_boosting",
+    "best_accuracy": 0.5323,
+    "trained_at": "2026-04-17 05:18"
+  }
+}

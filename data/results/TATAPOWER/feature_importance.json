@@ -1,0 +1,122 @@
+[
+  {
+    "feature": "day_in_month",
+    "importance": 0.0437
+  },
+  {
+    "feature": "days_to_month_end",
+    "importance": 0.0349
+  },
+  {
+    "feature": "sma_5",
+    "importance": 0.019
+  },
+  {
+    "feature": "is_budget_month",
+    "importance": 0.0182
+  },
+  {
+    "feature": "ema_5",
+    "importance": 0.0161
+  },
+  {
+    "feature": "macd_hist",
+    "importance": 0.0147
+  },
+  {
+    "feature": "ema_200",
+    "importance": 0.0146
+  },
+  {
+    "feature": "sma_10",
+    "importance": 0.0146
+  },
+  {
+    "feature": "nikkei_price",
+    "importance": 0.0143
+  },
+  {
+    "feature": "ema_10",
+    "importance": 0.0135
+  },
+  {
+    "feature": "crude_corr_20d",
+    "importance": 0.013
+  },
+  {
+    "feature": "nikkei_corr_20d",
+    "importance": 0.0129
+  },
+  {
+    "feature": "stoch_d",
+    "importance": 0.0128
+  },
+  {
+    "feature": "ema_100",
+    "importance": 0.0128
+  },
+  {
+    "feature": "sma_100",
+    "importance": 0.0126
+  },
+  {
+    "feature": "hangseng_price",
+    "importance": 0.012
+  },
+  {
+    "feature": "ema_50",
+    "importance": 0.012
+  },
+  {
+    "feature": "stoch_k",
+    "importance": 0.0119
+  },
+  {
+    "feature": "sma_50",
+    "importance": 0.0119
+  },
+  {
+    "feature": "rsi_14",
+    "importance": 0.0118
+  },
+  {
+    "feature": "gold_price",
+    "importance": 0.0113
+  },
+  {
+    "feature": "crude_price",
+    "importance": 0.0113
+  },
+  {
+    "feature": "ema_20",
+    "importance": 0.0112
+  },
+  {
+    "feature": "hangseng_return_5d",
+    "importance": 0.0111
+  },
+  {
+    "feature": "crude_return_5d",
+    "importance": 0.0111
+  },
+  {
+    "feature": "bb_position",
+    "importance": 0.0108
+  },
+  {
+    "feature": "hangseng_corr_20d",
+    "importance": 0.0108
+  },
+  {
+    "feature": "price_vs_sma20",
+    "importance": 0.0107
+  },
+  {
+    "feature": "return_10d",
+    "importance": 0.0107
+  },
+  {
+    "feature": "bb_lower",
+    "importance": 0.0106
+  }
+]

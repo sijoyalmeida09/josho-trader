@@ -1,0 +1,20 @@
+{
+  "accuracy": 0.3846,
+  "precision": 0.3514,
+  "recall": 1.0,
+  "f1": 0.52,
+  "auc": 0.7204,
+  "train_time_sec": 0.44,
+  "algorithm": "extra_trees",
+  "description": "Extra Trees",
+  "symbol": "BHARTIARTL",
+  "total_rows": 491,
+  "valid_samples": 390,
+  "train_size": 302,
+  "test_size": 78,
+  "up_count": 213,
+  "down_count": 177,
+  "scale_pos_weight": 0.6237,
+  "n_features": 52,
+  "saved_at": "2026-04-17T05:04:49.576744"
+}

@@ -1,0 +1,122 @@
+[
+  {
+    "feature": "nikkei_price",
+    "importance": 0.0634
+  },
+  {
+    "feature": "ema_5",
+    "importance": 0.058
+  },
+  {
+    "feature": "crude_price",
+    "importance": 0.0536
+  },
+  {
+    "feature": "price_vs_sma50",
+    "importance": 0.0511
+  },
+  {
+    "feature": "india_etf_price",
+    "importance": 0.0479
+  },
+  {
+    "feature": "macd_signal",
+    "importance": 0.0472
+  },
+  {
+    "feature": "bb_lower",
+    "importance": 0.0394
+  },
+  {
+    "feature": "hangseng_price",
+    "importance": 0.0357
+  },
+  {
+    "feature": "dxy_corr_20d",
+    "importance": 0.0351
+  },
+  {
+    "feature": "ema_100",
+    "importance": 0.0345
+  },
+  {
+    "feature": "volatility_5d",
+    "importance": 0.0328
+  },
+  {
+    "feature": "nikkei_corr_20d",
+    "importance": 0.0315
+  },
+  {
+    "feature": "bb_position",
+    "importance": 0.0303
+  },
+  {
+    "feature": "vix_us_corr_20d",
+    "importance": 0.0243
+  },
+  {
+    "feature": "usdinr_price",
+    "importance": 0.023
+  },
+  {
+    "feature": "vix_us_price",
+    "importance": 0.0206
+  },
+  {
+    "feature": "gold_corr_20d",
+    "importance": 0.02
+  },
+  {
+    "feature": "sector_BANKING_momentum",
+    "importance": 0.02
+  },
+  {
+    "feature": "day_in_month",
+    "importance": 0.0193
+  },
+  {
+    "feature": "stoch_d",
+    "importance": 0.0185
+  },
+  {
+    "feature": "is_budget_month",
+    "importance": 0.0176
+  },
+  {
+    "feature": "hangseng_corr_20d",
+    "importance": 0.0167
+  },
+  {
+    "feature": "us10y_corr_20d",
+    "importance": 0.0159
+  },
+  {
+    "feature": "cci",
+    "importance": 0.0146
+  },
+  {
+    "feature": "sp500_corr_20d",
+    "importance": 0.0139
+  },
+  {
+    "feature": "usdinr_return_5d",
+    "importance": 0.0136
+  },
+  {
+    "feature": "price_vs_sma20",
+    "importance": 0.0134
+  },
+  {
+    "feature": "gold_return_5d",
+    "importance": 0.0133
+  },
+  {
+    "feature": "upper_shadow",
+    "importance": 0.0132
+  },
+  {
+    "feature": "vix_india_return_5d",
+    "importance": 0.0125
+  }
+]

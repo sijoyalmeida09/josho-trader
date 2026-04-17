@@ -1,0 +1,70 @@
+{
+  "xgboost": {
+    "accuracy": 0.5282,
+    "f1": 0.3158,
+    "precision": 0.675,
+    "recall": 0.2061,
+    "auc": 0.616,
+    "time_sec": 2.1
+  },
+  "lightgbm": {
+    "accuracy": 0.5081,
+    "f1": 0.3068,
+    "precision": 0.6,
+    "recall": 0.2061,
+    "auc": 0.5902,
+    "time_sec": 0.7
+  },
+  "random_forest": {
+    "accuracy": 0.496,
+    "f1": 0.2038,
+    "precision": 0.6154,
+    "recall": 0.1221,
+    "auc": 0.601,
+    "time_sec": 1.1
+  },
+  "extra_trees": {
+    "accuracy": 0.5202,
+    "f1": 0.1905,
+    "precision": 0.875,
+    "recall": 0.1069,
+    "auc": 0.5985,
+    "time_sec": 0.6
+  },
+  "gradient_boosting": {
+    "accuracy": 0.504,
+    "f1": 0.3351,
+    "precision": 0.5741,
+    "recall": 0.2366,
+    "auc": 0.5111,
+    "time_sec": 6.1
+  },
+  "adaboost": {
+    "accuracy": 0.5,
+    "f1": 0.225,
+    "precision": 0.6207,
+    "recall": 0.1374,
+    "auc": 0.5799,
+    "time_sec": 2.2
+  },
+  "ensemble_top3": {
+    "accuracy": 0.5282,
+    "auc": 0.6175,
+    "f1": 0.2994,
+    "components": [
+      "xgboost",
+      "extra_trees",
+      "lightgbm"
+    ]
+  },
+  "_meta": {
+    "stock": "TATASTEEL",
+    "features": 115,
+    "samples": 1236,
+    "train_size": 988,
+    "test_size": 248,
+    "best_algorithm": "xgboost",
+    "best_accuracy": 0.5282,
+    "trained_at": "2026-04-17 05:17"
+  }
+}

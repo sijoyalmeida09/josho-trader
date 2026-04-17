@@ -1,0 +1,122 @@
+[
+  {
+    "feature": "hangseng_price",
+    "importance": 0.0532
+  },
+  {
+    "feature": "sector_return_5d",
+    "importance": 0.0463
+  },
+  {
+    "feature": "volatility_20d",
+    "importance": 0.0307
+  },
+  {
+    "feature": "dxy_corr_20d",
+    "importance": 0.0287
+  },
+  {
+    "feature": "vix_india_corr_20d",
+    "importance": 0.0283
+  },
+  {
+    "feature": "usdinr_price",
+    "importance": 0.0281
+  },
+  {
+    "feature": "sp500_corr_20d",
+    "importance": 0.0246
+  },
+  {
+    "feature": "crude_return_5d",
+    "importance": 0.0244
+  },
+  {
+    "feature": "gold_price",
+    "importance": 0.0239
+  },
+  {
+    "feature": "sma_10",
+    "importance": 0.0228
+  },
+  {
+    "feature": "crude_corr_20d",
+    "importance": 0.0225
+  },
+  {
+    "feature": "price_vs_sma200",
+    "importance": 0.0224
+  },
+  {
+    "feature": "us10y_corr_20d",
+    "importance": 0.022
+  },
+  {
+    "feature": "bb_width",
+    "importance": 0.0219
+  },
+  {
+    "feature": "india_etf_corr_20d",
+    "importance": 0.0194
+  },
+  {
+    "feature": "return_2d",
+    "importance": 0.0192
+  },
+  {
+    "feature": "macd",
+    "importance": 0.019
+  },
+  {
+    "feature": "hangseng_corr_20d",
+    "importance": 0.0189
+  },
+  {
+    "feature": "sp500_price",
+    "importance": 0.0189
+  },
+  {
+    "feature": "ftse_price",
+    "importance": 0.0185
+  },
+  {
+    "feature": "crude_price",
+    "importance": 0.0171
+  },
+  {
+    "feature": "price_vs_sma50",
+    "importance": 0.0166
+  },
+  {
+    "feature": "nikkei_price",
+    "importance": 0.016
+  },
+  {
+    "feature": "stoch_d",
+    "importance": 0.0154
+  },
+  {
+    "feature": "volatility_ratio",
+    "importance": 0.0146
+  },
+  {
+    "feature": "atr_14",
+    "importance": 0.0132
+  },
+  {
+    "feature": "vix_us_corr_20d",
+    "importance": 0.0122
+  },
+  {
+    "feature": "gold_corr_20d",
+    "importance": 0.0116
+  },
+  {
+    "feature": "sma_20",
+    "importance": 0.0116
+  },
+  {
+    "feature": "ema_5",
+    "importance": 0.0111
+  }
+]

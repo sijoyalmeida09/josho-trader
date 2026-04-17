@@ -1,0 +1,122 @@
+[
+  {
+    "feature": "nikkei_price",
+    "importance": 0.0817
+  },
+  {
+    "feature": "ema_10",
+    "importance": 0.0771
+  },
+  {
+    "feature": "usdinr_corr_20d",
+    "importance": 0.0591
+  },
+  {
+    "feature": "return_5d",
+    "importance": 0.0453
+  },
+  {
+    "feature": "sector_return_5d",
+    "importance": 0.0452
+  },
+  {
+    "feature": "crude_price",
+    "importance": 0.0432
+  },
+  {
+    "feature": "price_vs_sma50",
+    "importance": 0.0429
+  },
+  {
+    "feature": "rsi_14",
+    "importance": 0.0424
+  },
+  {
+    "feature": "ftse_corr_20d",
+    "importance": 0.0412
+  },
+  {
+    "feature": "return_10d",
+    "importance": 0.039
+  },
+  {
+    "feature": "gold_price",
+    "importance": 0.0314
+  },
+  {
+    "feature": "india_etf_corr_20d",
+    "importance": 0.031
+  },
+  {
+    "feature": "vix_us_price",
+    "importance": 0.0287
+  },
+  {
+    "feature": "nikkei_corr_20d",
+    "importance": 0.0241
+  },
+  {
+    "feature": "bb_upper",
+    "importance": 0.0223
+  },
+  {
+    "feature": "hangseng_price",
+    "importance": 0.022
+  },
+  {
+    "feature": "gold_return_5d",
+    "importance": 0.0198
+  },
+  {
+    "feature": "crude_corr_20d",
+    "importance": 0.0198
+  },
+  {
+    "feature": "us10y_return_5d",
+    "importance": 0.0185
+  },
+  {
+    "feature": "nikkei_return_5d",
+    "importance": 0.018
+  },
+  {
+    "feature": "bb_lower",
+    "importance": 0.0179
+  },
+  {
+    "feature": "dxy_corr_20d",
+    "importance": 0.0177
+  },
+  {
+    "feature": "sp500_corr_20d",
+    "importance": 0.0156
+  },
+  {
+    "feature": "hangseng_corr_20d",
+    "importance": 0.0156
+  },
+  {
+    "feature": "ema_50",
+    "importance": 0.0154
+  },
+  {
+    "feature": "usdinr_return_5d",
+    "importance": 0.0153
+  },
+  {
+    "feature": "sector_OIL_momentum",
+    "importance": 0.0152
+  },
+  {
+    "feature": "sp500_price",
+    "importance": 0.0151
+  },
+  {
+    "feature": "volume_ratio",
+    "importance": 0.0149
+  },
+  {
+    "feature": "vix_us_return_1d",
+    "importance": 0.0138
+  }
+]

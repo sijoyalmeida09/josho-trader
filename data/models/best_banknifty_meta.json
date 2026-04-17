@@ -1,0 +1,20 @@
+{
+  "accuracy": 0.6081,
+  "precision": 0.56,
+  "recall": 0.8,
+  "f1": 0.6588,
+  "auc": 0.6571,
+  "train_time_sec": 7.67,
+  "algorithm": "stacking",
+  "description": "Stacking Ensemble (meta-model)",
+  "symbol": "BANKNIFTY",
+  "total_rows": 488,
+  "valid_samples": 366,
+  "train_size": 282,
+  "test_size": 74,
+  "up_count": 197,
+  "down_count": 169,
+  "scale_pos_weight": 0.8431,
+  "n_features": 52,
+  "saved_at": "2026-04-17T05:04:32.278528"
+}

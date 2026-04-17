@@ -1,0 +1,70 @@
+{
+  "xgboost": {
+    "accuracy": 0.5282,
+    "f1": 0.4455,
+    "precision": 0.4234,
+    "recall": 0.47,
+    "auc": 0.4981,
+    "time_sec": 2.5
+  },
+  "lightgbm": {
+    "accuracy": 0.5403,
+    "f1": 0.4,
+    "precision": 0.4222,
+    "recall": 0.38,
+    "auc": 0.5237,
+    "time_sec": 1.7
+  },
+  "random_forest": {
+    "accuracy": 0.5565,
+    "f1": 0.1406,
+    "precision": 0.3214,
+    "recall": 0.09,
+    "auc": 0.5213,
+    "time_sec": 1.3
+  },
+  "extra_trees": {
+    "accuracy": 0.5524,
+    "f1": 0.4308,
+    "precision": 0.4421,
+    "recall": 0.42,
+    "auc": 0.5201,
+    "time_sec": 0.9
+  },
+  "gradient_boosting": {
+    "accuracy": 0.4919,
+    "f1": 0.3942,
+    "precision": 0.3796,
+    "recall": 0.41,
+    "auc": 0.4733,
+    "time_sec": 6.7
+  },
+  "adaboost": {
+    "accuracy": 0.5524,
+    "f1": 0.2449,
+    "precision": 0.383,
+    "recall": 0.18,
+    "auc": 0.4972,
+    "time_sec": 1.8
+  },
+  "ensemble_top3": {
+    "accuracy": 0.5202,
+    "auc": 0.5263,
+    "f1": 0.1905,
+    "components": [
+      "random_forest",
+      "extra_trees",
+      "adaboost"
+    ]
+  },
+  "_meta": {
+    "stock": "BHARTIARTL",
+    "features": 111,
+    "samples": 1236,
+    "train_size": 988,
+    "test_size": 248,
+    "best_algorithm": "random_forest",
+    "best_accuracy": 0.5565,
+    "trained_at": "2026-04-17 05:25"
+  }
+}

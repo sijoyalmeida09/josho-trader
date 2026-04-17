@@ -1,0 +1,20 @@
+{
+  "accuracy": 0.35,
+  "precision": 0.35,
+  "recall": 1.0,
+  "f1": 0.5185,
+  "auc": 0.5288,
+  "train_time_sec": 0.43,
+  "algorithm": "adaboost",
+  "description": "AdaBoost",
+  "symbol": "BAJFINANCE",
+  "total_rows": 491,
+  "valid_samples": 398,
+  "train_size": 308,
+  "test_size": 80,
+  "up_count": 203,
+  "down_count": 195,
+  "scale_pos_weight": 0.8225,
+  "n_features": 52,
+  "saved_at": "2026-04-17T05:04:14.022503"
+}

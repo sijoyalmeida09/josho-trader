@@ -1,0 +1,122 @@
+[
+  {
+    "feature": "day_in_month",
+    "importance": 0.0299
+  },
+  {
+    "feature": "days_to_month_end",
+    "importance": 0.027
+  },
+  {
+    "feature": "stoch_d",
+    "importance": 0.0176
+  },
+  {
+    "feature": "hangseng_price",
+    "importance": 0.0171
+  },
+  {
+    "feature": "ema_50",
+    "importance": 0.0153
+  },
+  {
+    "feature": "rsi_14",
+    "importance": 0.0152
+  },
+  {
+    "feature": "macd_hist",
+    "importance": 0.0151
+  },
+  {
+    "feature": "return_5d",
+    "importance": 0.0149
+  },
+  {
+    "feature": "ema_5",
+    "importance": 0.0149
+  },
+  {
+    "feature": "price_vs_sma20",
+    "importance": 0.0148
+  },
+  {
+    "feature": "cci",
+    "importance": 0.0146
+  },
+  {
+    "feature": "sma20_vs_sma50",
+    "importance": 0.0141
+  },
+  {
+    "feature": "ema_200",
+    "importance": 0.0138
+  },
+  {
+    "feature": "vix_us_corr_20d",
+    "importance": 0.013
+  },
+  {
+    "feature": "stoch_k",
+    "importance": 0.013
+  },
+  {
+    "feature": "sma_10",
+    "importance": 0.0128
+  },
+  {
+    "feature": "price_vs_sma50",
+    "importance": 0.0124
+  },
+  {
+    "feature": "sector_return_5d",
+    "importance": 0.0123
+  },
+  {
+    "feature": "bb_position",
+    "importance": 0.0122
+  },
+  {
+    "feature": "quarter",
+    "importance": 0.0121
+  },
+  {
+    "feature": "crude_price",
+    "importance": 0.0121
+  },
+  {
+    "feature": "ema_10",
+    "importance": 0.012
+  },
+  {
+    "feature": "sma_5",
+    "importance": 0.012
+  },
+  {
+    "feature": "macd",
+    "importance": 0.012
+  },
+  {
+    "feature": "bb_upper",
+    "importance": 0.0117
+  },
+  {
+    "feature": "usdinr_price",
+    "importance": 0.0116
+  },
+  {
+    "feature": "us10y_price",
+    "importance": 0.0115
+  },
+  {
+    "feature": "ftse_price",
+    "importance": 0.0115
+  },
+  {
+    "feature": "ema_20",
+    "importance": 0.0114
+  },
+  {
+    "feature": "crude_corr_20d",
+    "importance": 0.0114
+  }
+]

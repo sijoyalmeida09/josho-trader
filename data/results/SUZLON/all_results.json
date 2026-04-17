@@ -1,0 +1,70 @@
+{
+  "xgboost": {
+    "accuracy": 0.6411,
+    "f1": 0.3776,
+    "precision": 0.551,
+    "recall": 0.2872,
+    "auc": 0.5883,
+    "time_sec": 2.1
+  },
+  "lightgbm": {
+    "accuracy": 0.629,
+    "f1": 0.4458,
+    "precision": 0.5139,
+    "recall": 0.3936,
+    "auc": 0.5842,
+    "time_sec": 2.3
+  },
+  "random_forest": {
+    "accuracy": 0.5887,
+    "f1": 0.427,
+    "precision": 0.4524,
+    "recall": 0.4043,
+    "auc": 0.5706,
+    "time_sec": 2.1
+  },
+  "extra_trees": {
+    "accuracy": 0.6129,
+    "f1": 0.4217,
+    "precision": 0.4861,
+    "recall": 0.3723,
+    "auc": 0.5817,
+    "time_sec": 1.5
+  },
+  "gradient_boosting": {
+    "accuracy": 0.6492,
+    "f1": 0.1553,
+    "precision": 0.8889,
+    "recall": 0.0851,
+    "auc": 0.5848,
+    "time_sec": 11.0
+  },
+  "adaboost": {
+    "accuracy": 0.5081,
+    "f1": 0.419,
+    "precision": 0.3793,
+    "recall": 0.4681,
+    "auc": 0.5468,
+    "time_sec": 3.0
+  },
+  "ensemble_top3": {
+    "accuracy": 0.6411,
+    "auc": 0.5906,
+    "f1": 0.3504,
+    "components": [
+      "gradient_boosting",
+      "xgboost",
+      "lightgbm"
+    ]
+  },
+  "_meta": {
+    "stock": "SUZLON",
+    "features": 111,
+    "samples": 1236,
+    "train_size": 988,
+    "test_size": 248,
+    "best_algorithm": "gradient_boosting",
+    "best_accuracy": 0.6492,
+    "trained_at": "2026-04-17 05:21"
+  }
+}

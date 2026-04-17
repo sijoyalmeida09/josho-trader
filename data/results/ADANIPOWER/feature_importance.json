@@ -1,0 +1,122 @@
+[
+  {
+    "feature": "crude_corr_20d",
+    "importance": 112.0
+  },
+  {
+    "feature": "us10y_corr_20d",
+    "importance": 88.0
+  },
+  {
+    "feature": "nikkei_corr_20d",
+    "importance": 84.0
+  },
+  {
+    "feature": "vix_india_price",
+    "importance": 83.0
+  },
+  {
+    "feature": "us10y_return_5d",
+    "importance": 82.0
+  },
+  {
+    "feature": "return_2d",
+    "importance": 67.0
+  },
+  {
+    "feature": "gold_return_5d",
+    "importance": 65.0
+  },
+  {
+    "feature": "sma20_vs_sma50",
+    "importance": 60.0
+  },
+  {
+    "feature": "sector_return_5d",
+    "importance": 60.0
+  },
+  {
+    "feature": "india_etf_corr_20d",
+    "importance": 59.0
+  },
+  {
+    "feature": "crude_price",
+    "importance": 57.0
+  },
+  {
+    "feature": "hangseng_return_5d",
+    "importance": 55.0
+  },
+  {
+    "feature": "gap_pct",
+    "importance": 54.0
+  },
+  {
+    "feature": "vix_india_return_1d",
+    "importance": 52.0
+  },
+  {
+    "feature": "hangseng_corr_20d",
+    "importance": 52.0
+  },
+  {
+    "feature": "days_to_month_end",
+    "importance": 49.0
+  },
+  {
+    "feature": "gold_price",
+    "importance": 49.0
+  },
+  {
+    "feature": "vix_us_return_5d",
+    "importance": 49.0
+  },
+  {
+    "feature": "atr_pct",
+    "importance": 47.0
+  },
+  {
+    "feature": "crude_return_1d",
+    "importance": 47.0
+  },
+  {
+    "feature": "volatility_20d",
+    "importance": 46.0
+  },
+  {
+    "feature": "day_range_pct",
+    "importance": 46.0
+  },
+  {
+    "feature": "rsi_14",
+    "importance": 45.0
+  },
+  {
+    "feature": "vix_india_corr_20d",
+    "importance": 45.0
+  },
+  {
+    "feature": "hangseng_price",
+    "importance": 45.0
+  },
+  {
+    "feature": "gold_return_1d",
+    "importance": 44.0
+  },
+  {
+    "feature": "sma_200",
+    "importance": 43.0
+  },
+  {
+    "feature": "day_in_month",
+    "importance": 43.0
+  },
+  {
+    "feature": "return_10d",
+    "importance": 42.0
+  },
+  {
+    "feature": "bb_width",
+    "importance": 42.0
+  }
+]

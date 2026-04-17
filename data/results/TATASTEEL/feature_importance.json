@@ -1,0 +1,122 @@
+[
+  {
+    "feature": "price_vs_sma20",
+    "importance": 0.0203
+  },
+  {
+    "feature": "ema_200",
+    "importance": 0.0181
+  },
+  {
+    "feature": "is_budget_month",
+    "importance": 0.0177
+  },
+  {
+    "feature": "price_vs_sma50",
+    "importance": 0.0176
+  },
+  {
+    "feature": "ema_50",
+    "importance": 0.0174
+  },
+  {
+    "feature": "atr_14",
+    "importance": 0.0172
+  },
+  {
+    "feature": "ema_5",
+    "importance": 0.0168
+  },
+  {
+    "feature": "month",
+    "importance": 0.0166
+  },
+  {
+    "feature": "volatility_20d",
+    "importance": 0.0162
+  },
+  {
+    "feature": "sma_200",
+    "importance": 0.0153
+  },
+  {
+    "feature": "sma_5",
+    "importance": 0.0147
+  },
+  {
+    "feature": "is_results_season",
+    "importance": 0.0147
+  },
+  {
+    "feature": "sector_return_5d",
+    "importance": 0.0145
+  },
+  {
+    "feature": "crude_price",
+    "importance": 0.0144
+  },
+  {
+    "feature": "dxy_corr_20d",
+    "importance": 0.0144
+  },
+  {
+    "feature": "sma_10",
+    "importance": 0.0144
+  },
+  {
+    "feature": "sma_100",
+    "importance": 0.014
+  },
+  {
+    "feature": "day_in_month",
+    "importance": 0.014
+  },
+  {
+    "feature": "atr_pct",
+    "importance": 0.0136
+  },
+  {
+    "feature": "stoch_k",
+    "importance": 0.0135
+  },
+  {
+    "feature": "macd",
+    "importance": 0.0132
+  },
+  {
+    "feature": "hangseng_price",
+    "importance": 0.0129
+  },
+  {
+    "feature": "rsi_14",
+    "importance": 0.0128
+  },
+  {
+    "feature": "usdinr_price",
+    "importance": 0.0126
+  },
+  {
+    "feature": "us10y_return_5d",
+    "importance": 0.0117
+  },
+  {
+    "feature": "bb_upper",
+    "importance": 0.0117
+  },
+  {
+    "feature": "ftse_price",
+    "importance": 0.0117
+  },
+  {
+    "feature": "is_month_start",
+    "importance": 0.0117
+  },
+  {
+    "feature": "vix_us_price",
+    "importance": 0.0115
+  },
+  {
+    "feature": "vix_india_price",
+    "importance": 0.0108
+  }
+]

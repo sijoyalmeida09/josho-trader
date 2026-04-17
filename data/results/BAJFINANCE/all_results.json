@@ -1,0 +1,70 @@
+{
+  "xgboost": {
+    "accuracy": 0.5484,
+    "f1": 0.5725,
+    "precision": 0.4808,
+    "recall": 0.7075,
+    "auc": 0.6297,
+    "time_sec": 1.7
+  },
+  "lightgbm": {
+    "accuracy": 0.5121,
+    "f1": 0.6084,
+    "precision": 0.4631,
+    "recall": 0.8868,
+    "auc": 0.6193,
+    "time_sec": 1.0
+  },
+  "random_forest": {
+    "accuracy": 0.4758,
+    "f1": 0.586,
+    "precision": 0.4423,
+    "recall": 0.8679,
+    "auc": 0.5991,
+    "time_sec": 1.4
+  },
+  "extra_trees": {
+    "accuracy": 0.5161,
+    "f1": 0.5588,
+    "precision": 0.4578,
+    "recall": 0.717,
+    "auc": 0.5469,
+    "time_sec": 0.8
+  },
+  "gradient_boosting": {
+    "accuracy": 0.5242,
+    "f1": 0.6093,
+    "precision": 0.4694,
+    "recall": 0.8679,
+    "auc": 0.6231,
+    "time_sec": 6.5
+  },
+  "adaboost": {
+    "accuracy": 0.4839,
+    "f1": 0.6049,
+    "precision": 0.4495,
+    "recall": 0.9245,
+    "auc": 0.6483,
+    "time_sec": 2.0
+  },
+  "ensemble_top3": {
+    "accuracy": 0.5524,
+    "auc": 0.6348,
+    "f1": 0.6105,
+    "components": [
+      "xgboost",
+      "gradient_boosting",
+      "extra_trees"
+    ]
+  },
+  "_meta": {
+    "stock": "BAJFINANCE",
+    "features": 111,
+    "samples": 1236,
+    "train_size": 988,
+    "test_size": 248,
+    "best_algorithm": "ensemble_top3",
+    "best_accuracy": 0.5524,
+    "trained_at": "2026-04-17 05:23"
+  }
+}

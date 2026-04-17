@@ -1,0 +1,70 @@
+{
+  "xgboost": {
+    "accuracy": 0.6976,
+    "f1": 0.4828,
+    "precision": 0.6364,
+    "recall": 0.3889,
+    "auc": 0.6751,
+    "time_sec": 1.1
+  },
+  "lightgbm": {
+    "accuracy": 0.6573,
+    "f1": 0.2609,
+    "precision": 0.6,
+    "recall": 0.1667,
+    "auc": 0.6324,
+    "time_sec": 0.8
+  },
+  "random_forest": {
+    "accuracy": 0.6411,
+    "f1": 0.022,
+    "precision": 1.0,
+    "recall": 0.0111,
+    "auc": 0.5932,
+    "time_sec": 1.2
+  },
+  "extra_trees": {
+    "accuracy": 0.621,
+    "f1": 0.1132,
+    "precision": 0.375,
+    "recall": 0.0667,
+    "auc": 0.6276,
+    "time_sec": 0.8
+  },
+  "gradient_boosting": {
+    "accuracy": 0.6653,
+    "f1": 0.3465,
+    "precision": 0.5946,
+    "recall": 0.2444,
+    "auc": 0.6113,
+    "time_sec": 4.9
+  },
+  "adaboost": {
+    "accuracy": 0.6452,
+    "f1": 0.0435,
+    "precision": 1.0,
+    "recall": 0.0222,
+    "auc": 0.5792,
+    "time_sec": 1.2
+  },
+  "ensemble_top3": {
+    "accuracy": 0.6976,
+    "auc": 0.6496,
+    "f1": 0.4,
+    "components": [
+      "xgboost",
+      "gradient_boosting",
+      "lightgbm"
+    ]
+  },
+  "_meta": {
+    "stock": "ICICIBANK",
+    "features": 115,
+    "samples": 1236,
+    "train_size": 988,
+    "test_size": 248,
+    "best_algorithm": "xgboost",
+    "best_accuracy": 0.6976,
+    "trained_at": "2026-04-17 05:22"
+  }
+}

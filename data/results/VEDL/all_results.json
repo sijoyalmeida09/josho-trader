@@ -1,0 +1,70 @@
+{
+  "xgboost": {
+    "accuracy": 0.5,
+    "f1": 0.2955,
+    "precision": 0.6667,
+    "recall": 0.1898,
+    "auc": 0.5478,
+    "time_sec": 1.2
+  },
+  "lightgbm": {
+    "accuracy": 0.504,
+    "f1": 0.2971,
+    "precision": 0.6842,
+    "recall": 0.1898,
+    "auc": 0.582,
+    "time_sec": 0.8
+  },
+  "random_forest": {
+    "accuracy": 0.5121,
+    "f1": 0.3164,
+    "precision": 0.7,
+    "recall": 0.2044,
+    "auc": 0.5586,
+    "time_sec": 1.0
+  },
+  "extra_trees": {
+    "accuracy": 0.496,
+    "f1": 0.2138,
+    "precision": 0.7727,
+    "recall": 0.1241,
+    "auc": 0.5704,
+    "time_sec": 0.5
+  },
+  "gradient_boosting": {
+    "accuracy": 0.5081,
+    "f1": 0.337,
+    "precision": 0.6596,
+    "recall": 0.2263,
+    "auc": 0.5862,
+    "time_sec": 4.4
+  },
+  "adaboost": {
+    "accuracy": 0.4839,
+    "f1": 0.2099,
+    "precision": 0.68,
+    "recall": 0.1241,
+    "auc": 0.5162,
+    "time_sec": 1.5
+  },
+  "ensemble_top3": {
+    "accuracy": 0.5161,
+    "auc": 0.5796,
+    "f1": 0.3333,
+    "components": [
+      "random_forest",
+      "gradient_boosting",
+      "lightgbm"
+    ]
+  },
+  "_meta": {
+    "stock": "VEDL",
+    "features": 115,
+    "samples": 1236,
+    "train_size": 988,
+    "test_size": 248,
+    "best_algorithm": "ensemble_top3",
+    "best_accuracy": 0.5161,
+    "trained_at": "2026-04-17 05:18"
+  }
+}

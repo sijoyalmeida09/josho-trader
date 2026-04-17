@@ -1,0 +1,70 @@
+{
+  "xgboost": {
+    "accuracy": 0.5524,
+    "f1": 0.4932,
+    "precision": 0.5,
+    "recall": 0.4865,
+    "auc": 0.5468,
+    "time_sec": 2.1
+  },
+  "lightgbm": {
+    "accuracy": 0.6008,
+    "f1": 0.4706,
+    "precision": 0.5789,
+    "recall": 0.3964,
+    "auc": 0.6259,
+    "time_sec": 1.0
+  },
+  "random_forest": {
+    "accuracy": 0.5887,
+    "f1": 0.2388,
+    "precision": 0.6957,
+    "recall": 0.1441,
+    "auc": 0.5572,
+    "time_sec": 1.4
+  },
+  "extra_trees": {
+    "accuracy": 0.5605,
+    "f1": 0.1417,
+    "precision": 0.5625,
+    "recall": 0.0811,
+    "auc": 0.5134,
+    "time_sec": 0.7
+  },
+  "gradient_boosting": {
+    "accuracy": 0.5605,
+    "f1": 0.4467,
+    "precision": 0.5116,
+    "recall": 0.3964,
+    "auc": 0.5483,
+    "time_sec": 6.1
+  },
+  "adaboost": {
+    "accuracy": 0.5685,
+    "f1": 0.5114,
+    "precision": 0.5185,
+    "recall": 0.5045,
+    "auc": 0.5605,
+    "time_sec": 1.3
+  },
+  "ensemble_top3": {
+    "accuracy": 0.5927,
+    "auc": 0.6156,
+    "f1": 0.4358,
+    "components": [
+      "lightgbm",
+      "random_forest",
+      "adaboost"
+    ]
+  },
+  "_meta": {
+    "stock": "INFY",
+    "features": 115,
+    "samples": 1236,
+    "train_size": 988,
+    "test_size": 248,
+    "best_algorithm": "lightgbm",
+    "best_accuracy": 0.6008,
+    "trained_at": "2026-04-17 05:23"
+  }
+}

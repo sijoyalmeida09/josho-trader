@@ -1,0 +1,70 @@
+{
+  "xgboost": {
+    "accuracy": 0.5403,
+    "f1": 0.3596,
+    "precision": 0.4848,
+    "recall": 0.2857,
+    "auc": 0.5414,
+    "time_sec": 2.1
+  },
+  "lightgbm": {
+    "accuracy": 0.5605,
+    "f1": 0.323,
+    "precision": 0.5306,
+    "recall": 0.2321,
+    "auc": 0.5569,
+    "time_sec": 1.2
+  },
+  "random_forest": {
+    "accuracy": 0.5645,
+    "f1": 0.2174,
+    "precision": 0.5769,
+    "recall": 0.1339,
+    "auc": 0.6042,
+    "time_sec": 1.3
+  },
+  "extra_trees": {
+    "accuracy": 0.5968,
+    "f1": 0.359,
+    "precision": 0.6364,
+    "recall": 0.25,
+    "auc": 0.5995,
+    "time_sec": 0.9
+  },
+  "gradient_boosting": {
+    "accuracy": 0.5403,
+    "f1": 0.2963,
+    "precision": 0.48,
+    "recall": 0.2143,
+    "auc": 0.5737,
+    "time_sec": 6.7
+  },
+  "adaboost": {
+    "accuracy": 0.5766,
+    "f1": 0.5679,
+    "precision": 0.5267,
+    "recall": 0.6161,
+    "auc": 0.6339,
+    "time_sec": 1.5
+  },
+  "ensemble_top3": {
+    "accuracy": 0.5726,
+    "auc": 0.6174,
+    "f1": 0.3457,
+    "components": [
+      "extra_trees",
+      "adaboost",
+      "random_forest"
+    ]
+  },
+  "_meta": {
+    "stock": "JSWSTEEL",
+    "features": 115,
+    "samples": 1236,
+    "train_size": 988,
+    "test_size": 248,
+    "best_algorithm": "extra_trees",
+    "best_accuracy": 0.5968,
+    "trained_at": "2026-04-17 05:19"
+  }
+}

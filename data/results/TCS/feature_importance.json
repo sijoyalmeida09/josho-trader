@@ -1,0 +1,122 @@
+[
+  {
+    "feature": "doji",
+    "importance": 0.0479
+  },
+  {
+    "feature": "ema_100",
+    "importance": 0.0242
+  },
+  {
+    "feature": "sma_20",
+    "importance": 0.0206
+  },
+  {
+    "feature": "sma_10",
+    "importance": 0.0201
+  },
+  {
+    "feature": "sp500_price",
+    "importance": 0.018
+  },
+  {
+    "feature": "ftse_price",
+    "importance": 0.0177
+  },
+  {
+    "feature": "price_vs_sma50",
+    "importance": 0.0169
+  },
+  {
+    "feature": "sma_5",
+    "importance": 0.0164
+  },
+  {
+    "feature": "bb_lower",
+    "importance": 0.0158
+  },
+  {
+    "feature": "price_vs_sma200",
+    "importance": 0.0156
+  },
+  {
+    "feature": "ema_20",
+    "importance": 0.0146
+  },
+  {
+    "feature": "usdinr_corr_20d",
+    "importance": 0.0143
+  },
+  {
+    "feature": "day_in_month",
+    "importance": 0.0141
+  },
+  {
+    "feature": "sma_200",
+    "importance": 0.0139
+  },
+  {
+    "feature": "return_10d",
+    "importance": 0.0137
+  },
+  {
+    "feature": "ema_50",
+    "importance": 0.0136
+  },
+  {
+    "feature": "bb_upper",
+    "importance": 0.0135
+  },
+  {
+    "feature": "dxy_corr_20d",
+    "importance": 0.0127
+  },
+  {
+    "feature": "hangseng_corr_20d",
+    "importance": 0.0127
+  },
+  {
+    "feature": "month",
+    "importance": 0.0126
+  },
+  {
+    "feature": "sma20_vs_sma50",
+    "importance": 0.0117
+  },
+  {
+    "feature": "nikkei_price",
+    "importance": 0.0115
+  },
+  {
+    "feature": "nikkei_corr_20d",
+    "importance": 0.0115
+  },
+  {
+    "feature": "crude_price",
+    "importance": 0.0114
+  },
+  {
+    "feature": "crude_corr_20d",
+    "importance": 0.0113
+  },
+  {
+    "feature": "bb_position",
+    "importance": 0.0113
+  },
+  {
+    "feature": "volatility_5d",
+    "importance": 0.0107
+  },
+  {
+    "feature": "india_etf_corr_20d",
+    "importance": 0.0105
+  },
+  {
+    "feature": "crude_return_5d",
+    "importance": 0.0104
+  },
+  {
+    "feature": "stoch_d",
+    "importance": 0.0104
+  }
+]
