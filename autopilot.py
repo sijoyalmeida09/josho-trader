@@ -19,6 +19,10 @@ TG = os.environ.get("TELEGRAM_BOT_TOKEN", "")
 TC = os.environ.get("TELEGRAM_CHAT_ID", "")
 LOG = Path("C:/josho-trader/logs/autopilot.log")
 
+# Supabase — shared hub for ALL Sijoy systems
+SUPABASE_URL = os.environ.get("SUPABASE_URL", "https://ylfagpbsmbhnmomeosyx.supabase.co")
+SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "")
+
 def tg(msg):
     if TG and TC:
         try:
@@ -26,12 +30,38 @@ def tg(msg):
                 json={"chat_id": TC, "text": msg}, timeout=10)
         except: pass
 
+def heartbeat(status: str, message: str, data: dict):
+    """Write trader status to Supabase system_status table — the unified hub."""
+    if not SUPABASE_KEY:
+        return
+    try:
+        requests.post(
+            f"{SUPABASE_URL}/rest/v1/system_status",
+            headers={
+                "apikey": SUPABASE_KEY,
+                "Authorization": f"Bearer {SUPABASE_KEY}",
+                "Content-Type": "application/json",
+                "Prefer": "resolution=merge-duplicates",
+            },
+            json={
+                "system_name": "trader",
+                "status": status,
+                "message": message,
+                "data": data,
+                "updated_at": datetime.now(IST).isoformat(),
+            },
+            timeout=10,
+        )
+    except Exception:
+        pass
+
 def log(msg):
     ts = datetime.now(IST).strftime("%H:%M:%S")
     line = f"[{ts}] {msg}"
-    print(line)
+    print(line, flush=True)
     with open(LOG, "a") as f:
         f.write(line + "\n")
+        f.flush()
 
 # Exit rules per position
 EXIT_RULES = {
@@ -47,6 +77,7 @@ scan = 0
 
 log("AUTOPILOT STARTED")
 tg("AUTOPILOT ONLINE\nMonitoring F&O positions with auto-exit")
+heartbeat("online", "Autopilot starting", {"event": "startup"})
 
 client = GrowwClient()
 client.connect()
@@ -154,5 +185,22 @@ while True:
     # Status every 10 scans (~10 min)
     if scan % 10 == 0:
         tg(f"AUTOPILOT [{now.strftime('%H:%M')}]\n{len(pos_list)} positions\nTotal P&L: Rs.{total_pnl:+,.0f}")
+
+    # Heartbeat to Supabase — every 5 scans (~5 min)
+    if scan % 5 == 0:
+        pos_summary = []
+        for p in pos_list:
+            pos_summary.append({
+                "symbol": p["trading_symbol"],
+                "entry": p["net_price"],
+                "qty": p["quantity"],
+            })
+        heartbeat("online", f"{len(pos_list)} positions | P&L Rs.{total_pnl:+,.0f}", {
+            "positions": pos_summary,
+            "total_pnl": round(total_pnl, 2),
+            "position_count": len(pos_list),
+            "scan": scan,
+            "market_open": is_market,
+        })
 
     time.sleep(60)
