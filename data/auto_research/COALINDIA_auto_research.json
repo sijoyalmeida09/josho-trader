@@ -1,33 +1,33 @@
 {
   "stock": "COALINDIA",
-  "iterations": 200,
-  "improvements": 7,
-  "best_sharpe": 2091.1704,
+  "iterations": 500,
+  "improvements": 5,
+  "best_sharpe": 1850.3646,
   "best_score": {
-    "sharpe": 2091.1704,
+    "sharpe": 1850.3646,
     "win_rate": 100.0,
-    "total_return": 1806.7,
-    "trades": 6,
-    "avg_pnl_pct": 30.7,
+    "total_return": 1921.23,
+    "trades": 5,
+    "avg_pnl_pct": 24.04,
     "max_drawdown": 0,
-    "profit_factor": 1806.7
+    "profit_factor": 1921.23
   },
   "best_params": {
-    "rsi_oversold": 21,
-    "rsi_overbought": 70,
-    "sma_fast": 4,
-    "sma_slow": 16,
-    "volume_spike_threshold": 1.72,
-    "min_change_pct": -1.42,
-    "target_pct": 30,
+    "rsi_oversold": 36,
+    "rsi_overbought": 65,
+    "sma_fast": 3,
+    "sma_slow": 19,
+    "volume_spike_threshold": 1.66,
+    "min_change_pct": -1.52,
+    "target_pct": 23,
     "stop_pct": -40,
-    "trail_start_pct": 18,
-    "trail_pct": 8,
-    "max_risk_pct": 10,
-    "min_profit_to_fee_ratio": 3
+    "trail_start_pct": 15,
+    "trail_pct": 10,
+    "max_risk_pct": 16,
+    "min_profit_to_fee_ratio": 1
   },
   "baseline_sharpe": 159.1198,
-  "improvement_pct": 1214.2,
+  "improvement_pct": 1062.9,
   "history": [
     {
       "iteration": 0,
@@ -49,14 +49,14 @@
     },
     {
       "iteration": 1,
-      "sharpe": 267.078,
+      "sharpe": 273.2459,
       "params": {
         "rsi_oversold": 30,
         "rsi_overbought": 70,
         "sma_fast": 5,
-        "sma_slow": 19,
+        "sma_slow": 21,
         "volume_spike_threshold": 1.5,
-        "min_change_pct": -1.6,
+        "min_change_pct": -1.5,
         "target_pct": 22,
         "stop_pct": -40,
         "trail_start_pct": 15,
@@ -66,113 +66,77 @@
       }
     },
     {
-      "iteration": 1,
-      "sharpe": 303.5154,
+      "iteration": 2,
+      "sharpe": 1010.0149,
       "params": {
-        "rsi_oversold": 30,
+        "rsi_oversold": 32,
         "rsi_overbought": 70,
-        "sma_fast": 4,
-        "sma_slow": 20,
+        "sma_fast": 5,
+        "sma_slow": 21,
         "volume_spike_threshold": 1.5,
         "min_change_pct": -1.5,
-        "target_pct": 25,
+        "target_pct": 26,
         "stop_pct": -40,
         "trail_start_pct": 15,
-        "trail_pct": 9,
+        "trail_pct": 10,
         "max_risk_pct": 15,
         "min_profit_to_fee_ratio": 2
       }
     },
     {
-      "iteration": 3,
-      "sharpe": 479.9973,
+      "iteration": 65,
+      "sharpe": 1414.1471,
       "params": {
-        "rsi_oversold": 30,
+        "rsi_oversold": 36,
         "rsi_overbought": 70,
-        "sma_fast": 4,
-        "sma_slow": 18,
+        "sma_fast": 5,
+        "sma_slow": 21,
         "volume_spike_threshold": 1.5,
-        "min_change_pct": -1.5,
-        "target_pct": 25,
+        "min_change_pct": -1.52,
+        "target_pct": 23,
         "stop_pct": -40,
         "trail_start_pct": 15,
-        "trail_pct": 8,
-        "max_risk_pct": 15,
-        "min_profit_to_fee_ratio": 3
+        "trail_pct": 10,
+        "max_risk_pct": 16,
+        "min_profit_to_fee_ratio": 2
       }
     },
     {
-      "iteration": 4,
-      "sharpe": 726.9549,
+      "iteration": 70,
+      "sharpe": 1479.7577,
       "params": {
-        "rsi_oversold": 30,
-        "rsi_overbought": 70,
+        "rsi_oversold": 36,
+        "rsi_overbought": 65,
         "sma_fast": 4,
-        "sma_slow": 18,
-        "volume_spike_threshold": 1.72,
-        "min_change_pct": -1.5,
-        "target_pct": 30,
+        "sma_slow": 21,
+        "volume_spike_threshold": 1.5,
+        "min_change_pct": -1.52,
+        "target_pct": 23,
         "stop_pct": -40,
         "trail_start_pct": 15,
-        "trail_pct": 8,
-        "max_risk_pct": 15,
-        "min_profit_to_fee_ratio": 3
+        "trail_pct": 10,
+        "max_risk_pct": 16,
+        "min_profit_to_fee_ratio": 2
       }
     },
     {
-      "iteration": 5,
-      "sharpe": 1006.791,
+      "iteration": 78,
+      "sharpe": 1850.3646,
       "params": {
-        "rsi_oversold": 30,
-        "rsi_overbought": 80,
-        "sma_fast": 4,
-        "sma_slow": 16,
-        "volume_spike_threshold": 1.72,
-        "min_change_pct": -1.5,
-        "target_pct": 30,
+        "rsi_oversold": 36,
+        "rsi_overbought": 65,
+        "sma_fast": 3,
+        "sma_slow": 19,
+        "volume_spike_threshold": 1.66,
+        "min_change_pct": -1.52,
+        "target_pct": 23,
         "stop_pct": -40,
-        "trail_start_pct": 18,
-        "trail_pct": 8,
-        "max_risk_pct": 15,
-        "min_profit_to_fee_ratio": 3
-      }
-    },
-    {
-      "iteration": 6,
-      "sharpe": 1167.6024,
-      "params": {
-        "rsi_oversold": 26,
-        "rsi_overbought": 80,
-        "sma_fast": 4,
-        "sma_slow": 16,
-        "volume_spike_threshold": 1.72,
-        "min_change_pct": -1.42,
-        "target_pct": 30,
-        "stop_pct": -40,
-        "trail_start_pct": 18,
-        "trail_pct": 8,
-        "max_risk_pct": 12,
-        "min_profit_to_fee_ratio": 3
-      }
-    },
-    {
-      "iteration": 7,
-      "sharpe": 2091.1704,
-      "params": {
-        "rsi_oversold": 21,
-        "rsi_overbought": 70,
-        "sma_fast": 4,
-        "sma_slow": 16,
-        "volume_spike_threshold": 1.72,
-        "min_change_pct": -1.42,
-        "target_pct": 30,
-        "stop_pct": -40,
-        "trail_start_pct": 18,
-        "trail_pct": 8,
-        "max_risk_pct": 10,
-        "min_profit_to_fee_ratio": 3
+        "trail_start_pct": 15,
+        "trail_pct": 10,
+        "max_risk_pct": 16,
+        "min_profit_to_fee_ratio": 1
       }
     }
   ],
-  "timestamp": "2026-04-17T20:47:58.574579"
+  "timestamp": "2026-04-17T20:52:05.606127"
 }
