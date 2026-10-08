@@ -1,0 +1,8 @@
+.env
+.env.local
+logs/
+data/
+KILL
+state.json
+__pycache__/
+*.pyc
